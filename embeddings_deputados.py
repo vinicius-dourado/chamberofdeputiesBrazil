@@ -34,12 +34,14 @@ RNG = np.random.default_rng(42)
 
 # ============================================================================ IRT
 def ajustar_irt(i, j, y, n_i, n_j, ndim=2, grupos=None, lam_x=1.0, lam_b=0.04, lam_a=0.01,
-                lam_g=0.01, lam_d=None, base=None):
+                lam_g=0.01, lam_d=None, base=None, centrar=None):
     """Regressão logística bilinear (modelo de pontos ideais / IRT 2PL multidimensional):
         P(Sim) = σ(a_j + g_{grupo(obs)} + b_j · x_i)
     i, j: índices de linha (legislador) e coluna (votação) de cada voto observado.
     grupos: índice opcional de efeito fixo por observação (ex.: partido×votação).
     base: se dado, x_i = u_base(i) + δ_i, com δ penalizado por lam_d (pontos por período).
+    centrar: índice de grupo por linha i; força média zero de x dentro de cada grupo
+    (usado com efeitos fixos partido×votação, que já absorvem a posição do partido).
     Estimação por máxima verossimilhança penalizada (priors normais) com L-BFGS."""
     n_g = 0 if grupos is None else grupos.max() + 1
     n_u = 0 if base is None else base.max() + 1
@@ -53,9 +55,12 @@ def ajustar_irt(i, j, y, n_i, n_j, ndim=2, grupos=None, lam_x=1.0, lam_b=0.04, l
         g = th[cortes[3]:cortes[4]]
         u = th[cortes[4]:cortes[5]].reshape(n_u, ndim)
         x = d + u[base] if base is not None else d
+        if centrar is not None:
+            x = x - (np.stack([np.bincount(centrar, x[:, k]) for k in range(ndim)], 1) / n_c[:, None])[centrar]
         return a, b, d, g, u, x
 
     lam_dd = lam_x if base is None else lam_d
+    n_c = None if centrar is None else np.bincount(centrar).astype(float)
 
     def f(th):
         a, b, d, g, u, x = desemp(th)
@@ -70,6 +75,8 @@ def ajustar_irt(i, j, y, n_i, n_j, ndim=2, grupos=None, lam_x=1.0, lam_b=0.04, l
         ga = np.bincount(j, r, n_j) + 2 * lam_a * a
         gb = np.stack([np.bincount(j, r * x[i, k], n_j) for k in range(ndim)], 1) + 2 * lam_b * b
         gx = np.stack([np.bincount(i, r * b[j, k], n_i) for k in range(ndim)], 1)
+        if centrar is not None:   # projeção (centragem) é simétrica: aplica-se ao gradiente
+            gx = gx - (np.stack([np.bincount(centrar, gx[:, k]) for k in range(ndim)], 1) / n_c[:, None])[centrar]
         gd = gx + 2 * lam_dd * d
         gg = (np.bincount(grupos, r, n_g) + 2 * lam_g * g) if grupos is not None else np.zeros(0)
         gu = np.zeros((n_u, ndim))
@@ -80,7 +87,9 @@ def ajustar_irt(i, j, y, n_i, n_j, ndim=2, grupos=None, lam_x=1.0, lam_b=0.04, l
         return ll + pen, np.concatenate([ga, gb.ravel(), gd.ravel(), gg, gu.ravel()])
 
     th0 = RNG.normal(0, 0.1, cortes[-1])
-    res = minimize(f, th0, jac=True, method="L-BFGS-B", options={"maxiter": 3000})
+    res = minimize(f, th0, jac=True, method="L-BFGS-B", options={"maxiter": 15000, "maxfun": 30000})
+    if not res.success:
+        print("    aviso: otimização não convergiu:", res.message)
     a, b, d, g, u, x = desemp(res.x)
     return dict(a=a, b=b, d=d, g=g, u=u, x=x, convergiu=res.success, nll=res.fun)
 
@@ -129,6 +138,7 @@ def emb_votos(pasta, deputados, saida, ndim=2):
     j, votacoes = pd.factorize(v["idVotacao"])
     base_dep, deps = pd.factorize(periodos.str.split("|").str[0].astype(int))
     grp, _ = pd.factorize(v["deputado_siglaPartido"] + "|" + v["idVotacao"])
+    part_periodo, _ = pd.factorize(periodos.str.split("|").str[1])
     y = v["y"].to_numpy()
     n_i, n_j = len(periodos), len(votacoes)
 
@@ -147,15 +157,22 @@ def emb_votos(pasta, deputados, saida, ndim=2):
     ori = v["orientacao_partido"].map({"Sim": 1.0, "Não": 0.0, "Obstrução": 0.0}).to_numpy()
     ori = np.where(np.isnan(ori), maioria[j], ori)
     aval["base_orientacao_partido_acuracia"] = acuracia(ori[teste], y[teste])
-    mg = ajustar_irt(i[tr], j[tr], y[tr], n_i, n_j, ndim, grupos=grp[tr], base=base_dep, lam_d=4.0)
+    mg = ajustar_irt(i[tr], j[tr], y[tr], n_i, n_j, ndim, grupos=grp[tr], base=base_dep, lam_d=4.0,
+                     centrar=part_periodo)
     aval["irt_intrapartido_acuracia"] = acuracia(predizer(mg, i[teste], j[teste], grp[teste]), y[teste])
     print("  validação:", {k: round(x, 3) for k, x in aval.items()})
 
     # ---- ajuste final com todos os votos
     resultados = {}
     for nome, grupos in [("votos", None), ("votos_intra", grp)]:
-        m = ajustar_irt(i, j, y, n_i, n_j, ndim, grupos=grupos, base=base_dep, lam_d=4.0)
-        (u, x), _ = rotacionar(m["u"], m["x"])
+        m = ajustar_irt(i, j, y, n_i, n_j, ndim, grupos=grupos, base=base_dep, lam_d=4.0,
+                        centrar=None if grupos is None else part_periodo)
+        if grupos is None:
+            u_dep = m["u"]
+        else:   # ponto do deputado = média dos seus períodos (já centrados no partido)
+            u_dep = np.stack([np.bincount(base_dep, m["x"][:, k]) for k in range(ndim)], 1) \
+                / np.bincount(base_dep)[:, None]
+        (u, x), _ = rotacionar(u_dep, m["x"])
         # sentido: dim1 positivo = mais governista
         gov = (v.assign(s=v["seguiu_orientacao_governo"].astype(float))
                .groupby("deputado_id")["s"].mean().reindex(deps).to_numpy())
