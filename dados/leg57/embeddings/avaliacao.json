@@ -1,0 +1,10 @@
+{
+  "votos": {
+    "irt_acuracia": 0.919383575907629,
+    "irt_logloss": 0.207570223036449,
+    "irt_1d_acuracia": 0.9101742369900734,
+    "base_maioria_acuracia": 0.7479001318925423,
+    "base_orientacao_partido_acuracia": 0.843996575421709,
+    "irt_intrapartido_acuracia": 0.9299118402480505
+  }
+}
