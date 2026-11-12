@@ -281,6 +281,9 @@ def emb_discursos(pasta, deputados, saida, modelo="intfloat/multilingual-e5-smal
         if cache.exists() and len(np.load(cache, mmap_mode="r")) == len(d):
             e = np.load(cache).astype(np.float32)
         else:
+            # transcrições: primeiros 256 tokens (custo ~4x menor em CPU; a abertura do
+            # discurso concentra assunto e posicionamento); sumários: até 512
+            st.max_seq_length = 256 if nome == "discursos_fala" else 512
             print(f"  codificando {len(txt):,} textos ({nome})...", flush=True)
             e = st.encode(txt, batch_size=32, normalize_embeddings=True, show_progress_bar=False)
             np.save(cache, e.astype(np.float16))
