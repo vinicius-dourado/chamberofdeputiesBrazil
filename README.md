@@ -45,3 +45,18 @@ python baixar_legislatura.py --legislatura 56 # outra legislatura
 * Orientação vazia = a liderança não orientou. `seguiu_orientacao_*` só é preenchido quando a orientação foi
   Sim/Não/Obstrução/Abstenção (não para "Liberado").
 * Só há votos individuais em votações nominais (`votacoes.tem_votos_nominais`); as demais são simbólicas.
+
+## Discursos – `baixar_discursos.py`
+
+Baixa todos os discursos dos deputados da legislatura (`/deputados/{id}/discursos?idLegislatura=N`),
+com sumário, palavras-chave e **transcrição completa**. Roda depois de `baixar_legislatura.py`
+(usa `deputados_partidos` para registrar o partido do deputado na data do discurso).
+
+```bash
+python baixar_discursos.py                 # ~8 min; retoma de onde parou se interrompido
+python baixar_discursos.py --atualizar     # ignora o cache e baixa tudo de novo
+```
+
+| Tabela | Conteúdo | Chaves |
+|---|---|---|
+| `discursos` | um discurso por linha: deputado, partido/UF na data, data/hora, tipo (Pela ordem, Breves comunicações, Como líder...), fase da sessão, `keywords`, `sumario`, `transcricao`, `urlTexto` | `id_discurso`, `deputado_id` |
