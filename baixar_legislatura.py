@@ -97,9 +97,9 @@ def id_da_uri(serie):
     return serie.str.extract(r"/(\d+)$")[0]
 
 
-def salvar(df, nome, saida: Path):
+def salvar(df, nome, saida: Path, compressao="snappy"):
     df.to_csv(saida / f"{nome}.csv", sep=";", index=False, encoding="utf-8")
-    df.to_parquet(saida / f"{nome}.parquet", index=False)
+    df.to_parquet(saida / f"{nome}.parquet", index=False, compression=compressao)
     print(f"  -> {nome}: {len(df):,} linhas")
 
 
