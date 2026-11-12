@@ -447,15 +447,35 @@ def fusao(visoes, deputados, saida):
 
 
 def consultar(saida, nome, aspecto="media", k=10):
+    import unicodedata
+
+    def sem_acento(t):
+        return unicodedata.normalize("NFKD", str(t)).encode("ascii", "ignore").decode().lower()
+
     p = pd.read_parquet(saida / "similaridades.parquet")
     col = f"prox_{aspecto}"
-    m = p[p["nome_a"].str.contains(nome, case=False) | p["nome_b"].str.contains(nome, case=False)].copy()
-    alvo = m["nome_a"].where(m["nome_a"].str.contains(nome, case=False), m["nome_b"]).mode()[0]
-    m = m[(m["nome_a"] == alvo) | (m["nome_b"] == alvo)].copy()
+    if col not in p:
+        raise SystemExit(f"Aspecto '{aspecto}' inexistente. Opções: "
+                         + ", ".join(c[5:] for c in p.columns if c.startswith("prox_")))
+    nomes = pd.Series(pd.concat([p["nome_a"], p["nome_b"]]).dropna().unique())
+    achados = nomes[nomes.map(sem_acento).str.contains(sem_acento(nome), regex=False)].tolist()
+    if not achados:
+        raise SystemExit(f"Nenhum deputado encontrado para '{nome}'.")
+    if len(achados) > 1:
+        exatos = [a for a in achados if sem_acento(a) == sem_acento(nome)]
+        if len(exatos) != 1:
+            raise SystemExit(f"'{nome}' é ambíguo; especifique melhor: " + ", ".join(sorted(achados)))
+        achados = exatos
+    alvo = achados[0]
+    m = p[(p["nome_a"] == alvo) | (p["nome_b"] == alvo)].copy()
     m["outro"] = np.where(m["nome_a"] == alvo, m["nome_b"], m["nome_a"])
     cols = ["outro"] + [c for c in p.columns if c.startswith("prox_")]
+    m = m.dropna(subset=[col])
+    if m.empty:
+        raise SystemExit(f"{alvo} não tem dados suficientes no aspecto '{aspecto}'.")
     print(f"Mais próximos de {alvo} por '{aspecto}':")
     print(m.sort_values(col, ascending=False)[cols].head(k).to_string(index=False))
+
 
 # ======================================================================== util
 def salvar_emb(df, nome, deputados, saida):
