@@ -91,3 +91,10 @@ Coluna `confiavel` indica deputados com dados suficientes no aspecto (ex.: ≥ 5
 (seguir a orientação do partido: 84,4%; maioria da votação: 74,8%). O quanto cada aspecto prevê a posição
 governo×oposição (R², validação cruzada): frentes 0,85; discursos 0,37–0,39; temas 0,30; votos intrapartidários
 0,22 (não recupera o partido: acerto ≈ acaso, como esperado).
+
+## Painel interativo – `gerar_painel.py`
+
+`python gerar_painel.py` lê `dados/leg57/embeddings/` e o modelo `painel/modelo.html` e gera
+`painel/painel.html`: página única com o mapa ideológico, ficha de cada deputado (alinhamento, temas,
+deputados mais parecidos por aspecto), coesão dos partidos, pivôs e dissidentes, trocas de partido,
+temas por lado e pares que falam parecido e votam diferente.
