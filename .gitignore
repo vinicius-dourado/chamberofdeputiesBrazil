@@ -1,0 +1,4 @@
+# arquivos brutos baixados (cache) e CSVs gerados (grandes) - recriar com: python baixar_legislatura.py
+dados/brutos/
+dados/**/*.csv
+__pycache__/
