@@ -5,6 +5,43 @@
     "irt_1d_acuracia": 0.9101742369900734,
     "base_maioria_acuracia": 0.7479001318925423,
     "base_orientacao_partido_acuracia": 0.843996575421709,
-    "irt_intrapartido_acuracia": 0.9299118402480505
+    "irt_intrapartido_acuracia": 0.9287548881227294
+  },
+  "representacoes": {
+    "votos": {
+      "n_deputados": 621,
+      "knn5_acerta_partido": 0.453,
+      "acerto_partido_ao_acaso": 0.185
+    },
+    "votos_intra": {
+      "n_deputados": 621,
+      "knn5_acerta_partido": 0.162,
+      "acerto_partido_ao_acaso": 0.185,
+      "r2_preve_dim1_votos": 0.22
+    },
+    "temas": {
+      "n_deputados": 579,
+      "knn5_acerta_partido": 0.21,
+      "acerto_partido_ao_acaso": 0.185,
+      "r2_preve_dim1_votos": 0.297
+    },
+    "frentes": {
+      "n_deputados": 549,
+      "knn5_acerta_partido": 0.41,
+      "acerto_partido_ao_acaso": 0.188,
+      "r2_preve_dim1_votos": 0.852
+    },
+    "discursos_tema": {
+      "n_deputados": 447,
+      "knn5_acerta_partido": 0.311,
+      "acerto_partido_ao_acaso": 0.21,
+      "r2_preve_dim1_votos": 0.372
+    },
+    "discursos_fala": {
+      "n_deputados": 447,
+      "knn5_acerta_partido": 0.318,
+      "acerto_partido_ao_acaso": 0.21,
+      "r2_preve_dim1_votos": 0.391
+    }
   }
 }
