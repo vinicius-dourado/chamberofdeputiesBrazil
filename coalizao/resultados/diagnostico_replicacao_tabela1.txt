@@ -1,0 +1,28 @@
+todos tamanho {'Cardoso 1': np.float64(4.7), 'Cardoso 2': np.float64(3.9), 'Lula 1': np.float64(7.4), 'Lula 2': np.float64(9.3), 'Rousseff 1': np.float64(7.2)} n postos {'Cardoso 1': np.float64(22.0), 'Cardoso 2': np.float64(23.6), 'Lula 1': np.float64(29.9), 'Lula 2': np.float64(31.8), 'Rousseff 1': np.float64(33.1)}
+sem_orgaoPR tamanho {'Cardoso 1': np.float64(4.7), 'Cardoso 2': np.float64(3.9), 'Lula 1': np.float64(7.4), 'Lula 2': np.float64(9.3), 'Rousseff 1': np.float64(7.2)} n postos {'Cardoso 1': np.float64(21.0), 'Cardoso 2': np.float64(22.6), 'Lula 1': np.float64(28.9), 'Lula 2': np.float64(30.8), 'Rousseff 1': np.float64(32.1)}
+so_ministerios tamanho {'Cardoso 1': np.float64(4.7), 'Cardoso 2': np.float64(3.9), 'Lula 1': np.float64(7.4), 'Lula 2': np.float64(7.8), 'Rousseff 1': np.float64(6.9)} n postos {'Cardoso 1': np.float64(20.0), 'Cardoso 2': np.float64(19.9), 'Lula 1': np.float64(23.0), 'Lula 2': np.float64(23.0), 'Rousseff 1': np.float64(24.0)}
+          base  den  np  opp  Cardoso 1  Cardoso 2  Lula 1  Lula 2  Rousseff 1  rmse
+         todos coal   1    0       58.5       61.0    55.9    65.0        62.8  10.7
+         todos  513   1    1       50.3       54.9    41.3    54.8        49.9   7.0
+         todos  513   0    1       68.8       74.2    49.7    57.4        57.2   9.5
+         todos coal   0    0       77.0       80.3    64.3    67.7        70.0  19.0
+   sem_orgaoPR coal   1    0       58.9       63.6    56.7    66.3        63.8  11.5
+   sem_orgaoPR  513   1    1       51.5       56.5    42.0    55.3        50.3   6.3
+   sem_orgaoPR  513   0    1       70.9       74.6    50.6    58.0        57.8  10.3
+   sem_orgaoPR coal   0    0       78.3       81.7    65.3    69.0        71.3  20.3
+so_ministerios coal   1    0       61.0       60.9    62.1    73.2        67.5  15.3
+so_ministerios  513   1    1       53.1       54.2    46.5    55.2        50.4   5.7
+so_ministerios  513   0    1       70.9       73.7    57.4    58.9        58.4  11.0
+so_ministerios coal   0    0       78.8       80.4    73.0    76.9        75.5  24.1
+{'Cardoso 1': 59.6, 'Cardoso 2': 61.7, 'Lula 1': 49.3, 'Lula 2': 52.1, 'Rousseff 1': 43.7} {'Cardoso 1': 4.1, 'Cardoso 2': 4.3, 'Lula 1': 7.7, 'Lula 2': 9.1, 'Rousseff 1': 7.8}
+--- adicionando k postos np (AGU, CGU, BCB, GSI, Secom...) a base "todos"
+0 coal 0 {'Cardoso 1': np.float64(58.5), 'Cardoso 2': np.float64(61.0), 'Lula 1': np.float64(55.9), 'Lula 2': np.float64(65.0), 'Rousseff 1': np.float64(62.8)} rmse 10.7
+0 513 1 {'Cardoso 1': np.float64(50.3), 'Cardoso 2': np.float64(54.9), 'Lula 1': np.float64(41.3), 'Lula 2': np.float64(54.8), 'Rousseff 1': np.float64(49.9)} rmse 7.0
+2 coal 0 {'Cardoso 1': np.float64(55.2), 'Cardoso 2': np.float64(56.5), 'Lula 1': np.float64(54.6), 'Lula 2': np.float64(62.6), 'Rousseff 1': np.float64(60.8)} rmse 9.8
+2 513 1 {'Cardoso 1': np.float64(47.8), 'Cardoso 2': np.float64(52.1), 'Lula 1': np.float64(40.1), 'Lula 2': np.float64(53.8), 'Rousseff 1': np.float64(48.5)} rmse 8.3
+4 coal 0 {'Cardoso 1': np.float64(52.2), 'Cardoso 2': np.float64(52.6), 'Lula 1': np.float64(53.5), 'Lula 2': np.float64(60.5), 'Rousseff 1': np.float64(59.1)} rmse 9.6
+4 513 1 {'Cardoso 1': np.float64(45.6), 'Cardoso 2': np.float64(49.3), 'Lula 1': np.float64(39.0), 'Lula 2': np.float64(52.2), 'Rousseff 1': np.float64(47.1)} rmse 9.7
+6 coal 0 {'Cardoso 1': np.float64(49.4), 'Cardoso 2': np.float64(49.0), 'Lula 1': np.float64(52.4), 'Lula 2': np.float64(58.7), 'Rousseff 1': np.float64(57.5)} rmse 10.1
+6 513 1 {'Cardoso 1': np.float64(43.6), 'Cardoso 2': np.float64(46.8), 'Lula 1': np.float64(38.0), 'Lula 2': np.float64(50.6), 'Rousseff 1': np.float64(45.8)} rmse 11.1
+8 coal 0 {'Cardoso 1': np.float64(46.2), 'Cardoso 2': np.float64(45.9), 'Lula 1': np.float64(51.5), 'Lula 2': np.float64(57.0), 'Rousseff 1': np.float64(56.1)} rmse 11.0
+8 513 1 {'Cardoso 1': np.float64(41.8), 'Cardoso 2': np.float64(44.3), 'Lula 1': np.float64(37.2), 'Lula 2': np.float64(49.1), 'Rousseff 1': np.float64(44.5)} rmse 12.5
