@@ -1,0 +1,254 @@
+<title>O Preço da Base</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: coluna única de leitura (~680px) estilo Medium; gráficos sangram até 860px; verde = ministérios/índice, cinza = cadeiras */
+:root{
+  --bg:#fbfbf9; --paper:#ffffff; --ink:#16201c; --muted:#5b6661; --rule:#dfe3e0; --soft:#eef2ef;
+  --seat:#8a948f;      /* cadeiras */
+  --main:#0f7a55;      /* índice / ministérios */
+  --main-soft:#d7ece3;
+  --np:#c9a227;        /* ministros sem partido */
+  --display:"Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
+  --body:"Source Serif 4", Georgia, "Times New Roman", serif;
+  --mono:"IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111614; --paper:#171d1a; --ink:#e7ece9; --muted:#9aa5a0; --rule:#2b3430; --soft:#1e2622;
+  --seat:#7f8a85; --main:#3fbf8c; --main-soft:#173a2c; --np:#d9b44a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111614; --paper:#171d1a; --ink:#e7ece9; --muted:#9aa5a0; --rule:#2b3430; --soft:#1e2622;
+  --seat:#7f8a85; --main:#3fbf8c; --main-soft:#173a2c; --np:#d9b44a; color-scheme:dark}
+
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:20px;line-height:1.62;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px;
+  -webkit-font-smoothing:antialiased}
+.col{max-width:680px;margin-inline:auto}
+.wide{max-width:860px;margin-inline:auto}
+header.top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-block:18px;border-bottom:1px solid var(--rule);
+  font-family:var(--display);font-size:15px;color:var(--muted);max-width:860px;margin-inline:auto}
+header.top b{color:var(--ink);font-weight:800;letter-spacing:-.01em}
+.kicker{font-family:var(--mono);font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--main);margin-top:56px}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(36px,6vw,54px);line-height:1.05;letter-spacing:-.025em;margin:14px 0 18px;text-wrap:balance}
+.dek{font-size:23px;line-height:1.45;color:var(--muted);margin:0 0 28px;text-wrap:pretty}
+.byline{display:flex;align-items:center;gap:14px;font-family:var(--display);font-size:15px;color:var(--muted);padding-block:16px;border-block:1px solid var(--rule)}
+.avatar{width:42px;height:42px;border-radius:50%;background:var(--main);display:grid;place-items:center;color:var(--paper);font-weight:800;font-size:16px;flex:none}
+.byline strong{color:var(--ink);display:block;font-weight:700}
+h2{font-family:var(--display);font-weight:700;font-size:30px;line-height:1.2;letter-spacing:-.015em;margin:56px 0 8px;text-wrap:balance}
+p{margin:0 0 22px}
+strong{font-weight:600}
+.k-seat{color:var(--seat);font-weight:600}
+.k-main{color:var(--main);font-weight:600}
+.k-np{color:var(--np);font-weight:600}
+blockquote.pull{font-family:var(--display);font-weight:500;font-size:28px;line-height:1.3;letter-spacing:-.01em;margin:40px 0;padding-left:22px;border-left:3px solid var(--main);text-wrap:balance}
+figure{margin:36px auto 40px}
+figcaption{font-family:var(--display);font-size:14px;line-height:1.45;color:var(--muted);margin-top:10px;max-width:680px;margin-inline:auto}
+.chart{width:100%;height:auto;display:block;overflow:visible}
+.chart text{font-family:var(--mono);font-size:12px;fill:var(--muted)}
+.chart .lbl{font-family:var(--display);font-size:13px;fill:var(--ink);font-weight:500}
+.chart .hl{font-family:var(--display);font-size:13px;fill:var(--main);font-weight:700}
+.chart .grid{stroke:var(--rule);stroke-width:1}
+.legend{display:flex;flex-wrap:wrap;gap:18px;font-family:var(--display);font-size:14px;color:var(--muted);margin:0 auto 10px;max-width:860px}
+.legend i{display:inline-block;width:22px;height:3px;border-radius:2px;vertical-align:middle;margin-right:7px}
+.legend i.dot{width:11px;height:11px;border-radius:50%}
+
+.score{display:grid;grid-template-columns:repeat(3,1fr);border-block:1px solid var(--rule);margin:30px 0}
+.score div{padding:18px 8px}
+.score div+div{border-left:1px solid var(--rule);padding-left:18px}
+.score .v{font-family:var(--display);font-weight:800;font-size:40px;line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.score .k{font-family:var(--display);font-size:14px;color:var(--muted);margin-top:6px;line-height:1.35}
+@media (max-width:520px){.score{grid-template-columns:1fr}.score div+div{border-left:0;border-top:1px solid var(--rule);padding-left:8px}}
+
+.tablewrap{overflow-x:auto;margin:28px auto;max-width:860px}
+table{border-collapse:collapse;width:100%;font-family:var(--display);font-size:15px;font-variant-numeric:tabular-nums;min-width:600px}
+th{text-align:left;font-weight:600;color:var(--muted);font-size:13px;letter-spacing:.03em;padding:8px 10px;border-bottom:1.5px solid var(--ink);vertical-align:bottom}
+td{padding:10px;border-bottom:1px solid var(--rule)}
+td.num,th.num{text-align:right}
+td.low{color:var(--np);font-weight:700}
+.bar{display:inline-block;height:8px;border-radius:4px;background:var(--seat);vertical-align:middle;margin-right:6px}
+
+.box{background:var(--soft);border-radius:14px;padding:22px 24px;margin:30px 0;font-size:18px}
+.box h3{font-family:var(--display);font-size:18px;margin:0 0 8px}
+.box ul{margin:0;padding-left:20px}
+.box li{margin-bottom:8px}
+footer{border-top:1px solid var(--rule);margin-top:56px;padding-top:20px;font-family:var(--display);font-size:14px;color:var(--muted);line-height:1.5}
+footer code{font-family:var(--mono);font-size:13px}
+:focus-visible{outline:2px solid var(--main);outline-offset:2px}
+@media (prefers-reduced-motion:no-preference){.draw{stroke-dasharray:2400;stroke-dashoffset:0;animation:draw 1.6s ease-out}
+  @keyframes draw{from{stroke-dashoffset:2400}to{stroke-dashoffset:0}}}
+</style>
+
+<header class="top"><b>Plenário em Números</b><span>Coalizões · Lula 3</span></header>
+
+<article>
+<div class="col">
+  <div class="kicker">Ciência política, sem jargão</div>
+  <h1>O preço da base</h1>
+  <p class="dek">Como Lula dividiu os ministérios entre os partidos aliados de 2023 a 2026, e como isso se compara com os governos desde Sarney.</p>
+  <div class="byline"><div class="avatar" aria-hidden="true">PN</div><div><strong>Plenário em Números</strong>Novembro de 2026 · 8 min de leitura · dados do Ipea e da Câmara dos Deputados</div></div>
+
+  <p style="margin-top:32px">No Brasil, nenhum presidente governa sozinho. O partido que vence a eleição presidencial nunca tem maioria na Câmara. Por isso o presidente monta uma coalizão: entrega ministérios a outros partidos e, em troca, espera os votos deles no Congresso.</p>
+  <p>Essa troca levanta uma pergunta antiga da ciência política: os ministérios são divididos de acordo com o peso de cada partido? Quem traz mais deputados leva mais pastas? Ou o presidente fica com a maior parte e dá pouco aos aliados?</p>
+
+  <h2>Como medir se a divisão é proporcional</h2>
+  <p>O Ipea acompanha isso desde 1985 com um índice de <strong>proporcionalidade</strong> que vai de 0 a 100. A ideia é comparar duas fatias de cada partido:</p>
+  <p>a sua fatia de <span class="k-main">ministérios</span> e a sua fatia das <span class="k-seat">cadeiras</span> que a coalizão tem na Câmara.</p>
+  <p>Se cada partido tem a mesma fatia nas duas, o índice dá 100. Quanto mais as fatias se afastam, mais baixo ele fica. Há um detalhe importante: os <span class="k-np">ministros sem partido</span> entram como um grupo que ocupa pastas mas não traz nenhum deputado. Quanto mais ministérios vão para técnicos e nomes sem filiação, menor é o índice.</p>
+  <p>Veja como era a divisão no governo Lula 3 entre março e setembro de 2025:</p>
+</div>
+
+<div class="wide">
+  <div class="legend"><span><i class="dot" style="background:var(--main)"></i>% dos ministérios</span><span><i class="dot" style="background:var(--paper);box-shadow:inset 0 0 0 2px var(--seat)"></i>% das cadeiras da coalizão</span></div>
+  <figure style="margin-top:0">
+    <svg class="chart" id="divisao" viewBox="0 0 860 420" role="img" aria-label="Fatia de ministérios e fatia de cadeiras de cada partido no gabinete Lula 3-6, de março a setembro de 2025"></svg>
+    <figcaption>Gabinete Lula 3-6 (mar–set/2025): 34 pastas com status de ministério e 319 deputados nos partidos com ministério. Proporcionalidade (Ipea): 75,5.</figcaption>
+  </figure>
+</div>
+
+<div class="col">
+  <p>O PT ficou com 35% das pastas, com 21% das cadeiras da coalizão. União Brasil e PP ficaram abaixo do seu peso: juntos, tinham um terço dos deputados da base e 12% dos ministérios. E seis pastas estavam com pessoas sem partido. Mesmo assim, o índice ficou em 75,5, um valor típico dos governos do PT.</p>
+
+  <h2>Lula 3 na história</h2>
+  <p>Até março de 2026, a proporcionalidade média de Lula 3 foi de <strong>72,6</strong>. É mais que nos dois mandatos de Fernando Henrique, um pouco abaixo de Temer (73,6) e menos que nos mandatos de Lula 1 e 2 e de Dilma. A média do mandato inteiro cai para 64,2 por causa de 2026, um caso especial que explicamos mais abaixo.</p>
+</div>
+
+<div class="wide">
+  <figure>
+    <svg class="chart" id="historia" viewBox="0 0 860 470" role="img" aria-label="Proporcionalidade média por mandato presidencial, de Sarney a Lula 3"></svg>
+    <figcaption>Média mensal por mandato do índice de proporcionalidade do Ipea (Almeida, 2021), com os ministros sem partido contados como um grupo. Em Lula 3, a barra clara mostra a média até março de 2026.</figcaption>
+  </figure>
+</div>
+
+<div class="col">
+  <p>Dois mandatos chamam a atenção pelos números baixos. Collor e Bolsonaro governaram com ministérios cheios de nomes sem partido. Entre novembro de 2019 e fevereiro de 2021, nenhum partido tinha ministério no governo Bolsonaro. Sarney fica no topo porque dividia o governo basicamente entre PMDB e PFL, quase na medida exata das bancadas.</p>
+
+  <h2>Uma base que encolheu</h2>
+  <p>A proporcionalidade diz como os ministérios foram divididos. Ela não diz se a coalizão tinha força suficiente no Congresso. Para isso, olhamos as <strong>cadeiras da coalizão</strong>: a parte da Câmara ocupada pelos partidos que têm ministério.</p>
+
+  <div class="score">
+    <div><div class="v">51%</div><div class="k">da Câmara no início, em janeiro de 2023</div></div>
+    <div><div class="v" style="color:var(--main)">62%</div><div class="k">com a entrada do PP, de set/2023 a ago/2025</div></div>
+    <div><div class="v" style="color:var(--np)">32%</div><div class="k">depois da saída de União e PP e das trocas de 2026</div></div>
+  </div>
+</div>
+
+<div class="wide">
+  <div class="legend"><span><i style="background:var(--main)"></i>proporcionalidade (0 a 100)</span><span><i style="background:var(--seat)"></i>% da Câmara com a coalizão</span></div>
+  <figure style="margin-top:0">
+    <svg class="chart" id="linha" viewBox="0 0 860 360" role="img" aria-label="Proporcionalidade e cadeiras da coalizão mês a mês no governo Lula 3"></svg>
+    <figcaption>Valores no dia 15 de cada mês. A linha tracejada marca a metade da Câmara (257 deputados).</figcaption>
+  </figure>
+</div>
+
+<div class="col">
+  <p>Lula começou com uma maioria apertada, de 51%. Ela cresceu para 62% quando o PP ganhou um ministério, em setembro de 2023. Em setembro de 2025, União Brasil e PP deixaram o governo, e a base caiu para 41%. Temer também terminou o mandato com uma base formal abaixo da metade da Câmara, mas por cerca de um ano. Em Lula 3, foram mais de catorze meses.</p>
+  <p>Com a saída de União e PP, a proporcionalidade caiu pouco, de 75,7 para 72,7. Os dois partidos tinham poucas pastas para o seu tamanho, e os ministérios deles passaram a contar como pastas sem partido.</p>
+
+  <blockquote class="pull">A divisão de ministérios de Lula 3 é parecida com a dos outros governos do PT. O que mudou foi o tamanho da base que ela sustenta.</blockquote>
+
+  <h2>O que aconteceu em 2026</h2>
+  <p>Em abril de 2026, ministros que iam disputar a eleição deixaram o cargo, como exige a lei. Muitos foram substituídos pelos seus secretários-executivos, que tratamos como sem partido. O governo passou a ter <strong>23 das 34 pastas</strong> com pessoas sem partido, e o MDB ficou sem ministério.</p>
+  <p>Pelo índice do Ipea, a proporcionalidade despencou para 23. Esse número precisa ser lido com cuidado. Ele não indica um governo desequilibrado entre aliados; indica que a maior parte do governo deixou de ser partidária. O Ipea também calcula uma segunda versão do índice, em que cada ministro sem partido pesa menos. Por ela, a queda é bem menor: de cerca de 90 para 74.</p>
+
+  <h2>Gabinete por gabinete</h2>
+  <p>O governo Lula 3 teve nove formações. Uma nova formação começa quando muda o conjunto de partidos ou quando há uma troca relevante de ministro, segundo os critérios do Ipea.</p>
+</div>
+
+<div class="tablewrap">
+  <table>
+    <thead><tr><th>Gabinete</th><th>Período</th><th>O que mudou</th><th class="num">Partidos</th><th class="num">Sem partido</th><th>Cadeiras da coalizão</th><th class="num">Proporcionalidade</th></tr></thead>
+    <tbody id="gabtable"></tbody>
+  </table>
+</div>
+
+<div class="col">
+  <h2>A coalizão mais diversa</h2>
+  <p>Há ainda uma terceira medida: a <strong>heterogeneidade ideológica</strong>, que mostra o quanto os partidos do gabinete estão distantes entre si na escala esquerda-direita. Lula 3 tem a coalizão mais heterogênea desde a redemocratização (53,6), à frente de Lula 1 (49,4). Num mesmo governo estavam PSOL e PCdoB, de um lado, e União Brasil e PP, de outro. Parte da instabilidade da base vem daí.</p>
+
+  <div class="box">
+    <h3>Cuidados com os números</h3>
+    <ul>
+      <li><strong>Codificação de Lula 3.</strong> O Ipea cobre até junho de 2024. Daí em diante, a composição foi montada ministro a ministro com os mesmos critérios. Duas escolhas pesam: a partir de 2 de setembro de 2025, os ministros de União e PP contam como sem partido, e os substitutos de abril de 2026 também.</li>
+      <li><strong>Outra codificação, outro número.</strong> Mantendo União e PP no governo e atribuindo os substitutos ao partido da pasta, a média do mandato sobe para 71,1.</li>
+      <li><strong>O índice mede a divisão, não a lealdade.</strong> Ter ministério não garante voto. Partidos com pastas podem votar contra o governo, e partidos sem pastas podem votar a favor.</li>
+      <li><strong>Nem toda pasta pesa igual.</strong> O índice conta a Saúde igual a uma secretaria com status de ministério.</li>
+    </ul>
+  </div>
+
+  <h2>Em resumo</h2>
+  <p>Até 2026, Lula dividiu os ministérios de forma parecida com os outros governos do PT: o próprio partido acima do seu peso e os aliados de centro abaixo dele. A diferença está no tamanho da coalizão. Lula 3 começou com uma maioria apertada, chegou a 62% da Câmara e terminou o mandato com uma base formal de menos de um terço dos deputados.</p>
+
+  <footer>
+    <p><strong>Como foi feito.</strong> Proporcionalidade: índice de Koppel &amp; Diskin usado pelo Ipea (Almeida, Nota Técnica nº 53/2021), na versão em que os ministros sem partido contam como um grupo (Prop_v1). Gabinetes de 1985 a junho de 2024: planilha do Ipea. De julho de 2024 a novembro de 2026: codificação própria com os mesmos critérios. Cadeiras: deputados em exercício, a partir dos dados abertos da Câmara. Ideologia: Zucco &amp; Power (2023), via Atlas do Estado Brasileiro. Código e tabelas em <code>coalizao/</code>.</p>
+  </footer>
+</div>
+</article>
+
+<script>
+(function(){
+const NS="http://www.w3.org/2000/svg";
+const el=(t,a,p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e};
+const txt=(p,x,y,s,a)=>{const t=el("text",Object.assign({x,y},a||{}),p);t.textContent=s;return t};
+const fmt=v=>v.toFixed(1).replace(".",",");
+
+/* 1. divisão Lula 3-6: ministérios x cadeiras */
+const D=[["PT",35.3,21.0],["União",8.8,18.5],["PP",2.9,15.7],["MDB",8.8,13.8],["PSD",8.8,13.8],["PDT",2.9,5.6],["PSB",5.9,4.7],["PSOL",2.9,4.1],["PCdoB",2.9,2.5],["Rede",2.9,0.3],["Sem partido",17.6,0]];
+(function(){
+  const svg=document.getElementById("divisao"),W=860,L=130,R=50,T=20,row=34,max=40;
+  const x=v=>L+v*(W-L-R)/max, H=T+D.length*row;
+  [0,10,20,30,40].forEach(v=>{el("line",{x1:x(v),x2:x(v),y1:T-8,y2:H-10,class:"grid"},svg);txt(svg,x(v),H+8,v+"%",{"text-anchor":"middle"})});
+  D.forEach(([p,m,s],i)=>{const y=T+i*row+6, np=p==="Sem partido";
+    txt(svg,L-14,y+4,p,{class:"lbl","text-anchor":"end",style:np?"fill:var(--np)":""});
+    el("line",{x1:x(m),x2:x(s),y1:y,y2:y,stroke:"var(--rule)","stroke-width":4,"stroke-linecap":"round"},svg);
+    el("circle",{cx:x(s),cy:y,r:6,fill:"var(--paper)",stroke:"var(--seat)","stroke-width":2.5},svg);
+    el("circle",{cx:x(m),cy:y,r:6.5,fill:np?"var(--np)":"var(--main)"},svg);
+  });
+  svg.setAttribute("viewBox",`0 0 ${W} ${H+20}`);
+})();
+
+/* 2. histórico por mandato */
+const M=[["Sarney",94.0,"1985–90"],["Collor",19.2,"1990–92"],["Itamar",37.4,"1992–94"],["FHC 1",56.3,"1995–98"],["FHC 2",68.3,"1999–2002"],["Lula 1",76.7,"2003–06"],["Lula 2",82.0,"2007–10"],["Dilma 1",80.9,"2011–14"],["Dilma 2",77.7,"2015–16"],["Temer",73.6,"2016–18"],["Bolsonaro",8.4,"2019–22"],["Lula 3",64.2,"2023–26"]];
+(function(){
+  const svg=document.getElementById("historia"),W=860,L=150,R=60,T=10,row=37;
+  const x=v=>L+v*(W-L-R)/100, H=T+M.length*row;
+  [0,25,50,75,100].forEach(v=>{el("line",{x1:x(v),x2:x(v),y1:T-4,y2:H-6,class:"grid"},svg);txt(svg,x(v),H+10,v,{"text-anchor":"middle"})});
+  M.forEach(([p,v,a],i)=>{const y=T+i*row, l3=p==="Lula 3";
+    txt(svg,L-14,y+15,p,{class:l3?"hl":"lbl","text-anchor":"end"});
+    txt(svg,L-14,y+29,a,{"text-anchor":"end",style:"font-size:11px"});
+    if(l3){el("rect",{x:x(0),y:y+4,width:x(72.6)-x(0),height:20,rx:3,fill:"var(--main-soft)"},svg);
+      txt(svg,x(72.6)+8,y+19,"72,6 até mar/2026",{fill:"var(--main)"});}
+    el("rect",{x:x(0),y:y+4,width:x(v)-x(0),height:20,rx:3,fill:l3?"var(--main)":"var(--seat)"},svg);
+    txt(svg,l3?x(v)-8:x(v)+8,y+19,fmt(v),{"text-anchor":l3?"end":"start",style:l3?"fill:var(--paper);font-weight:500":"fill:var(--ink)"});
+  });
+  svg.setAttribute("viewBox",`0 0 ${W} ${H+22}`);
+})();
+
+/* 3. série mensal Lula 3 */
+const S=[["2023-01",74.2,51.3],["2023-02",74.2,51.3],["2023-03",74.2,51.3],["2023-04",74.2,51.3],["2023-05",74.2,51.3],["2023-06",74.2,52.0],["2023-07",74.2,52.0],["2023-08",74.2,52.0],["2023-09",70.7,61.6],["2023-10",70.7,61.6],["2023-11",70.5,61.8],["2023-12",70.4,61.8],["2024-01",70.4,61.8],["2024-02",67.4,61.8],["2024-03",67.4,62.0],["2024-04",71.1,61.8],["2024-05",71.1,61.8],["2024-06",71.3,61.4],["2024-07",70.9,61.8],["2024-08",70.9,62.0],["2024-09",70.9,62.2],["2024-10",73.7,62.2],["2024-11",73.8,62.0],["2024-12",73.8,62.0],["2025-01",73.5,62.0],["2025-02",73.5,62.2],["2025-03",75.5,62.2],["2025-04",73.5,61.6],["2025-05",75.6,62.2],["2025-06",75.6,62.0],["2025-07",75.2,62.6],["2025-08",75.7,62.2],["2025-09",72.7,40.9],["2025-10",72.7,40.9],["2025-11",71.8,41.3],["2025-12",71.7,41.1],["2026-01",71.8,41.1],["2026-02",71.7,41.3],["2026-03",71.7,41.3],["2026-04",23.3,32.8],["2026-05",23.6,31.4],["2026-06",23.4,31.8],["2026-07",23.4,31.6],["2026-08",23.4,31.6],["2026-09",23.4,31.6],["2026-10",23.5,32.0],["2026-11",23.5,32.0]];
+(function(){
+  const svg=document.getElementById("linha"),W=860,H=360,L=40,R=20,T=34,B=30;
+  const x=i=>L+i*(W-L-R)/(S.length-1), y=v=>T+(100-v)*(H-T-B)/100;
+  [0,25,50,75,100].forEach(v=>{el("line",{x1:L,x2:W-R,y1:y(v),y2:y(v),class:"grid"},svg);txt(svg,L-8,y(v)+4,v,{"text-anchor":"end"})});
+  el("line",{x1:L,x2:W-R,y1:y(50),y2:y(50),stroke:"var(--ink)","stroke-dasharray":"5 5","stroke-width":1.2},svg);
+  txt(svg,W-R,y(50)-6,"metade da Câmara",{"text-anchor":"end",class:"lbl"});
+  ["2023","2024","2025","2026"].forEach(a=>{const i=S.findIndex(d=>d[0]===a+"-01");txt(svg,x(i),H-8,a)});
+  const path=k=>"M"+S.map((s,i)=>x(i)+","+y(s[k])).join("L");
+  el("path",{d:path(2),fill:"none",stroke:"var(--seat)","stroke-width":2.6,"stroke-linejoin":"round",class:"draw"},svg);
+  el("path",{d:path(1),fill:"none",stroke:"var(--main)","stroke-width":3,"stroke-linejoin":"round",class:"draw"},svg);
+  [["2023-09","PP entra"],["2025-09","União e PP saem"],["2026-04","Trocas da eleição"]].forEach(([m,l],k)=>{
+    const i=S.findIndex(d=>d[0]===m);
+    el("line",{x1:x(i),x2:x(i),y1:T-14,y2:H-B,stroke:"var(--muted)","stroke-dasharray":"2 4"},svg);
+    txt(svg,k===2?x(i)+6:x(i)+6,k===2?y(8):T-18,l,{class:"lbl","text-anchor":"start"});
+  });
+})();
+
+/* 4. tabela de gabinetes */
+const G=[["Lula 3-1","jan–set 2023","posse",9,8,51.3,74.2],["Lula 3-2","set–dez 2023","PP entra",10,8,62.2,70.4],["Lula 3-3","jan–abr 2024","troca de ministro",10,9,62.2,67.3],["Lula 3-4","abr–set 2024","troca de ministro",10,8,62.2,70.9],["Lula 3-5","set 2024–mar 2025","Macaé Evaristo (PT) nos Direitos Humanos",10,7,62.2,73.7],["Lula 3-6","mar–set 2025","Padilha (PT) na Saúde; Gleisi na SRI",10,6,62.2,75.5],["Lula 3-7","set–out 2025","União e PP saem",8,10,40.9,72.7],["Lula 3-8","out 2025–mar 2026","Boulos (PSOL) na Secretaria-Geral",8,10,40.9,72.0],["Lula 3-9","abr–nov 2026","trocas da eleição; MDB sai",6,23,32.7,23.3]];
+const tb=document.getElementById("gabtable");
+G.forEach(([g,p,e,n,np,c,v])=>{const tr=document.createElement("tr");
+  tr.innerHTML=`<td>${g}</td><td>${p}</td><td>${e}</td><td class="num">${n}</td><td class="num">${np}</td><td><span class="bar" style="width:${Math.round(c*1.2)}px"></span>${fmt(c)}%</td><td class="num ${v<50?"low":""}">${fmt(v)}</td>`;
+  tb.appendChild(tr)});
+})();
+</script>
