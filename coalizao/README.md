@@ -13,7 +13,7 @@ python coalizao/indicadores_coalizao.py
 |---|---|---|
 | 1995–2022 | Almeida (Ipea, NT 53/2021), `dados_brutos/almeida_ipea_gabinetes.xlsx` | idem (na data de início de cada gabinete) |
 | 2023–nov/2026 | `dados_brutos/lula3_gabinete_2023_2026.csv`: codificação ministro a ministro com os critérios de Almeida (ministro partidário se o partido apoia o governo e o indicou ou o reconhece) | mensal, deputados em exercício (`cadeiras_leg57.py`, a partir de `dados/leg57`) |
-| Ideologia | `dados_brutos/ideologia_partidos.csv`: Power & Zucco (2012), tabela 4, ondas de 1990 a 2009. **Falta a série de 1990 a 2021 do Atlas do Estado Brasileiro (Ipea)** | — |
+| Ideologia | Zucco & Power (2023), ondas do BLS de 1990 a 2021, via Atlas do Estado Brasileiro (Ipea), `dados_brutos/atlas_ipea_ideologia_partidos.xlsx`. A série foi convertida para a escala de Power & Zucco (2012), usada no artigo (`dados_brutos/ideologia_power_zucco_2012.csv`) | — |
 
 O gabinete exclui GSI, CGU, AGU, Secom e Banco Central (critério de Almeida). A codificação própria de Lula 3 reproduz os gabinetes Lula 3-2 e 3-4 de Almeida (Koppel–Diskin v1 com diferença de ±0,3 ponto). Veja `resultados/validacao_lula3_almeida.csv`.
 
@@ -22,21 +22,26 @@ O gabinete exclui GSI, CGU, AGU, Secom e Banco Central (critério de Almeida). A
 * **Proporcionalidade (`coalescencia`)**: índice de coalescência de Amorim Neto, a medida do artigo. Os ministros não partidários entram como um grupo sem cadeiras.
 * **`prop_kd_v1` / `prop_kd_v2`**: cosseno de Koppel & Diskin, a medida de Almeida. Reproduz exatamente Prop_v1 e Prop_v2 da planilha.
 * **Tamanho**: número de partidos com pelo menos um ministério.
-* **Heterogeneidade**: coeficiente de variação (×100, desvio-padrão amostral) da ideologia dos partidos do gabinete, usando a onda do BLS mais recente anterior ao mês. Com as ondas de 1990 a 2009, reproduz a Tabela 1 de perto: Lula 1 dá 50,3 (artigo: 48,2), Lula 2 dá 42,1 (42,2), Rousseff 1 dá 45,4 (45,8) e FHC fica cerca de 2 pontos acima. Partidos sem estimativa são omitidos (coluna `partidos_sem_ideologia`). **A partir de 2013, o valor só será confiável depois de incluir as ondas de 2013, 2017 e 2021.**
+* **Heterogeneidade**: coeficiente de variação (×100, desvio-padrão amostral) da ideologia dos partidos do gabinete, usando a onda do BLS mais recente anterior ao mês.
+  * **Conversão de escala**: a série do Atlas vai de -1 a 1 e é centrada em zero, onde o coeficiente de variação não faz sentido. Ela é uma transformação linear exata da escala de 2012: nas 72 observações comuns de 1990 a 2009, r = 0,9998 e 2012 ≈ 5,24 + 4,16 × Atlas. Por isso a série foi levada para a escala de 2012 antes do cálculo.
+  * **União Brasil**: como não foi medido no BLS, recebe a média de DEM e PSL em 2021.
+  * **Validação**: com essa regra, a série reproduz de perto a Tabela 1 (Lula 1: 49,4 contra 48,2; Lula 2: 41,2 contra 42,2).
 
 ## Resultados (`resultados/tabela1_estendida.csv`)
 
-| Mandato | Proporc. média | DP | Tamanho médio | DP |
-|---|---|---|---|---|
-| Cardoso 1 | 58,7 | 3,0 | 4,7 | 0,5 |
-| Cardoso 2 | 64,0 | 3,9 | 3,9 | 0,5 |
-| Lula 1 | 56,5 | 2,2 | 7,5 | 0,5 |
-| Lula 2 | 65,6 | 2,8 | 9,2 | 1,0 |
-| Rousseff 1 | 61,9 | 1,7 | 7,4 | 0,9 |
-| Rousseff 2 | 64,6 | 3,8 | 8,7 | 1,2 |
-| Temer | 65,9 | 6,6 | 8,2 | 1,6 |
-| Bolsonaro | 9,7 | 7,5 | 1,3 | 1,1 |
-| Lula 3 | 59,5 | 12,6 | 8,9 | 1,5 |
+| Mandato | Proporc. média | DP | Tamanho médio | DP | Heterog. média | DP |
+|---|---|---|---|---|---|---|
+| Cardoso 1 | 58,7 | 3,0 | 4,7 | 0,5 | 24,2 | 3,7 |
+| Cardoso 2 | 64,0 | 3,9 | 3,9 | 0,5 | 22,1 | 1,7 |
+| Lula 1 | 56,5 | 2,2 | 7,5 | 0,5 | 49,4 | 4,7 |
+| Lula 2 | 65,6 | 2,8 | 9,2 | 1,0 | 41,2 | 1,8 |
+| Rousseff 1 | 61,9 | 1,7 | 7,4 | 0,9 | 42,8 | 3,1 |
+| Rousseff 2 | 64,6 | 3,8 | 8,7 | 1,2 | 37,3 | 4,0 |
+| Temer | 65,9 | 6,6 | 8,2 | 1,6 | 14,1 | 6,5 |
+| Bolsonaro | 9,7 | 7,5 | 1,3 | 1,1 | 1,8* | 0,3 |
+| Lula 3 | 59,5 | 12,6 | 8,9 | 1,5 | 53,6 | 1,5 |
+
+\* Média só dos meses com dois ou mais partidos no gabinete (a partir de abr/2021, PL, PP e Republicanos).
 
 Lula 3 por subperíodo (`resultados/lula3_subperiodos.csv`):
 

@@ -11,8 +11,9 @@ Fontes
 * 2023-2026: dados_brutos/lula3_gabinete_2023_2026.csv (codificação ministro a ministro
   seguindo os critérios de Almeida) + cadeiras mensais em exercício na Câmara
   (cadeiras_leg57.py, a partir de dados/leg57).
-* Ideologia partidária (opcional): dados_brutos/ideologia_partidos.csv
-  (colunas partido;ano;ideologia - estimativas de Power & Zucco, BLS).
+* Ideologia partidária: Zucco & Power (2023), série 1990-2021 do Atlas do Estado Brasileiro
+  (dados_brutos/atlas_ipea_ideologia_partidos.xlsx), reescalada para a escala de
+  Power & Zucco (2012) usada no artigo (dados_brutos/ideologia_power_zucco_2012.csv).
 
 Medidas (mês a mês, dia 15)
 ---------------------------
@@ -93,13 +94,30 @@ def koppel_diskin(comp, np_em_grupo=True):
     return 100 * (s * m).sum() / np.sqrt((s ** 2).sum() * (m ** 2).sum())
 
 
+ATLAS_PARA_SIGLA = {"PCB/PPS/CID": "PPS", "PFL/DEM": "DEM", "PMDB/MDB": "MDB", "PL/PR/PL": "PL",
+                    "PDS/PPR/PPB/PP": "PP", "PRB/REP": "REP", "SD": "SD"}
+
+
 def carregar_ideologia():
-    f = BRUTOS / "ideologia_partidos.csv"
-    if not f.exists():
-        return None
-    ide = pd.read_csv(f, sep=";")
-    ide["partido"] = ide["partido"].replace(NORM)
-    return ide
+    """Série de Zucco & Power (2023), via Atlas do Estado Brasileiro (Ipea), 1990-2021.
+
+    Essa série está numa escala de -1 a 1, centrada em zero, onde o coeficiente de variação
+    não faz sentido. Como ela é uma transformação linear da escala de Power & Zucco (2012),
+    usada no artigo (r = 0,9998 nas 72 observações comuns de 1990 a 2009), a série é levada
+    para a escala de 2012 pela regressão estimada nessas observações.
+    União Brasil (fusão DEM + PSL, 2022) recebe a média de DEM e PSL na onda de 2021.
+    """
+    at = pd.read_excel(BRUTOS / "atlas_ipea_ideologia_partidos.xlsx", sheet_name="dados")
+    at["partido"] = at.partido.replace(ATLAS_PARA_SIGLA)
+    pz = pd.read_csv(BRUTOS / "ideologia_power_zucco_2012.csv", sep=";")
+    m = at.merge(pz, on=["partido", "ano"], suffixes=("_atlas", "_pz"))
+    b, a = np.polyfit(m.ideologia_atlas, m.ideologia_pz, 1)
+    at["ideologia"] = a + b * at.ideologia
+    w21 = at[at.ano == 2021].set_index("partido").ideologia
+    at = pd.concat([at, pd.DataFrame([{"ano": 2021, "partido": "UNIAO",
+                                       "ideologia": (w21["DEM"] + w21["PSL"]) / 2}])])
+    at["partido"] = at["partido"].replace(NORM)
+    return at[["ano", "partido", "ideologia"]]
 
 
 def heterogeneidade(partidos, ano, ide):
