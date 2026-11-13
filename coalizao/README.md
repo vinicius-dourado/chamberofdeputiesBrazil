@@ -19,8 +19,11 @@ O gabinete exclui GSI, CGU, AGU, Secom e Banco Central (critério de Almeida). A
 
 ## Medidas (painel mensal, dia 15)
 
-* **Proporcionalidade (`coalescencia`)**: índice de coalescência de Amorim Neto, a medida do artigo. Os ministros não partidários entram como um grupo sem cadeiras.
-* **`prop_kd_v1` / `prop_kd_v2`**: cosseno de Koppel & Diskin, a medida de Almeida. Reproduz exatamente Prop_v1 e Prop_v2 da planilha.
+* **Proporcionalidade (`coalescencia`)**: índice de coalescência de Amorim Neto (2006, p. 426), como no artigo. A fórmula é CABINET = 1 − ½ Σ|Sᵢ − Mᵢ| (×100), em que Mᵢ é a fração dos ministérios com o partido i e Sᵢ é a fração de cadeiras do partido i no total das cadeiras dos partidos do gabinete.
+  * **Não partidários**: entram como um grupo com S = 0. Cada ponto percentual de ministros sem partido reduz o índice em 1 ponto.
+  * **Por que essa leitura**: é a forma como Amorim Neto aplica o índice. Na Tabela 1 dele (2006), a coalescência média de cada um dos 13 países é menor ou igual à fração de ministros partidários (Brasil: 0,50 e 53,1%; Equador: 0,27 e 34,7%; Venezuela: 0,56 e 56,3%). Esse limite só existe quando os não partidários entram na soma.
+  * **Leitura literal**: somar só os partidos dá valores bem mais altos (FHC 1: 77,8; Lula 1: 64,9). Ela está em `coalescencia_sem_np`, apenas como sensibilidade.
+* **Medidas de conferência (fora da Tabela 1)**: `prop_kd_v1` e `prop_kd_v2`, o cosseno de Koppel & Diskin usado por Almeida, que reproduz exatamente Prop_v1 e Prop_v2 da planilha. Estão em `resultados/proporcionalidade_medidas_alternativas.csv`.
 * **Tamanho**: número de partidos com pelo menos um ministério.
 * **Heterogeneidade**: coeficiente de variação (×100, desvio-padrão amostral) da ideologia dos partidos do gabinete, usando a onda do BLS mais recente anterior ao mês.
   * **Conversão de escala**: a série do Atlas vai de -1 a 1 e é centrada em zero, onde o coeficiente de variação não faz sentido. Ela é uma transformação linear exata da escala de 2012: nas 72 observações comuns de 1990 a 2009, r = 0,9998 e 2012 ≈ 5,24 + 4,16 × Atlas. Por isso a série foi levada para a escala de 2012 antes do cálculo.

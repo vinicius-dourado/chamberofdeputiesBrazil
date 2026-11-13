@@ -17,10 +17,14 @@ Fontes
 
 Medidas (mês a mês, dia 15)
 ---------------------------
-* coalescencia: índice de Amorim Neto (2006), medida usada no artigo:
-  100 * (1 - 1/2 * sum_i |S_i - M_i|), S_i = fração de cadeiras do partido i entre os
-  partidos do gabinete, M_i = fração de ministérios; os não partidários entram como um
-  grupo com 0 cadeiras.
+* coalescencia (PROPORCIONALIDADE DA TABELA 1): índice de coalescência de Amorim Neto
+  (2006, p. 426), CABINET = 1 - 1/2 * sum_i |S_i - M_i|, x100. M_i = % dos ministérios
+  com o partido i; S_i = % de cadeiras do partido i no total de cadeiras dos partidos do
+  gabinete. Os ministros não partidários entram como um grupo com S = 0. Isso reproduz o
+  modo como Amorim Neto aplica o índice: na Tabela 1 dele, a coalescência média de todos
+  os 13 países é <= a % de ministros partidários (Brasil 0,50 vs 53,1%; Equador 0,27
+  vs 34,7%), um limite que só vale com o termo dos não partidários.
+  coalescencia_sem_np: leitura literal, somando só os partidos (sensibilidade).
 * prop_kd_v1 / prop_kd_v2: cosseno de Koppel & Diskin (2009), medida de Almeida (np em
   grupo / individualmente). Reproduz exatamente Prop_v1 e Prop_v2 da planilha.
 * tamanho: nº de partidos com ao menos um ministério.
@@ -76,6 +80,15 @@ def coalescencia(comp):
     if S == 0:
         return 0.0  # gabinete sem partidos
     return 100 * (1 - 0.5 * sum(abs(s / S - m / M) for _, m, s in comp))
+
+
+
+def _coal_literal(comp):
+    M = sum(m for _, m, _ in comp)
+    S = sum(s for _, _, s in comp)
+    if S == 0:
+        return 0.0
+    return 100 * (1 - 0.5 * sum(abs(s / S - m / M) for p, m, s in comp if p != "np"))
 
 
 def koppel_diskin(comp, np_em_grupo=True):
@@ -191,6 +204,7 @@ def painel_mensal():
                 "ministros_np": sum(m for p, m, _ in comp if p == "np"),
                 "tamanho": len(partidos),
                 "coalescencia": coalescencia(comp),
+                "coalescencia_sem_np": _coal_literal(comp),
                 "prop_kd_v1": koppel_diskin(comp, True),
                 "prop_kd_v2": koppel_diskin(comp, False),
                 "heterogeneidade": het,
@@ -210,7 +224,6 @@ def tabela_por_mandato(painel, versao="base"):
         prop_media=("coalescencia", "mean"), prop_dp=("coalescencia", "std"),
         tam_media=("tamanho", "mean"), tam_dp=("tamanho", "std"),
         het_media=("heterogeneidade", "mean"), het_dp=("heterogeneidade", "std"),
-        kd_v1_media=("prop_kd_v1", "mean"), kd_v1_dp=("prop_kd_v1", "std"),
     ).reindex(ordem).round(1).reset_index()
     return t
 
@@ -237,6 +250,10 @@ if __name__ == "__main__":
     painel.to_csv(SAIDA / "painel_mensal_1995_2026.csv", sep=";", index=False, float_format="%.2f")
     tab = tabela_por_mandato(painel)
     tab.to_csv(SAIDA / "tabela1_estendida.csv", sep=";", index=False)
+    extra = painel[painel.versao == "base"].groupby("mandato")[
+        ["coalescencia_sem_np", "prop_kd_v1", "prop_kd_v2"]].agg(["mean", "std"]).round(1)
+    extra.columns = [f"{a}_{'media' if b == 'mean' else 'dp'}" for a, b in extra.columns]
+    extra.reindex([m for m, _, _ in MANDATOS]).to_csv(SAIDA / "proporcionalidade_medidas_alternativas.csv", sep=";")
     alt = tabela_por_mandato(painel, "alt")
     alt[alt.mandato == "Lula 3"].to_csv(SAIDA / "lula3_sensibilidade.csv", sep=";", index=False)
     l3 = painel[(painel.mandato == "Lula 3") & (painel.versao == "base")]
