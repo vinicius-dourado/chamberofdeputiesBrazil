@@ -1397,7 +1397,6 @@ def figuras(P, m, pred, tvot, se, dcom, sc_svd):
     ax.axhline(0, color=GRADE, lw=1), ax.axvline(0, color=GRADE, lw=1)
     ax.set_xlabel("Dimensão 1: oposição (−)  ×  governo (+)")
     ax.set_ylabel("Dimensão 2: centrão (−)  ×  polos ideológicos (+)")
-    ax.set_title("Pontos ideais na 57ª Legislatura (um ponto por período de filiação, ≥ 50 votos)")
     legenda_blocos(ax, loc="lower left", fontsize=8.5)
     fig.savefig(FIGS / "fig1_mapa_pontos_ideais.png"), plt.close(fig)
 
@@ -1477,7 +1476,6 @@ def figuras(P, m, pred, tvot, se, dcom, sc_svd):
     ax.axhline(0, color=GRADE, lw=1), ax.axvline(0, color=GRADE, lw=1)
     ax.set_xlabel("Carga na dimensão 1 (b1): > 0 = governistas votam Sim")
     ax.set_ylabel("Carga na dimensão 2 (b2): > 0 = polos (PSOL, NOVO) votam Sim")
-    ax.set_title("Cargas das 1.470 votações nas duas dimensões".replace("1.470", f"{P.n_j:,}".replace(",", ".")))
     ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.13), ncol=1, fontsize=8.5)
     fig.savefig(FIGS / "fig4_cargas_votacoes.png"), plt.close(fig)
 
@@ -1533,7 +1531,6 @@ def figuras(P, m, pred, tvot, se, dcom, sc_svd):
                     va="center", ha="left", fontsize=8.5)
     ax.axvline(0, color=TINTA2, lw=1), ax.grid(axis="y", visible=False)
     ax.set_xlabel("Ganho de acerto fora da amostra de 1D para 2D (pontos percentuais)")
-    ax.set_title("Onde a segunda dimensão ajuda a prever o voto")
     legenda_blocos(ax, loc="lower right", fontsize=8.5)
     fig.savefig(FIGS / "fig8_ganho_por_partido.png"), plt.close(fig)
 
