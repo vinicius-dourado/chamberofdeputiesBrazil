@@ -4,7 +4,8 @@ Extensão da Tabela 1 de Bertholini & Pereira, *Pagando o preço de governar* (R
 
 ```bash
 pip install pandas openpyxl pyarrow
-python coalizao/indicadores_coalizao.py
+python coalizao/indicadores_coalizao.py   # painel mensal e médias por mandato
+python coalizao/gabinetes.py              # indicadores por gabinete (subgabinetes)
 ```
 
 ## Fontes
@@ -32,6 +33,9 @@ python coalizao/indicadores_coalizao.py
 
 | Mandato | Proporc. | DP | Tamanho | DP | Heterog. | DP | Proporc. em Bertholini 2017 |
 |---|---|---|---|---|---|---|---|
+| Sarney | 90,7 | 4,3 | 2,0 | 0,0 | 35,0† | 0,0 | — |
+| Collor | 60,5 | 5,4 | 2,4 | 1,4 | 6,2 | 1,0 | — |
+| Itamar | 69,9 | 5,5 | 4,9 | 0,8 | 34,2 | 9,8 | — |
 | Cardoso 1 | 77,8 | 2,8 | 4,7 | 0,5 | 24,2 | 3,7 | 71,4 |
 | Cardoso 2 | 81,8 | 2,0 | 3,9 | 0,5 | 22,1 | 1,7 | 73,8 |
 | Lula 1 | 64,9 | 2,2 | 7,5 | 0,5 | 49,4 | 4,7 | 65,5 |
@@ -44,6 +48,29 @@ python coalizao/indicadores_coalizao.py
 
 \* Média entre meses sem nenhum partido no gabinete (índice = 0 por convenção) e meses com um a três partidos.
 \*\* Média só dos meses com dois ou mais partidos.
+† Até 1989 usa a onda de 1990 do BLS, a primeira disponível.
+
+## Por gabinete (`resultados/gabinetes_1985_2026.csv`)
+
+A unidade básica é o gabinete (subgabinete), como na planilha de Almeida:
+* **Regra de início:** um novo gabinete começa com A (inauguração de presidente), B (mudança no conjunto de partidos) ou C (mudança relevante de ministro), conforme a aba leiame e a NT 53/2021.
+* **Cadeiras:** são as da data de início de cada gabinete.
+* **Médias por mandato:** a média por mandato da tabela acima é a média dos gabinetes ponderada pela duração de cada um, porque o painel mensal pega o gabinete em vigor em cada mês.
+* **Sarney-1 a Lula 3-4:** composição e cadeiras de Almeida, sem alteração.
+* **Lula 3-5 a Lula 3-9:** identificados aqui com os mesmos critérios. Os eventos C são classificação nossa e devem ser revisados.
+
+| Gabinete | Evento | Início | Motivo |
+|---|---|---|---|
+| Lula 3-5 | C | 27/09/2024 | Macaé Evaristo (PT) substitui Silvio Almeida (sem partido) nos Direitos Humanos |
+| Lula 3-6 | C | 10/03/2025 | Padilha (PT) substitui Nísia Trindade (sem partido) na Saúde; Gleisi assume a SRI |
+| Lula 3-7 | B | 02/09/2025 | União Brasil e PP deixam o governo |
+| Lula 3-8 | C | 21/10/2025 | Boulos (PSOL) substitui Márcio Macêdo (PT) na Secretaria-Geral |
+| Lula 3-9 | B | 01/04/2026 | desincompatibilizações: MDB e Rede ficam sem ministros |
+
+O arquivo traz, para cada gabinete:
+* início, fim, duração, número de cargos, ministros sem partido e composição;
+* tamanho, proporcionalidade (as duas versões da coalescência) e heterogeneidade;
+* Prop_v1 e Prop_v2 (Koppel–Diskin). Até Lula 3-4, esses valores coincidem com os da planilha de Almeida.
 
 Lula 3 por subperíodo (`resultados/lula3_subperiodos.csv`):
 

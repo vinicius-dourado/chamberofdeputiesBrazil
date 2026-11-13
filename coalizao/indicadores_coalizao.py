@@ -55,6 +55,9 @@ NORM = {"PMDB": "MDB", "PFL": "DEM", "PPB": "PP", "PR": "PL", "PRB": "REP",
         "REPUBLICANOS": "REP", "União": "UNIAO", "UNIÃO": "UNIAO", "Rede": "REDE"}
 
 MANDATOS = [  # (rótulo, início, fim exclusivo)
+    ("Sarney", "1985-03-15", "1990-03-15"),
+    ("Collor", "1990-03-15", "1992-10-02"),
+    ("Itamar", "1992-10-02", "1995-01-01"),
     ("Cardoso 1", "1995-01-01", "1999-01-01"),
     ("Cardoso 2", "1999-01-01", "2003-01-01"),
     ("Lula 1", "2003-01-01", "2007-01-01"),
@@ -142,6 +145,14 @@ def carregar_ideologia():
     return at[["ano", "partido", "ideologia"]]
 
 
+def partidos_ideologia(partidos, t):
+    """Antes de 1995, 'PP' na planilha de Almeida é o PP de 1993-95 ('PPold' na série de
+    ideologia) e PDS/PPR são antecessores do PP atual."""
+    if t >= pd.Timestamp("1995-01-01"):
+        return partidos
+    return ["PPold" if p == "PP" else {"PDS": "PP", "PPR": "PP"}.get(p, p) for p in partidos]
+
+
 def heterogeneidade(partidos, ano, ide):
     """CV (x100, desvio-padrão amostral) da ideologia dos partidos do gabinete.
 
@@ -195,7 +206,7 @@ def painel_mensal():
     cad = cad.groupby(["t", "partido"], as_index=False).cadeiras.sum()
 
     linhas = []
-    for t in pd.date_range("1995-01-01", FIM, freq="MS") + pd.Timedelta(days=14):
+    for t in pd.date_range("1985-04-01", FIM, freq="MS") + pd.Timedelta(days=14):
         mand = next(n for n, i, f in MANDATOS if pd.Timestamp(i) <= t < pd.Timestamp(f))
         versoes = {}
         if t < pd.Timestamp("2023-01-01"):
@@ -206,7 +217,7 @@ def painel_mensal():
             versoes["alt"] = (comp_lula3(t, gab, cad, "partido_alt", saida_uniao_pp=False)[0], "Lula 3 (alternativa)")
         for v, (comp, nome) in versoes.items():
             partidos = [p for p, _, _ in comp if p != "np"]
-            het, sem_ide = heterogeneidade(partidos, t.year, ide)
+            het, sem_ide = heterogeneidade(partidos_ideologia(partidos, t), t.year, ide)
             linhas.append({
                 "data": t.date(), "mandato": mand, "versao": v, "gabinete": nome,
                 "n_ministerios": sum(m for _, m, _ in comp),
