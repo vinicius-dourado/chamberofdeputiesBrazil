@@ -1,10 +1,12 @@
-"""Proporcionalidade "entregue": coalescência ponderada pelos votos efetivamente entregues.
+"""Proporcionalidade por votos POTENCIAIS x votos EFETIVOS.
 
 A coalescência de Amorim Neto (indicadores_coalizao.coalescencia) compara a fração de
-ministérios de cada partido (M_i) com a sua fração de CADEIRAS na coalizão (S_i), isto é,
-com o seu POTENCIAL de votos (lei de Gamson). Aqui S_i passa a ser o peso ENTREGUE:
+ministérios de cada partido (M_i) com a sua fração de cadeiras na coalizão (S_i), isto é,
+com os seus VOTOS POTENCIAIS (lei de Gamson: cada deputado aliado = um voto do governo).
+Aqui S_i passa a ser a fração de VOTOS EFETIVOS, os votos que o partido de fato deu ao governo:
 
-    S_i^e = cadeiras_i x governismo_i / soma_j(cadeiras_j x governismo_j)   (j no gabinete)
+    votos efetivos_i = cadeiras_i x governismo_i
+    S_i^e = votos efetivos_i / soma_j(votos efetivos_j)   (j no gabinete)
 
 e M_i fica igual (mesmos gabinetes e mesmos não partidários da versão base).
 
@@ -37,8 +39,8 @@ existem (python baixar_legislatura.py --legislatura 55 / 56); senão o script as
 
 Saídas (resultados/):
   governismo_partidos.csv                       partido x mês (taxas, presença, entrega)
-  proporcionalidade_entregue_mensal.csv         painel mensal: cadeiras x entregue
-  proporcionalidade_entregue_gabinetes.csv      por gabinete: cadeiras x entregue
+  proporcionalidade_entregue_mensal.csv         painel mensal: potencial x efetivo
+  proporcionalidade_entregue_gabinetes.csv      por gabinete: potencial x efetivo
   proporcionalidade_entregue_partidos.csv       por gabinete x partido: pesos e retorno
   proporcionalidade_entregue_resumo.csv         médias, DP e diferença por (sub)período
 
@@ -192,10 +194,10 @@ def pesos_partidos(comp, comp_e):
     for p, m, s in part:
         s_pot, s_ent = s / S if S else np.nan, se[p] / Se if Se else np.nan
         linhas.append({"partido": p, "ministros": m, "cadeiras": s, "M_total": m / M, "M_partidario": m / Mp,
-                       "S_potencial": s_pot, "S_entregue": s_ent,
+                       "S_potencial": s_pot, "S_efetivo": s_ent,
                        "dif_S_pp": 100 * (s_ent - s_pot),
                        "retorno_potencial": (m / Mp) / s_pot if s_pot else np.nan,
-                       "retorno_entregue": (m / Mp) / s_ent if s_ent else np.nan})
+                       "retorno_efetivo": (m / Mp) / s_ent if s_ent else np.nan})
     return linhas
 
 
@@ -253,22 +255,22 @@ def main():
                      "gabinete": "Lula 3" if mand == "Lula 3" else alm[alm.inicio <= t].iloc[-1].gabinete,
                      "tamanho": sum(p != "np" for p, _, _ in comp),
                      "ministros_np": sum(m for p, m, _ in comp if p == "np"),
-                     "prop_cadeiras": ic.coalescencia(comp), "prop_entregue": ic.coalescencia(ce),
-                     "prop_entregue_presenca": ic.coalescencia(cp),
+                     "prop_potencial": ic.coalescencia(comp), "prop_efetivo": ic.coalescencia(ce),
+                     "prop_efetivo_presenca": ic.coalescencia(cp),
                      "governismo_coalizao": sum(s for p, _, s in ce if p != "np") / max(1, sum(s for p, _, s in comp if p != "np")),
-                     "composicao_cadeiras": fmt(comp), "composicao_entregue": fmt(ce)})
+                     "composicao_potencial": fmt(comp), "composicao_efetiva": fmt(ce)})
     mens = pd.DataFrame(mens)
-    mens["dif"] = mens.prop_entregue - mens.prop_cadeiras
-    mens["dif_presenca"] = mens.prop_entregue_presenca - mens.prop_cadeiras
+    mens["dif"] = mens.prop_efetivo - mens.prop_potencial
+    mens["dif_presenca"] = mens.prop_efetivo_presenca - mens.prop_potencial
     mens.to_csv(ic.SAIDA / "proporcionalidade_entregue_mensal.csv", sep=";", index=False, float_format="%.2f")
 
     # ------------------------------------------------------------------ resumo
     def resumo(df, rotulo):
         return {"periodo": rotulo, "meses": len(df),
-                "cadeiras_media": df.prop_cadeiras.mean(), "cadeiras_dp": df.prop_cadeiras.std(),
-                "entregue_media": df.prop_entregue.mean(), "entregue_dp": df.prop_entregue.std(),
-                "entregue_presenca_media": df.prop_entregue_presenca.mean(),
-                "entregue_presenca_dp": df.prop_entregue_presenca.std(),
+                "potencial_media": df.prop_potencial.mean(), "potencial_dp": df.prop_potencial.std(),
+                "efetivo_media": df.prop_efetivo.mean(), "efetivo_dp": df.prop_efetivo.std(),
+                "efetivo_presenca_media": df.prop_efetivo_presenca.mean(),
+                "efetivo_presenca_dp": df.prop_efetivo_presenca.std(),
                 "dif_media": df.dif.mean(), "dif_presenca_media": df.dif_presenca.mean(),
                 "governismo_coalizao": df.governismo_coalizao.mean()}
     res = [resumo(mens[mens.mandato == m], m) for m, _, _ in ic.MANDATOS if m in mand_cobertos]
@@ -297,13 +299,13 @@ def main():
         gabs.append({"gabinete": r.gabinete, "mandato": r.mandato, "evento": r.evento, "inicio": r.inicio.date(),
                      "fim": r.fim.date(), "meses": r.meses, "n_votacoes": n_vot, "tamanho": r.tamanho,
                      "ministros_np": r.ministros_np,
-                     "prop_cadeiras": round(ic.coalescencia(comp), 1),
-                     "prop_entregue": round(ic.coalescencia(ce), 1),
-                     "prop_entregue_presenca": round(ic.coalescencia(cp), 1),
-                     "prop_entregue_disputadas": round(ic.coalescencia(cd), 1),
+                     "prop_potencial": round(ic.coalescencia(comp), 1),
+                     "prop_efetivo": round(ic.coalescencia(ce), 1),
+                     "prop_efetivo_presenca": round(ic.coalescencia(cp), 1),
+                     "prop_efetivo_disputadas": round(ic.coalescencia(cd), 1),
                      "dif": round(ic.coalescencia(ce) - ic.coalescencia(comp), 1),
                      "governismo_coalizao": round(sum(s for p, _, s in ce if p != "np") / max(1, sum(s for p, _, s in comp if p != "np")), 3),
-                     "composicao_cadeiras": fmt(comp), "composicao_entregue": fmt(ce)})
+                     "composicao_potencial": fmt(comp), "composicao_efetiva": fmt(ce)})
         for l in pesos_partidos(comp, ce):
             l.update(gabinete=r.gabinete, mandato=r.mandato, meses=r.meses,
                      governismo=gp.taxa.get(l["partido"], np.nan),
@@ -313,19 +315,19 @@ def main():
     gabs = pd.DataFrame(gabs)
     gabs.to_csv(ic.SAIDA / "proporcionalidade_entregue_gabinetes.csv", sep=";", index=False)
     parts = pd.DataFrame(parts)[["gabinete", "mandato", "meses", "partido", "ministros", "cadeiras", "governismo",
-                                 "governismo_disputadas", "presenca", "M_total", "M_partidario", "S_potencial", "S_entregue", "dif_S_pp",
-                                 "retorno_potencial", "retorno_entregue"]]
+                                 "governismo_disputadas", "presenca", "M_total", "M_partidario", "S_potencial", "S_efetivo", "dif_S_pp",
+                                 "retorno_potencial", "retorno_efetivo"]]
     parts.to_csv(ic.SAIDA / "proporcionalidade_entregue_partidos.csv", sep=";", index=False, float_format="%.4f")
 
     # ---------------------------------------------------------------- impressão
     pd.set_option("display.width", 220)
-    print("\nPor gabinete:\n", gabs.drop(columns=["composicao_cadeiras", "composicao_entregue", "evento"]).to_string(index=False))
+    print("\nPor gabinete:\n", gabs.drop(columns=["composicao_potencial", "composicao_efetiva", "evento"]).to_string(index=False))
     print("\nResumo:\n", res.to_string(index=False))
     for mand in sorted(mand_cobertos, key=lambda m: MANDATO[m][0]):
         p = parts[parts.mandato == mand]
         w = p.assign(w=p.meses).groupby("partido").apply(
             lambda x: pd.Series({c: np.average(x[c], weights=x.w) for c in
-                                 ["governismo", "S_potencial", "S_entregue", "dif_S_pp", "retorno_potencial", "retorno_entregue"]}
+                                 ["governismo", "S_potencial", "S_efetivo", "dif_S_pp", "retorno_potencial", "retorno_efetivo"]}
                                 | {"meses": x.w.sum()}), include_groups=False)
         print(f"\n{mand} - partidos (média ponderada pela duração dos gabinetes em que tiveram ministério):\n",
               w.sort_values("dif_S_pp").round(3).to_string())

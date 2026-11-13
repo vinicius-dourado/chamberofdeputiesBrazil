@@ -1,4 +1,4 @@
-periodo;meses;cadeiras_media;cadeiras_dp;entregue_media;entregue_dp;entregue_presenca_media;entregue_presenca_dp;dif_media;dif_presenca_media;governismo_coalizao
+periodo;meses;potencial_media;potencial_dp;efetivo_media;efetivo_dp;efetivo_presenca_media;efetivo_presenca_dp;dif_media;dif_presenca_media;governismo_coalizao
 Rousseff 2;16;75.57;1.0;79.13;2.11;80.38;2.43;3.56;4.82;0.79
 Temer;32;77.56;2.28;78.16;2.35;79.09;2.47;0.6;1.53;0.93
 Bolsonaro;48;39.21;26.77;39.21;26.77;39.21;26.77;0.0;0.0;0.65

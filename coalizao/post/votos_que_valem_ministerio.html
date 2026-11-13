@@ -7,8 +7,8 @@
 /* Layout: coluna única de leitura (~680px) estilo Medium; gráficos sangram até 860px; placar do plenário como fio condutor visual */
 :root{
   --bg:#fbfbf9; --paper:#ffffff; --ink:#16201c; --muted:#5b6661; --rule:#dfe3e0; --soft:#eef2ef;
-  --seat:#8a948f;      /* peso potencial (cadeiras) */
-  --vote:#0f7a55;      /* peso entregue (votos) */
+  --seat:#8a948f;      /* votos potenciais (cadeiras) */
+  --vote:#0f7a55;      /* votos efetivos */
   --vote-soft:#d7ece3;
   --warn:#b4581f;
   --display:"Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
@@ -98,7 +98,7 @@ a{color:var(--vote)}
 <div class="col">
   <div class="kicker">Ciência política, sem jargão</div>
   <h1>Votos que valem ministério</h1>
-  <p class="dek">Contar deputados para saber quanto cada partido "merece" no governo é o método clássico. Contamos, em vez disso, os votos que cada partido de fato entregou a Lula entre 2023 e 2026. O quadro muda.</p>
+  <p class="dek">O método clássico mede quanto cada partido "merece" no governo pelos seus votos potenciais, isto é, pelo número de deputados. Refizemos a conta com os votos efetivos, os que cada partido de fato deu a Lula entre 2023 e 2026. O quadro muda.</p>
   <div class="byline"><div class="avatar" aria-hidden="true">PN</div><div><strong>Plenário em Números</strong>Novembro de 2026 · 8 min de leitura · dados da Câmara dos Deputados</div></div>
 
   <p style="margin-top:32px">Todo presidente brasileiro governa com uma coalizão. Ele distribui ministérios a partidos e, em troca, espera votos no Congresso. A pergunta que cientistas políticos fazem há décadas é se essa troca é <strong>justa</strong>: cada partido recebe uma fatia do governo do tamanho da força que traz?</p>
@@ -112,45 +112,54 @@ a{color:var(--vote)}
 
 <div class="col">
   <div class="example" role="img" aria-label="União Brasil: 59 deputados, cerca de 37 votos com o governo por votação. PSB: 15 deputados, cerca de 14 votos.">
-    <div><h4>União Brasil</h4><div class="n">59 deputados · apoio de 63%</div><div class="dots" id="dots-uniao"></div><div class="tot"><b>≈37</b> votos entregues por votação</div></div>
-    <div><h4>PSB</h4><div class="n">15 deputados · apoio de 91%</div><div class="dots" id="dots-psb"></div><div class="tot"><b>≈14</b> votos entregues por votação</div></div>
+    <div><h4>União Brasil</h4><div class="n">59 votos potenciais · apoio de 63%</div><div class="dots" id="dots-uniao"></div><div class="tot"><b>≈37</b> votos efetivos por votação</div></div>
+    <div><h4>PSB</h4><div class="n">15 votos potenciais · apoio de 91%</div><div class="dots" id="dots-psb"></div><div class="tot"><b>≈14</b> votos efetivos por votação</div></div>
   </div>
 </div>
 
 <div class="col">
-  <p>No papel, o União Brasil vale quatro PSBs. No plenário, entrega um pouco mais de dois e meio. Por isso refizemos a conta com uma troca só: no lugar das <span class="seat">cadeiras</span> de cada partido, usamos os <span class="vote">votos que ele efetivamente deu ao governo</span>. Os ministérios ficam exatamente os mesmos.</p>
+  <p>No papel, o União Brasil vale quatro PSBs. No plenário, entrega um pouco mais de dois e meio. Daí as duas formas de medir a força de um partido:</p>
 
-  <div class="formula">peso entregue = deputados × taxa de apoio ao governo</div>
+  <div class="box" style="margin-top:4px">
+    <ul>
+      <li><span class="seat">Votos potenciais</span>: o número de deputados do partido. É a conta clássica, que supõe que todo deputado aliado vota com o governo.</li>
+      <li><span class="vote">Votos efetivos</span>: os votos que o partido de fato deu ao governo, isto é, os deputados multiplicados pela taxa de apoio.</li>
+    </ul>
+  </div>
+
+  <div class="formula">votos efetivos = votos potenciais (deputados) × taxa de apoio ao governo</div>
+
+  <p>Refizemos a conta com uma troca só: no lugar dos votos potenciais, usamos os votos efetivos. Os ministérios ficam exatamente os mesmos.</p>
 
   <p>A taxa de apoio vem de 874 votações nominais do plenário em que o líder do governo pediu "Sim" ou "Não", de março de 2023 a outubro de 2026. Obstruir ou se abster conta como não apoiar. Faltar à votação fica fora da conta principal.</p>
 
   <div class="score">
-    <div><div class="v" style="color:var(--seat)">75,1</div><div class="k">proporcionalidade medida por cadeiras</div></div>
-    <div><div class="v" style="color:var(--vote)">78,3</div><div class="k">proporcionalidade medida por votos entregues</div></div>
+    <div><div class="v" style="color:var(--seat)">75,1</div><div class="k">proporcionalidade por votos potenciais</div></div>
+    <div><div class="v" style="color:var(--vote)">78,3</div><div class="k">proporcionalidade por votos efetivos</div></div>
     <div><div class="v">+6,5</div><div class="k">maior diferença em um gabinete (meados de 2024 e de 2025)</div></div>
   </div>
 
-  <h2>Pelo critério dos votos, o governo é mais justo do que parece</h2>
-  <p>Mês a mês, a linha verde fica sempre acima da cinza. Medida pelos votos que recebe, a distribuição de ministérios de Lula é mais proporcional do que a medida pelas cadeiras sugere.</p>
+  <h2>Pelos votos efetivos, o governo é mais justo do que parece</h2>
+  <p>Mês a mês, a linha verde fica sempre acima da cinza. Medida pelos votos efetivos, a distribuição de ministérios de Lula é mais proporcional do que a medida pelos votos potenciais sugere.</p>
 </div>
 
 <div class="wide">
-  <div class="legend"><span><i style="background:var(--seat)"></i>por cadeiras (potencial)</span><span><i style="background:var(--vote)"></i>por votos entregues</span></div>
+  <div class="legend"><span><i style="background:var(--seat)"></i>por votos potenciais</span><span><i style="background:var(--vote)"></i>por votos efetivos</span></div>
   <figure style="margin-top:0">
-    <svg class="chart" id="linechart" viewBox="0 0 860 340" role="img" aria-label="Proporcionalidade mensal do gabinete Lula 3, por cadeiras e por votos entregues, de janeiro de 2023 a novembro de 2026"></svg>
+    <svg class="chart" id="linechart" viewBox="0 0 860 340" role="img" aria-label="Proporcionalidade mensal do gabinete Lula 3, por votos potenciais e por votos efetivos, de janeiro de 2023 a novembro de 2026"></svg>
     <figcaption>Índice de proporcionalidade (coalescência, 0 a 100) no dia 15 de cada mês. O apoio ao governo é medido numa janela móvel de seis meses. Em abril de 2026, ministros deixaram os cargos para disputar a eleição, e as duas linhas se juntam (explicação mais abaixo).</figcaption>
   </figure>
 </div>
 
 <div class="col">
-  <p>O motivo fica claro quando olhamos partido por partido. O PT tem mais ministérios do que suas cadeiras justificariam: cerca de 40% das pastas partidárias, com 27% das cadeiras da coalizão. Pela régua clássica, isso é desproporção. Mas o PT vota com o governo 98% das vezes. Quando a conta passa a ser feita em votos, o peso do partido sobe para 31%, mais perto do que ele recebe.</p>
+  <p>O motivo fica claro quando olhamos partido por partido. O PT tem mais ministérios do que seus votos potenciais justificariam: cerca de 40% das pastas partidárias, com 27% das cadeiras da coalizão. Pela régua clássica, isso é desproporção. Mas o PT vota com o governo 98% das vezes. Quando a conta passa a ser feita em votos efetivos, o peso do partido sobe para 31%, mais perto do que ele recebe.</p>
   <p>Com o "centrão" do gabinete acontece o contrário. União Brasil, PSD, MDB e PP votaram com o governo entre 68% e 78% das vezes. O peso real deles encolhe e também se aproxima da fatia menor de ministérios que receberam.</p>
 </div>
 
 <div class="wide">
-  <div class="legend"><span><i style="background:var(--seat)"></i>% das cadeiras da coalizão</span><span><i style="background:var(--vote)"></i>% dos votos entregues pela coalizão</span></div>
+  <div class="legend"><span><i style="background:var(--seat)"></i>% dos votos potenciais da coalizão</span><span><i style="background:var(--vote)"></i>% dos votos efetivos da coalizão</span></div>
   <figure style="margin-top:0">
-    <svg class="chart" id="dumbbell" viewBox="0 0 860 360" role="img" aria-label="Peso potencial e peso entregue de cada partido do gabinete"></svg>
+    <svg class="chart" id="dumbbell" viewBox="0 0 860 360" role="img" aria-label="Fatia dos votos potenciais e dos votos efetivos de cada partido do gabinete"></svg>
     <figcaption>Média dos gabinetes de Lula 3 em que cada partido teve ministério, ponderada pela duração. Entre parênteses, a taxa de apoio ao governo nas votações do plenário.</figcaption>
   </figure>
 </div>
@@ -163,10 +172,10 @@ a{color:var(--vote)}
 </div>
 
 <div class="wide">
-  <div class="legend"><span><i style="background:var(--seat)"></i>retorno por cadeira</span><span><i style="background:var(--vote)"></i>retorno por voto entregue</span></div>
+  <div class="legend"><span><i style="background:var(--seat)"></i>retorno por voto potencial</span><span><i style="background:var(--vote)"></i>retorno por voto efetivo</span></div>
   <figure style="margin-top:0">
-    <svg class="chart" id="retorno" viewBox="0 0 860 330" role="img" aria-label="Retorno ministerial por cadeira e por voto entregue de cada partido"></svg>
-    <figcaption>Retorno = fatia dos ministérios ocupados por partidos ÷ fatia do apoio (cadeiras ou votos entregues). A Rede (1 deputado, 1 ministério) fica fora da escala, com retorno de cerca de 10.</figcaption>
+    <svg class="chart" id="retorno" viewBox="0 0 860 330" role="img" aria-label="Retorno ministerial por voto potencial e por voto efetivo de cada partido"></svg>
+    <figcaption>Retorno = fatia dos ministérios ocupados por partidos ÷ fatia do apoio (votos potenciais ou votos efetivos). A Rede (1 deputado, 1 ministério) fica fora da escala, com retorno de cerca de 10.</figcaption>
   </figure>
 </div>
 
@@ -179,7 +188,7 @@ a{color:var(--vote)}
 
 <div class="tablewrap">
   <table>
-    <thead><tr><th>Gabinete</th><th>Período</th><th class="num">Votações</th><th class="num">Por cadeiras</th><th class="num">Por votos</th><th class="num">Diferença</th><th>Apoio médio da base</th></tr></thead>
+    <thead><tr><th>Gabinete</th><th>Período</th><th class="num">Votações</th><th class="num">Votos potenciais</th><th class="num">Votos efetivos</th><th class="num">Diferença</th><th>Apoio médio da base</th></tr></thead>
     <tbody id="gabtable"></tbody>
   </table>
 </div>
@@ -200,11 +209,11 @@ a{color:var(--vote)}
   </div>
 
   <h2>Por que isso importa</h2>
-  <p>Ler a coalizão só pelas cadeiras leva a ver um presidente que favorece o próprio partido e paga pouco aos aliados. Ler pelos votos mostra uma troca mais equilibrada do que parecia. Ministérios acompanham, ao menos em parte, quem de fato aparece no plenário. Em presidencialismo de coalizão, o preço de governar depende do tamanho da bancada e também da disposição dela de votar com o governo.</p>
+  <p>Ler a coalizão só pelos votos potenciais leva a ver um presidente que favorece o próprio partido e paga pouco aos aliados. Ler pelos votos efetivos mostra uma troca mais equilibrada do que parecia. Ministérios acompanham, ao menos em parte, quem de fato aparece no plenário. Em presidencialismo de coalizão, o preço de governar depende do tamanho da bancada e também da disposição dela de votar com o governo.</p>
 
   <footer>
     <p><strong>Como foi feito.</strong> O índice de proporcionalidade é a coalescência de Amorim Neto (2006), no formato de Pereira &amp; Bertholini (2017): 100 × (1 − ½ Σ |fatia de apoio − fatia de ministérios|). A composição dos gabinetes vem de Almeida (Ipea, 2021), estendida até novembro de 2026. As cadeiras e os votos são dados abertos da Câmara dos Deputados. O código e as tabelas estão em <code>coalizao/proporcionalidade_entregue.py</code> e <code>coalizao/resultados/</code>.</p>
-    <p>Valores médios do mandato: por cadeiras, 75,1 (desvio-padrão 5,1); por votos, 78,3 (5,9); por votos contando ausências, 79,4.</p>
+    <p>Valores médios do mandato: por votos potenciais, 75,1 (desvio-padrão 5,1); por votos efetivos, 78,3 (5,9); por votos efetivos contando ausências, 79,4.</p>
   </footer>
 </div>
 </article>
@@ -240,7 +249,7 @@ const S=[["2023-01",79.7,82.0],["2023-02",79.7,82.0],["2023-03",79.7,82.0],["202
   el("circle",{cx:x(38),cy:y(S[38][2]),r:4.5,fill:"var(--vote)"},svg);
 })();
 
-/* halteres: peso potencial x entregue */
+/* halteres: votos potenciais x efetivos */
 const P=[["PT",26.6,30.9,.98],["União",19.5,16.1,.68],["PSD",17.9,16.2,.78],["PP",15.8,14.6,.76],["MDB",15.3,13.8,.76],["PDT",6.4,6.9,.90],["PSB",6.0,6.5,.92],["PSOL",5.2,5.2,.84],["PCdoB",3.3,3.8,.97]];
 (function(){
   const svg=document.getElementById("dumbbell"),W=860,L=140,R=60,T=26,row=36,max=35;
