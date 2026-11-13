@@ -1,0 +1,228 @@
+<title>Quarenta Anos de Coalizões</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: coluna de leitura (~680px) estilo Medium; linha do tempo 1985–2026 como peça central; faixas alternadas marcam os mandatos */
+:root{
+  --bg:#fbfbf9; --paper:#ffffff; --ink:#16201c; --muted:#5b6661; --rule:#dfe3e0; --soft:#eef2ef; --band:#f1f4f2;
+  --seat:#8a948f;  /* cadeiras */
+  --main:#0f7a55;  /* proporcionalidade */
+  --main-soft:#d7ece3;
+  --ideo:#7a4fb5;  /* heterogeneidade */
+  --np:#c9a227;
+  --display:"Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
+  --body:"Source Serif 4", Georgia, "Times New Roman", serif;
+  --mono:"IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111614; --paper:#171d1a; --ink:#e7ece9; --muted:#9aa5a0; --rule:#2b3430; --soft:#1e2622; --band:#161d1a;
+  --seat:#7f8a85; --main:#3fbf8c; --main-soft:#173a2c; --ideo:#b08be6; --np:#d9b44a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111614; --paper:#171d1a; --ink:#e7ece9; --muted:#9aa5a0; --rule:#2b3430; --soft:#1e2622; --band:#161d1a;
+  --seat:#7f8a85; --main:#3fbf8c; --main-soft:#173a2c; --ideo:#b08be6; --np:#d9b44a; color-scheme:dark}
+
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:20px;line-height:1.62;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px;-webkit-font-smoothing:antialiased}
+.col{max-width:680px;margin-inline:auto}
+.wide{max-width:900px;margin-inline:auto}
+header.top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-block:18px;border-bottom:1px solid var(--rule);
+  font-family:var(--display);font-size:15px;color:var(--muted);max-width:900px;margin-inline:auto}
+header.top b{color:var(--ink);font-weight:800}
+.kicker{font-family:var(--mono);font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--main);margin-top:56px}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(36px,6vw,54px);line-height:1.05;letter-spacing:-.025em;margin:14px 0 18px;text-wrap:balance}
+.dek{font-size:23px;line-height:1.45;color:var(--muted);margin:0 0 28px;text-wrap:pretty}
+.byline{display:flex;align-items:center;gap:14px;font-family:var(--display);font-size:15px;color:var(--muted);padding-block:16px;border-block:1px solid var(--rule)}
+.avatar{width:42px;height:42px;border-radius:50%;background:var(--main);display:grid;place-items:center;color:var(--paper);font-weight:800;font-size:16px;flex:none}
+.byline strong{color:var(--ink);display:block;font-weight:700}
+h2{font-family:var(--display);font-weight:700;font-size:30px;line-height:1.2;letter-spacing:-.015em;margin:56px 0 8px;text-wrap:balance}
+h3.era{font-family:var(--display);font-weight:700;font-size:22px;margin:40px 0 4px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+h3.era span{font-family:var(--mono);font-size:13px;font-weight:400;color:var(--muted)}
+p{margin:0 0 22px}
+strong{font-weight:600}
+blockquote.pull{font-family:var(--display);font-weight:500;font-size:28px;line-height:1.3;letter-spacing:-.01em;margin:40px 0;padding-left:22px;border-left:3px solid var(--main);text-wrap:balance}
+figure{margin:36px auto 40px}
+figcaption{font-family:var(--display);font-size:14px;line-height:1.45;color:var(--muted);margin-top:10px;max-width:680px;margin-inline:auto}
+.chart{width:100%;height:auto;display:block;overflow:visible}
+.chart text{font-family:var(--mono);font-size:12px;fill:var(--muted)}
+.chart .lbl{font-family:var(--display);font-size:13px;fill:var(--ink);font-weight:500}
+.chart .pres{font-family:var(--display);font-size:12px;fill:var(--muted);font-weight:500}
+.chart .grid{stroke:var(--rule);stroke-width:1}
+.legend{display:flex;flex-wrap:wrap;gap:18px;font-family:var(--display);font-size:14px;color:var(--muted);margin:0 auto 10px;max-width:900px}
+.legend i{display:inline-block;width:22px;height:3px;border-radius:2px;vertical-align:middle;margin-right:7px}
+.legend i.area{height:11px;width:18px;border-radius:2px;opacity:.55}
+
+.measures{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:28px 0}
+.measures div{background:var(--paper);border:1px solid var(--rule);border-radius:12px;padding:16px 18px;font-size:17px;line-height:1.5}
+.measures b{display:block;font-family:var(--display);font-size:16px;margin-bottom:4px}
+@media (max-width:560px){.measures{grid-template-columns:1fr}}
+
+.tablewrap{overflow-x:auto;margin:28px auto;max-width:900px}
+table{border-collapse:collapse;width:100%;font-family:var(--display);font-size:15px;font-variant-numeric:tabular-nums;min-width:680px}
+th{text-align:left;font-weight:600;color:var(--muted);font-size:13px;letter-spacing:.02em;padding:8px 10px;border-bottom:1.5px solid var(--ink);vertical-align:bottom}
+td{padding:9px 10px;border-bottom:1px solid var(--rule)}
+td.num,th.num{text-align:right}
+td small{color:var(--muted);font-size:12px;display:block}
+.cell{display:flex;align-items:center;justify-content:flex-end;gap:8px}
+.cell i{display:inline-block;height:7px;border-radius:4px}
+
+.box{background:var(--soft);border-radius:14px;padding:22px 24px;margin:30px 0;font-size:18px}
+.box h3{font-family:var(--display);font-size:18px;margin:0 0 8px}
+.box ul{margin:0;padding-left:20px}
+.box li{margin-bottom:8px}
+footer{border-top:1px solid var(--rule);margin-top:56px;padding-top:20px;font-family:var(--display);font-size:14px;color:var(--muted);line-height:1.5}
+footer code{font-family:var(--mono);font-size:13px}
+:focus-visible{outline:2px solid var(--main);outline-offset:2px}
+</style>
+
+<header class="top"><b>Plenário em Números</b><span>Coalizões · 1985–2026</span></header>
+
+<article>
+<div class="col">
+  <div class="kicker">Ciência política, sem jargão</div>
+  <h1>Quarenta anos de coalizões</h1>
+  <p class="dek">De Sarney a Lula 3, todo presidente precisou dividir o governo com outros partidos para aprovar suas propostas no Congresso. A forma de dividir mudou muito de um governo para outro.</p>
+  <div class="byline"><div class="avatar" aria-hidden="true">PN</div><div><strong>Plenário em Números</strong>Novembro de 2026 · 10 min de leitura · dados do Ipea e da Câmara dos Deputados</div></div>
+
+  <p style="margin-top:32px">Em 1988, o cientista político Sérgio Abranches deu nome ao sistema brasileiro: <strong>presidencialismo de coalizão</strong>. O presidente é eleito diretamente, mas o seu partido nunca tem maioria no Congresso. Por isso ele monta uma aliança, oferece ministérios aos partidos aliados e conta com os votos deles para governar.</p>
+  <p>Todos os presidentes desde a redemocratização fizeram isso, mas de jeitos muito diferentes. Para comparar os governos, usamos quatro medidas, calculadas mês a mês de março de 1985 a novembro de 2026.</p>
+
+  <div class="measures">
+    <div><b>Tamanho</b>Quantos partidos têm pelo menos um ministério.</div>
+    <div><b>Cadeiras da coalizão</b>Que parte da Câmara os partidos com ministério ocupam. Acima de 50%, a base tem maioria.</div>
+    <div><b>Proporcionalidade</b>De 0 a 100, o quanto a fatia de ministérios de cada partido acompanha a sua fatia de deputados. É o índice do Ipea. Ministros sem partido baixam o valor.</div>
+    <div><b>Heterogeneidade</b>O quanto os partidos do governo estão distantes entre si na escala esquerda-direita. Quanto maior, mais diversa a aliança.</div>
+  </div>
+
+  <h2>A linha do tempo</h2>
+  <p>O gráfico abaixo mostra duas dessas medidas ao longo de quatro décadas. A área cinza indica quanto da Câmara estava com o governo. A linha verde indica o quanto os ministérios foram divididos de acordo com o peso de cada partido.</p>
+</div>
+
+<div class="wide">
+  <div class="legend"><span><i class="area" style="background:var(--seat)"></i>% da Câmara com a coalizão</span><span><i style="background:var(--main)"></i>proporcionalidade (0 a 100)</span></div>
+  <figure style="margin-top:0">
+    <svg class="chart" id="timeline" viewBox="0 0 900 400" role="img" aria-label="Cadeiras da coalizão e proporcionalidade, mês a mês, de 1985 a 2026, por presidente"></svg>
+    <figcaption>Valores no dia 15 de cada mês. A linha tracejada marca a metade da Câmara. As faixas separam os mandatos. Fonte: Almeida (Ipea, 2021) até junho de 2024; codificação própria com os mesmos critérios depois disso.</figcaption>
+  </figure>
+</div>
+
+<div class="col">
+  <p>Dá para ver de cara que não existe um único jeito de governar. Há governos com bases enormes e muito proporcionais, governos que deixaram os partidos quase fora do ministério e governos cuja base foi encolhendo pelo caminho. Vale olhar cada um deles.</p>
+
+  <h3 class="era">O condomínio PMDB-PFL <span>Sarney, 1985–1990</span></h3>
+  <p>Sarney governou com dois partidos, PMDB e PFL, herdeiros da aliança que elegeu Tancredo Neves. Juntos, tinham perto de dois terços da Câmara. Os ministérios eram divididos quase exatamente na proporção das bancadas: a proporcionalidade média foi de 94, a maior da série.</p>
+
+  <h3 class="era">Governar sem partidos <span>Collor, 1990–1992 · Bolsonaro, 2019–2022</span></h3>
+  <p>Collor e Bolsonaro chegaram ao poder criticando a política tradicional e montaram ministérios com técnicos, militares e nomes sem partido. Com Collor, em média, 79% das pastas eram de ministros sem partido. Com Bolsonaro, 90%. Entre novembro de 2019 e fevereiro de 2021, nenhum partido tinha ministério. Por isso a proporcionalidade dos dois é a mais baixa da série (19 e 8) e a coalizão formal ocupava pequena parte da Câmara.</p>
+  <p>Os dois também seguiram o mesmo caminho na segunda metade do mandato e abriram o governo a partidos de centro e de direita. Collor, em 1992, juntou PDS, PTB, PRN e PL ao PFL. Bolsonaro, a partir de 2021, deu ministérios a Republicanos, PL e PP.</p>
+
+  <h3 class="era">Poucos partidos, base grande <span>Itamar, 1992–1994 · FHC, 1995–2002</span></h3>
+  <p>Fernando Henrique governou com quatro ou cinco partidos (PSDB, PFL, PMDB, PTB e PPB, depois PP) que somavam até 77% da Câmara, a maior base da série. Eram partidos próximos ideologicamente: a heterogeneidade ficou entre 20 e 28. A proporcionalidade foi intermediária (56 e 68), porque o PSDB tinha mais pastas que o seu peso e mais de um terço dos ministérios ficou com nomes sem partido.</p>
+
+  <h3 class="era">Muitos partidos, todos os lados <span>Lula 1 e 2, Dilma 1 e 2, 2003–2016</span></h3>
+  <p>Os governos do PT trouxeram uma mudança: coalizões de sete a dez partidos, da esquerda (PCdoB, PSB) à centro-direita (PP, PTB, PL). A heterogeneidade dobrou em relação a FHC. O número de ministérios também cresceu, de cerca de 22 para 30 a 34. Com mais pastas para distribuir e menos ministros sem partido, esses governos tiveram as divisões mais proporcionais depois de Sarney (77 a 82).</p>
+  <p>No fim do governo Dilma, a base desmontou. Em abril de 2016, às vésperas do afastamento, só quatro partidos tinham ministério, com um quarto da Câmara.</p>
+
+  <h3 class="era">Ampla e alinhada <span>Temer, 2016–2018</span></h3>
+  <p>Temer assumiu com uma coalizão de dez partidos e dois terços da Câmara, mas ideologicamente compacta: a heterogeneidade caiu para 14, menos da metade da dos governos do PT. Ao longo do mandato, com saídas como as de PSDB e PSB, a base encolheu para menos da metade da Câmara.</p>
+
+  <h3 class="era">A aliança mais diversa <span>Lula 3, 2023–2026</span></h3>
+  <p>Lula voltou com a coalizão de maior heterogeneidade média da série (54), que juntava PSOL e União Brasil, e com 34 ministérios, o mesmo número do fim de Dilma 1 e o maior da série. A base chegou a 62% da Câmara, mas caiu para 41% com a saída de União Brasil e PP, em 2025. Em 2026, quando ministros deixaram os cargos para disputar a eleição e foram substituídos por nomes sem partido, a proporcionalidade despencou.</p>
+</div>
+
+<div class="col"><h2>Os governos lado a lado</h2>
+<p>A tabela reúne as médias de cada mandato. As barras ajudam a comparar cada coluna.</p></div>
+<div class="tablewrap">
+  <table>
+    <thead><tr><th>Mandato</th><th class="num">Partidos</th><th class="num">Ministérios</th><th class="num">Sem partido</th><th class="num">Cadeiras da coalizão</th><th class="num">Proporcionalidade</th><th class="num">Heterogeneidade</th></tr></thead>
+    <tbody id="tabela"></tbody>
+  </table>
+</div>
+
+<div class="col">
+  <h2>Diversidade e divisão andam juntas?</h2>
+  <p>Cruzando duas das medidas, aparece um padrão. Os governos com alianças mais diversas ideologicamente, os do PT, foram também os que dividiram os ministérios de forma mais proporcional. FHC e Temer, com aliados mais parecidos entre si, dividiram de forma menos proporcional. Sarney e Lula 3 fogem do padrão: Sarney, por ter só dois partidos; Lula 3, por combinar a aliança mais diversa com uma proporcionalidade parecida com a de Temer.</p>
+</div>
+
+<div class="wide">
+  <figure>
+    <svg class="chart" id="scatter" viewBox="0 0 900 430" role="img" aria-label="Heterogeneidade ideológica e proporcionalidade média por mandato"></svg>
+    <figcaption>Cada círculo é um mandato, e o tamanho do círculo indica a fatia da Câmara com a coalizão. Lula 3 aparece com a média até março de 2026 (72,6), sem o efeito das trocas eleitorais. Collor e Bolsonaro ficam fora do gráfico, porque quase não tinham partidos no ministério.</figcaption>
+  </figure>
+</div>
+
+<div class="col">
+  <p>Frederico Bertholini e Carlos Pereira mostram que alianças heterogêneas e divisões pouco proporcionais tornam mais caro governar: o presidente precisa gastar mais com emendas, cargos e concessões para manter a base. Uma leitura possível do gráfico é que presidentes com aliados muito diferentes dividiram o ministério com mais cuidado, e os que tinham aliados parecidos ficaram com uma parte maior para o próprio partido ou para técnicos. São só dez mandatos, então vale como pista, e não como regra.</p>
+
+  <blockquote class="pull">Não existe um único presidencialismo de coalizão. Cada presidente escolheu quantos parceiros ter, quão diferentes eles seriam e quanto do governo dividir.</blockquote>
+
+  <div class="box">
+    <h3>Cuidados com os números</h3>
+    <ul>
+      <li><strong>Proporcionalidade não é lealdade.</strong> O índice mostra como os ministérios foram divididos, e não se os partidos votaram com o governo.</li>
+      <li><strong>Nem toda pasta pesa igual.</strong> A Fazenda conta o mesmo que uma secretaria com status de ministério.</li>
+      <li><strong>Ministros sem partido.</strong> No índice do Ipea, eles contam como um grupo que não traz deputados. Governos com muitos técnicos ficam com índices baixos, mesmo que dividam o restante de forma equilibrada. Uma segunda versão do índice, em que cada um pesa menos, dá valores mais altos para Collor (55), Bolsonaro (30) e Lula 3 (84).</li>
+      <li><strong>Ideologia antes de 1990.</strong> As pesquisas com deputados que medem a posição dos partidos começam em 1990. Para Sarney, usamos essa primeira medição.</li>
+      <li><strong>Codificação recente.</strong> A planilha do Ipea vai até junho de 2024. Daí em diante, a composição foi montada com os mesmos critérios, e algumas escolhas (como tratar os ministros de União e PP como sem partido depois de setembro de 2025) mudam os números de Lula 3.</li>
+    </ul>
+  </div>
+
+  <footer>
+    <p><strong>Como foi feito.</strong> Gabinetes e cadeiras de 1985 a junho de 2024: Acir Almeida, Ipea (Nota Técnica nº 53/2021). De julho de 2024 a novembro de 2026: codificação própria com os mesmos critérios e deputados em exercício segundo os dados abertos da Câmara. Proporcionalidade: índice de Koppel &amp; Diskin na versão do Ipea, com os ministros sem partido como um grupo. Heterogeneidade: coeficiente de variação da posição ideológica dos partidos (Zucco &amp; Power, 2023, via Atlas do Estado Brasileiro). Cadeiras da coalizão: deputados dos partidos com ministério sobre o total da Câmara (513 desde 1995). Código e tabelas em <code>coalizao/</code>.</p>
+  </footer>
+</div>
+</article>
+
+<script>
+(function(){
+const NS="http://www.w3.org/2000/svg";
+const el=(t,a,p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e};
+const txt=(p,x,y,s,a)=>{const t=el("text",Object.assign({x,y},a||{}),p);t.textContent=s;return t};
+const fmt=v=>v.toFixed(1).replace(".",",");
+const SERIE=[["1985-04",93.5,57.8,2],["1985-05",93.5,57.8,2],["1985-06",93.5,57.8,2],["1985-07",93.5,57.8,2],["1985-08",93.5,57.8,2],["1985-09",95.9,57.8,2],["1985-10",95.9,57.8,2],["1985-11",95.9,57.8,2],["1985-12",95.9,57.8,2],["1986-01",95.9,57.8,2],["1986-02",98.2,67.0,2],["1986-03",98.2,67.0,2],["1986-04",98.2,67.0,2],["1986-05",98.2,67.0,2],["1986-06",98.2,67.0,2],["1986-07",98.2,67.0,2],["1986-08",98.2,67.0,2],["1986-09",98.2,67.0,2],["1986-10",98.2,67.0,2],["1986-11",98.2,67.0,2],["1986-12",98.2,67.0,2],["1987-01",98.2,67.0,2],["1987-02",98.2,65.9,2],["1987-03",98.2,65.9,2],["1987-04",98.2,65.9,2],["1987-05",98.2,65.9,2],["1987-06",98.2,65.9,2],["1987-07",98.2,65.9,2],["1987-08",98.2,65.9,2],["1987-09",98.2,65.9,2],["1987-10",98.2,65.9,2],["1987-11",98.2,65.9,2],["1987-12",98.2,65.9,2],["1988-01",96.8,65.3,2],["1988-02",96.8,65.3,2],["1988-03",96.8,65.3,2],["1988-04",96.8,65.3,2],["1988-05",96.8,65.3,2],["1988-06",96.8,65.3,2],["1988-07",96.8,65.3,2],["1988-08",96.8,65.3,2],["1988-09",96.8,65.3,2],["1988-10",96.8,65.3,2],["1988-11",96.8,65.3,2],["1988-12",96.8,65.3,2],["1989-01",96.8,65.3,2],["1989-02",83.1,64.1,2],["1989-03",83.1,64.1,2],["1989-04",83.1,64.1,2],["1989-05",83.1,64.1,2],["1989-06",83.1,64.1,2],["1989-07",83.1,64.1,2],["1989-08",83.1,64.1,2],["1989-09",83.1,64.1,2],["1989-10",83.1,64.1,2],["1989-11",83.1,64.1,2],["1989-12",83.1,64.1,2],["1990-01",83.1,64.1,2],["1990-02",83.1,64.1,2],["1990-03",13.2,19.5,1],["1990-04",13.2,19.5,1],["1990-05",13.2,19.5,1],["1990-06",13.2,19.5,1],["1990-07",13.2,19.5,1],["1990-08",13.2,19.5,1],["1990-09",13.2,19.5,1],["1990-10",15.6,25.9,2],["1990-11",15.6,25.9,2],["1990-12",15.6,25.9,2],["1991-01",15.6,25.9,2],["1991-02",15.6,25.1,2],["1991-03",15.6,25.1,2],["1991-04",15.6,25.1,2],["1991-05",15.6,25.1,2],["1991-06",15.6,25.1,2],["1991-07",15.6,25.1,2],["1991-08",15.6,25.1,2],["1991-09",15.6,25.1,2],["1991-10",15.6,25.1,2],["1991-11",15.6,25.1,2],["1991-12",15.6,25.1,2],["1992-01",15.6,25.1,2],["1992-02",15.6,25.1,2],["1992-03",15.6,25.1,2],["1992-04",36.7,42.1,5],["1992-05",36.7,42.1,5],["1992-06",36.7,42.1,5],["1992-07",36.7,42.1,5],["1992-08",36.7,42.1,5],["1992-09",36.7,42.1,5],["1992-10",62.7,62.6,6],["1992-11",62.7,62.6,6],["1992-12",62.7,62.6,6],["1993-01",62.7,62.6,6],["1993-02",62.7,62.6,6],["1993-03",62.7,62.6,6],["1993-04",62.7,62.6,6],["1993-05",62.7,62.6,6],["1993-06",45.7,52.9,5],["1993-07",45.7,52.9,5],["1993-08",45.7,52.9,5],["1993-09",35.2,59.2,5],["1993-10",35.2,59.2,5],["1993-11",35.2,59.2,5],["1993-12",35.2,59.2,5],["1994-01",35.2,59.2,5],["1994-02",17.7,54.9,4],["1994-03",17.7,54.9,4],["1994-04",17.7,54.9,4],["1994-05",17.7,54.9,4],["1994-06",17.7,54.9,4],["1994-07",17.7,54.9,4],["1994-08",17.7,54.9,4],["1994-09",17.7,54.9,4],["1994-10",17.7,54.9,4],["1994-11",17.7,54.9,4],["1994-12",17.7,54.9,4],["1995-01",54.8,56.1,4],["1995-02",54.8,56.1,4],["1995-03",54.8,56.1,4],["1995-04",54.8,56.1,4],["1995-05",54.8,56.1,4],["1995-06",54.8,56.1,4],["1995-07",54.8,56.1,4],["1995-08",54.8,56.1,4],["1995-09",54.8,56.1,4],["1995-10",54.8,56.1,4],["1995-11",54.8,56.1,4],["1995-12",54.8,56.1,4],["1996-01",54.8,56.1,4],["1996-02",54.8,56.1,4],["1996-03",54.8,56.1,4],["1996-04",54.8,56.1,4],["1996-05",54.6,76.8,5],["1996-06",54.6,76.8,5],["1996-07",54.6,76.8,5],["1996-08",54.6,76.8,5],["1996-09",54.6,76.8,5],["1996-10",54.6,76.8,5],["1996-11",54.6,76.8,5],["1996-12",54.6,76.8,5],["1997-01",54.6,76.8,5],["1997-02",54.6,76.8,5],["1997-03",54.6,76.8,5],["1997-04",54.6,76.8,5],["1997-05",54.6,76.8,5],["1997-06",54.6,76.8,5],["1997-07",54.6,76.8,5],["1997-08",54.6,76.8,5],["1997-09",54.6,76.8,5],["1997-10",54.6,76.8,5],["1997-11",54.6,76.8,5],["1997-12",54.6,76.8,5],["1998-01",54.6,76.8,5],["1998-02",54.6,76.8,5],["1998-03",54.6,76.8,5],["1998-04",63.3,76.8,5],["1998-05",63.3,76.8,5],["1998-06",63.3,76.8,5],["1998-07",63.3,76.8,5],["1998-08",63.3,76.8,5],["1998-09",63.3,76.8,5],["1998-10",63.3,76.8,5],["1998-11",63.3,76.8,5],["1998-12",63.3,76.8,5],["1999-01",72.9,74.8,5],["1999-02",72.9,74.8,5],["1999-03",72.9,74.8,5],["1999-04",69.3,70.0,4],["1999-05",69.3,70.0,4],["1999-06",69.3,70.0,4],["1999-07",69.3,70.0,4],["1999-08",71.0,71.0,4],["1999-09",71.0,71.0,4],["1999-10",71.0,71.0,4],["1999-11",71.0,71.0,4],["1999-12",71.0,71.0,4],["2000-01",71.0,71.0,4],["2000-02",71.0,71.0,4],["2000-03",71.0,71.0,4],["2000-04",71.0,71.0,4],["2000-05",71.0,71.0,4],["2000-06",71.0,71.0,4],["2000-07",71.0,71.0,4],["2000-08",71.0,71.0,4],["2000-09",71.0,71.0,4],["2000-10",71.0,71.0,4],["2000-11",71.0,71.0,4],["2000-12",71.0,71.0,4],["2001-01",71.0,71.0,4],["2001-02",71.0,71.0,4],["2001-03",69.0,67.5,4],["2001-04",69.0,67.5,4],["2001-05",69.0,67.5,4],["2001-06",69.0,67.5,4],["2001-07",69.0,67.5,4],["2001-08",69.0,67.5,4],["2001-09",69.0,67.5,4],["2001-10",69.0,67.5,4],["2001-11",69.0,67.5,4],["2001-12",69.0,67.5,4],["2002-01",69.0,67.5,4],["2002-02",69.0,67.5,4],["2002-03",60.5,45.6,3],["2002-04",60.5,45.6,3],["2002-05",60.5,45.6,3],["2002-06",60.5,45.6,3],["2002-07",60.5,45.6,3],["2002-08",60.5,45.6,3],["2002-09",60.5,45.6,3],["2002-10",60.5,45.6,3],["2002-11",60.5,45.6,3],["2002-12",60.5,45.6,3],["2003-01",84.1,48.7,8],["2003-02",84.1,48.7,8],["2003-03",84.1,48.7,8],["2003-04",84.1,48.7,8],["2003-05",84.1,48.7,8],["2003-06",84.1,48.7,8],["2003-07",84.1,48.7,8],["2003-08",84.1,48.7,8],["2003-09",84.1,48.7,8],["2003-10",84.1,48.7,8],["2003-11",84.1,48.7,8],["2003-12",84.1,48.7,8],["2004-01",84.1,48.7,8],["2004-02",73.2,62.4,8],["2004-03",73.2,62.4,8],["2004-04",73.2,62.4,8],["2004-05",73.2,62.4,8],["2004-06",73.2,62.4,8],["2004-07",73.2,62.4,8],["2004-08",73.2,62.4,8],["2004-09",73.2,62.4,8],["2004-10",73.2,62.4,8],["2004-11",73.2,62.4,8],["2004-12",74.7,58.5,7],["2005-01",74.7,58.5,7],["2005-02",74.7,58.5,7],["2005-03",74.7,58.5,7],["2005-04",74.7,58.5,7],["2005-05",74.7,58.5,7],["2005-06",74.7,58.5,7],["2005-07",74.7,58.5,7],["2005-08",74.1,68.2,7],["2005-09",74.1,68.2,7],["2005-10",74.1,68.2,7],["2005-11",74.1,68.2,7],["2005-12",74.1,68.2,7],["2006-01",74.1,68.2,7],["2006-02",74.1,68.2,7],["2006-03",74.1,68.2,7],["2006-04",74.1,68.2,7],["2006-05",74.1,68.2,7],["2006-06",74.1,68.2,7],["2006-07",74.1,68.2,7],["2006-08",74.1,68.2,7],["2006-09",74.1,68.2,7],["2006-10",74.1,68.2,7],["2006-11",74.1,68.2,7],["2006-12",74.1,68.2,7],["2007-01",74.1,68.2,7],["2007-02",74.1,68.2,7],["2007-03",74.1,68.2,7],["2007-04",79.3,70.0,9],["2007-05",79.3,70.0,9],["2007-06",79.3,70.0,9],["2007-07",83.3,70.8,10],["2007-08",83.3,70.8,10],["2007-09",83.3,70.8,10],["2007-10",83.3,70.8,10],["2007-11",83.3,70.8,10],["2007-12",83.3,70.8,10],["2008-01",83.3,70.8,10],["2008-02",83.3,70.8,10],["2008-03",83.3,70.8,10],["2008-04",83.3,70.8,10],["2008-05",83.3,70.8,10],["2008-06",83.3,70.8,10],["2008-07",83.3,70.8,10],["2008-08",83.3,70.8,10],["2008-09",83.3,70.8,10],["2008-10",83.3,70.8,10],["2008-11",83.3,70.8,10],["2008-12",83.3,70.8,10],["2009-01",83.3,70.8,10],["2009-02",83.3,70.8,10],["2009-03",83.3,70.8,10],["2009-04",83.3,70.8,10],["2009-05",83.3,70.8,10],["2009-06",83.3,70.8,10],["2009-07",83.3,70.8,10],["2009-08",83.3,70.8,10],["2009-09",83.3,70.8,10],["2009-10",82.0,65.9,9],["2009-11",82.0,65.9,9],["2009-12",82.0,65.9,9],["2010-01",82.0,65.9,9],["2010-02",82.0,65.9,9],["2010-03",81.9,63.4,8],["2010-04",81.9,63.4,8],["2010-05",81.9,63.4,8],["2010-06",81.9,63.4,8],["2010-07",81.9,63.4,8],["2010-08",81.9,63.4,8],["2010-09",81.9,63.4,8],["2010-10",81.9,63.4,8],["2010-11",81.9,63.4,8],["2010-12",81.9,63.4,8],["2011-01",83.4,62.4,7],["2011-02",83.4,62.4,7],["2011-03",83.4,62.4,7],["2011-04",83.4,62.4,7],["2011-05",83.4,62.4,7],["2011-06",83.4,62.4,7],["2011-07",83.4,62.4,7],["2011-08",82.2,54.6,6],["2011-09",82.2,54.6,6],["2011-10",82.2,54.6,6],["2011-11",82.2,54.6,6],["2011-12",82.2,54.6,6],["2012-01",82.2,54.6,6],["2012-02",82.2,54.6,6],["2012-03",81.8,56.9,7],["2012-04",81.8,56.9,7],["2012-05",81.8,56.9,7],["2012-06",81.8,56.9,7],["2012-07",81.8,56.9,7],["2012-08",81.8,56.9,7],["2012-09",81.8,56.9,7],["2012-10",81.8,56.9,7],["2012-11",81.8,56.9,7],["2012-12",81.8,56.9,7],["2013-01",81.8,56.9,7],["2013-02",81.8,56.9,7],["2013-03",81.8,56.9,7],["2013-04",81.8,56.9,7],["2013-05",79.0,73.9,9],["2013-06",79.0,73.9,9],["2013-07",79.0,73.9,9],["2013-08",79.0,73.9,9],["2013-09",79.0,73.9,9],["2013-10",78.9,62.6,8],["2013-11",78.9,62.6,8],["2013-12",78.9,62.6,8],["2014-01",78.9,62.6,8],["2014-02",78.9,62.6,8],["2014-03",78.9,62.6,8],["2014-04",78.9,62.6,8],["2014-05",78.9,62.6,8],["2014-06",78.9,62.6,8],["2014-07",78.9,62.6,8],["2014-08",78.9,62.6,8],["2014-09",78.9,62.6,8],["2014-10",78.9,62.6,8],["2014-11",78.9,62.6,8],["2014-12",78.9,62.6,8],["2015-01",77.4,62.0,9],["2015-02",77.4,62.0,9],["2015-03",77.4,62.0,9],["2015-04",77.4,62.0,9],["2015-05",77.4,62.0,9],["2015-06",77.4,62.0,9],["2015-07",77.4,62.0,9],["2015-08",77.4,62.0,9],["2015-09",77.4,62.0,9],["2015-10",82.3,62.0,9],["2015-11",82.3,62.0,9],["2015-12",82.3,62.0,9],["2016-01",82.3,62.0,9],["2016-02",82.3,62.0,9],["2016-03",82.3,62.0,9],["2016-04",53.4,24.9,4],["2016-05",85.1,67.5,10],["2016-06",85.1,67.5,10],["2016-07",85.1,67.5,10],["2016-08",85.1,67.5,10],["2016-09",85.1,67.5,10],["2016-10",85.1,67.5,10],["2016-11",85.1,67.5,10],["2016-12",85.1,67.5,10],["2017-01",85.1,67.5,10],["2017-02",85.1,67.5,10],["2017-03",85.1,67.5,10],["2017-04",85.1,67.5,10],["2017-05",85.1,67.5,10],["2017-06",73.3,59.8,8],["2017-07",73.3,59.8,8],["2017-08",73.3,59.8,8],["2017-09",73.3,59.8,8],["2017-10",73.3,59.8,8],["2017-11",73.3,59.8,8],["2017-12",65.7,49.9,7],["2018-01",65.7,49.9,7],["2018-02",65.7,49.9,7],["2018-03",65.7,49.9,7],["2018-04",65.7,49.9,7],["2018-05",65.7,49.9,7],["2018-06",65.7,49.9,7],["2018-07",58.4,46.8,6],["2018-08",58.4,46.8,6],["2018-09",58.4,46.8,6],["2018-10",58.4,46.8,6],["2018-11",58.4,46.8,6],["2018-12",58.4,46.8,6],["2019-01",12.4,10.1,1],["2019-02",12.4,10.1,1],["2019-03",12.4,10.1,1],["2019-04",12.4,10.1,1],["2019-05",12.4,10.1,1],["2019-06",12.4,10.1,1],["2019-07",12.4,10.1,1],["2019-08",12.4,10.1,1],["2019-09",12.4,10.1,1],["2019-10",12.4,10.1,1],["2019-11",0.0,0.0,0],["2019-12",0.0,0.0,0],["2020-01",0.0,0.0,0],["2020-02",0.0,0.0,0],["2020-03",0.0,0.0,0],["2020-04",0.0,0.0,0],["2020-05",0.0,0.0,0],["2020-06",0.0,0.0,0],["2020-07",0.0,0.0,0],["2020-08",0.0,0.0,0],["2020-09",0.0,0.0,0],["2020-10",0.0,0.0,0],["2020-11",0.0,0.0,0],["2020-12",0.0,0.0,0],["2021-01",0.0,0.0,0],["2021-02",5.5,5.8,1],["2021-03",5.5,5.8,1],["2021-04",8.3,12.3,2],["2021-05",8.3,12.3,2],["2021-06",8.3,12.3,2],["2021-07",8.3,12.3,2],["2021-08",10.1,19.5,3],["2021-09",10.1,19.5,3],["2021-10",10.1,19.5,3],["2021-11",10.1,19.5,3],["2021-12",10.1,19.5,3],["2022-01",10.1,19.5,3],["2022-02",10.1,19.5,3],["2022-03",10.1,19.5,3],["2022-04",17.3,13.1,2],["2022-05",17.3,13.1,2],["2022-06",17.3,13.1,2],["2022-07",17.3,13.1,2],["2022-08",17.3,13.1,2],["2022-09",17.3,13.1,2],["2022-10",17.3,13.1,2],["2022-11",17.3,13.1,2],["2022-12",17.3,13.1,2],["2023-01",74.2,51.3,9],["2023-02",74.2,51.3,9],["2023-03",74.2,51.3,9],["2023-04",74.2,51.3,9],["2023-05",74.2,51.3,9],["2023-06",74.2,52.0,9],["2023-07",74.2,52.0,9],["2023-08",74.2,52.0,9],["2023-09",70.7,61.6,10],["2023-10",70.7,61.6,10],["2023-11",70.5,61.8,10],["2023-12",70.4,61.8,10],["2024-01",70.4,61.8,10],["2024-02",67.4,61.8,10],["2024-03",67.4,62.0,10],["2024-04",71.1,61.8,10],["2024-05",71.1,61.8,10],["2024-06",71.3,61.4,10],["2024-07",70.9,61.8,10],["2024-08",70.9,62.0,10],["2024-09",70.9,62.2,10],["2024-10",73.7,62.2,10],["2024-11",73.8,62.0,10],["2024-12",73.8,62.0,10],["2025-01",73.5,62.0,10],["2025-02",73.5,62.2,10],["2025-03",75.5,62.2,10],["2025-04",73.5,61.6,10],["2025-05",75.6,62.2,10],["2025-06",75.6,62.0,10],["2025-07",75.2,62.6,10],["2025-08",75.7,62.2,10],["2025-09",72.7,40.9,8],["2025-10",72.7,40.9,8],["2025-11",71.8,41.3,8],["2025-12",71.7,41.1,8],["2026-01",71.8,41.1,8],["2026-02",71.7,41.3,8],["2026-03",71.7,41.3,8],["2026-04",23.3,32.8,6],["2026-05",23.6,31.4,6],["2026-06",23.4,31.8,6],["2026-07",23.4,31.6,6],["2026-08",23.4,31.6,6],["2026-09",23.4,31.6,6],["2026-10",23.5,32.0,6],["2026-11",23.5,32.0,6]];  /* [mês, proporcionalidade, % cadeiras, nº partidos] */
+
+/* 1. linha do tempo */
+(function(){
+  const svg=document.getElementById("timeline"),W=900,H=400,L=40,R=16,T=44,B=34;
+  const t0=new Date("1985-03-15"),t1=new Date("2026-12-15");
+  const x=d=>L+(new Date(d)-t0)/(t1-t0)*(W-L-R), y=v=>T+(100-v)*(H-T-B)/100;
+  const P=[["Sarney","1985-03-15","1990-03-15"],["Collor","1990-03-15","1992-10-02"],["Itamar","1992-10-02","1995-01-01"],["FHC 1","1995-01-01","1999-01-01"],["FHC 2","1999-01-01","2003-01-01"],["Lula 1","2003-01-01","2007-01-01"],["Lula 2","2007-01-01","2011-01-01"],["Dilma 1","2011-01-01","2015-01-01"],["Dilma 2","2015-01-01","2016-05-12"],["Temer","2016-05-12","2019-01-01"],["Bolsonaro","2019-01-01","2023-01-01"],["Lula 3","2023-01-01","2026-12-15"]];
+  P.forEach(([n,a,b],i)=>{ if(i%2===0) el("rect",{x:x(a),y:T-34,width:x(b)-x(a),height:H-B-T+34,fill:"var(--band)"},svg);
+    const short={"Dilma 2":"D2","Itamar":"Itamar","Temer":"Temer"}[n]||n;
+    const w=x(b)-x(a); if(w>26) txt(svg,x(a)+w/2,T-20+(i%2?12:0),w<50?short:n,{class:"pres","text-anchor":"middle"}); });
+  [0,25,50,75,100].forEach(v=>{el("line",{x1:L,x2:W-R,y1:y(v),y2:y(v),class:"grid"},svg);txt(svg,L-8,y(v)+4,v,{"text-anchor":"end"})});
+  el("line",{x1:L,x2:W-R,y1:y(50),y2:y(50),stroke:"var(--ink)","stroke-dasharray":"5 5","stroke-width":1},svg);
+  [1985,1990,1995,2000,2005,2010,2015,2020,2025].forEach(a=>txt(svg,x(a+"-01-01"),H-10,a,{"text-anchor":"middle"}));
+  const pts=SERIE.map(s=>[x(s[0]+"-15"),s]);
+  const area="M"+pts[0][0]+","+y(0)+"L"+pts.map(([px,s])=>px+","+y(s[2])).join("L")+"L"+pts[pts.length-1][0]+","+y(0)+"Z";
+  el("path",{d:area,fill:"var(--seat)","fill-opacity":.35,stroke:"var(--seat)","stroke-width":1.2},svg);
+  el("path",{d:"M"+pts.map(([px,s])=>px+","+y(s[1])).join("L"),fill:"none",stroke:"var(--main)","stroke-width":2.4,"stroke-linejoin":"round"},svg);
+})();
+
+/* 2. tabela */
+const MAND=[["Sarney","1985–90",2.0,21.1,17.4,64.2,94.0,35.0],["Collor","1990–92",2.4,17.4,78.9,27.2,19.2,6.2],["Itamar","1992–94",4.9,21.7,54.7,57.8,37.4,34.2],["FHC 1","1995–98",4.7,22.1,38.3,69.9,56.3,24.2],["FHC 2","1999–2002",3.9,24.0,35.6,65.0,68.3,22.1],["Lula 1","2003–06",7.5,29.6,16.9,60.1,76.7,49.4],["Lula 2","2007–10",9.2,31.7,7.3,68.5,82.0,41.2],["Dilma 1","2011–14",7.4,33.4,16.0,60.9,80.9,42.8],["Dilma 2","2015–16",8.7,30.4,21.9,59.7,77.7,37.3],["Temer","2016–18",8.2,23.2,23.4,58.3,73.6,14.1],["Bolsonaro","2019–22",1.3,18.8,90.3,9.1,8.4,1.8],["Lula 3","2023–26",8.9,33.8,31.1,51.9,64.2,53.6]];
+const tb=document.getElementById("tabela");
+const cell=(v,max,c,suf)=>`<div class="cell">${fmt(v)}${suf||""}<i style="width:${Math.round(v/max*56)}px;background:${c}"></i></div>`;
+MAND.forEach(([m,a,tam,nmin,np,cad,prop,het])=>{const tr=document.createElement("tr");
+  tr.innerHTML=`<td><strong>${m}</strong><small>${a}</small></td><td class="num">${fmt(tam)}</td><td class="num">${Math.round(nmin)}</td><td class="num">${Math.round(np)}%</td>`+
+  `<td class="num">${cell(cad,100,"var(--seat)","%")}</td><td class="num">${cell(prop,100,"var(--main)")}</td><td class="num">${cell(het,60,"var(--ideo)")}</td>`;
+  tb.appendChild(tr)});
+
+/* 3. dispersão heterogeneidade x proporcionalidade */
+const SC=[["Sarney",35.0,94.0,64.2],["Itamar",34.2,37.4,57.8],["FHC 1",24.2,56.3,69.9],["FHC 2",22.1,68.3,65.0],["Lula 1",49.4,76.7,60.1],["Lula 2",41.2,82.0,68.5],["Dilma 1",42.8,80.9,60.9],["Dilma 2",37.3,77.7,59.7],["Temer",14.1,73.6,58.3],["Lula 3",53.6,72.6,56.1]];
+(function(){
+  const svg=document.getElementById("scatter"),W=900,H=430,L=56,R=30,T=20,B=50;
+  const x=v=>L+v*(W-L-R)/60, y=v=>T+(100-v)*(H-T-B)/70;
+  [30,40,50,60,70,80,90,100].forEach(v=>{el("line",{x1:L,x2:W-R,y1:y(v),y2:y(v),class:"grid"},svg);txt(svg,L-8,y(v)+4,v,{"text-anchor":"end"})});
+  [0,10,20,30,40,50,60].forEach(v=>{el("line",{x1:x(v),x2:x(v),y1:T,y2:H-B,class:"grid"},svg);txt(svg,x(v),H-B+18,v,{"text-anchor":"middle"})});
+  txt(svg,(L+W-R)/2,H-6,"heterogeneidade ideológica →",{class:"lbl","text-anchor":"middle"});
+  txt(svg,L,T-6,"proporcionalidade ↑",{class:"lbl"});
+  const off={"Lula 2":[0,-16],"Dilma 1":[12,14],"Lula 1":[12,4],"Dilma 2":[-12,18,"end"],"FHC 1":[12,4],"FHC 2":[12,4],"Sarney":[14,4],"Itamar":[14,4],"Temer":[14,4],"Lula 3":[14,4]};
+  SC.forEach(([n,h,p,c])=>{const r=Math.sqrt(c)*1.6, isPT=/Lula|Dilma/.test(n);
+    el("circle",{cx:x(h),cy:y(p),r,fill:isPT?"var(--main)":"var(--seat)","fill-opacity":.28,stroke:isPT?"var(--main)":"var(--seat)","stroke-width":1.6},svg);
+    const o=off[n]||[12,4]; txt(svg,x(h)+o[0],y(p)+o[1],n,{class:"lbl","text-anchor":o[2]||(o[0]===0?"middle":"start")});
+  });
+})();
+})();
+</script>
