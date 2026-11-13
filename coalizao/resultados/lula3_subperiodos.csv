@@ -1,4 +1,4 @@
-periodo;coalescencia;tamanho;cadeiras_coalizao_pct;prop_kd_v1;ministros_np
-jan/23-ago/25;75.8;9.8;59.3;72.7;7.5
-set/25-mar/26;81.8;8.0;41.2;72.0;10.0
-abr/26-nov/26;66.2;6.0;31.8;23.4;23.0
+periodo;prop_kd_v1;prop_kd_v2;tamanho;cadeiras_coalizao_pct;coalescencia;ministros_np
+jan/23-ago/25;72.7;84.5;9.8;59.3;75.8;7.5
+set/25-mar/26;72.0;89.5;8.0;41.2;81.8;10.0
+abr/26-nov/26;23.4;74.2;6.0;31.8;66.2;23.0

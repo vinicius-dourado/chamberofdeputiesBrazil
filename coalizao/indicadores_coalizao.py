@@ -17,7 +17,11 @@ Fontes
 
 Medidas (mês a mês, dia 15)
 ---------------------------
-* coalescencia (PROPORCIONALIDADE DA TABELA 1): índice de coalescência de Amorim Neto
+* prop_kd_v1 (PROPORCIONALIDADE PRINCIPAL, medida do Ipea/Almeida): cosseno de Koppel &
+  Diskin (2009) entre os vetores de ministérios e de cadeiras, com os não partidários como um
+  grupo (cadeiras = 0). prop_kd_v2 trata cada não partidário individualmente. Reproduzem
+  Prop_v1 e Prop_v2 da planilha de Almeida (Ipea, NT 53/2021) com diferença <= 0,05.
+* coalescencia (medida de Bertholini & Pereira, para comparação com a Tabela 1): índice de coalescência de Amorim Neto
   (2006, p. 426), CABINET = 1 - 1/2 * sum_i |S_i - M_i|, x100, somando sobre os partidos
   do gabinete. M_i = % de todos os cargos com status de ministério que o partido i ocupa
   (os não partidários entram só no denominador); S_i = % de cadeiras do partido i no total
@@ -28,8 +32,6 @@ Medidas (mês a mês, dia 15)
   Rousseff 2: 75,6 vs 75,6).
   coalescencia_np_grupo: variante com os não partidários como um grupo com S = 0
   (cada ponto de ministros não partidários reduz o índice em 1 ponto) - sensibilidade.
-* prop_kd_v1 / prop_kd_v2: cosseno de Koppel & Diskin (2009), medida de Almeida (np em
-  grupo / individualmente). Reproduz exatamente Prop_v1 e Prop_v2 da planilha.
 * tamanho: nº de partidos com ao menos um ministério.
 * cadeiras_coalizao_pct: % das cadeiras da Câmara com os partidos do gabinete.
 * heterogeneidade: coeficiente de variação (x100) da ideologia dos partidos do gabinete.
@@ -253,7 +255,8 @@ def tabela_por_mandato(painel, versao="base"):
     ordem = [m for m, _, _ in MANDATOS]
     t = p.groupby("mandato").agg(
         meses=("data", "size"),
-        prop_media=("coalescencia", "mean"), prop_dp=("coalescencia", "std"),
+        prop_media=("prop_kd_v1", "mean"), prop_dp=("prop_kd_v1", "std"),
+        prop_v2_media=("prop_kd_v2", "mean"), prop_v2_dp=("prop_kd_v2", "std"),
         tam_media=("tamanho", "mean"), tam_dp=("tamanho", "std"),
         het_media=("heterogeneidade", "mean"), het_dp=("heterogeneidade", "std"),
         cad_media=("cadeiras_coalizao_pct", "mean"), cad_dp=("cadeiras_coalizao_pct", "std"),
@@ -284,10 +287,15 @@ if __name__ == "__main__":
     tab = tabela_por_mandato(painel)
     tab.to_csv(SAIDA / "tabela1_estendida.csv", sep=";", index=False)
     extra = painel[painel.versao == "base"].groupby("mandato")[
-        ["coalescencia_np_grupo", "prop_kd_v1", "prop_kd_v2"]].agg(["mean", "std"]).round(1)
+        ["coalescencia", "coalescencia_np_grupo", "prop_kd_v2"]].agg(["mean", "std"]).round(1)
     extra.columns = [f"{a}_{'media' if b == 'mean' else 'dp'}" for a, b in extra.columns]
     extra.reindex([m for m, _, _ in MANDATOS]).to_csv(SAIDA / "proporcionalidade_medidas_alternativas.csv", sep=";")
-    comp17 = tab.merge(TABELA1_BERTHOLINI_2017, on="mandato", how="left", suffixes=("", "_b2017"))
+    # comparação com Bertholini usa a medida deles (coalescência), não a do Ipea
+    coal = painel[painel.versao == "base"].groupby("mandato").coalescencia.agg(["mean", "std"]).round(1)
+    coal.columns = ["prop_media", "prop_dp"]
+    comp17 = (tab.drop(columns=["prop_media", "prop_dp", "prop_v2_media", "prop_v2_dp"])
+              .merge(coal, left_on="mandato", right_index=True)
+              .merge(TABELA1_BERTHOLINI_2017, on="mandato", how="left", suffixes=("", "_b2017")))
     comp17.to_csv(SAIDA / "comparacao_bertholini_2017.csv", sep=";", index=False)
     alt = tabela_por_mandato(painel, "alt")
     alt[alt.mandato == "Lula 3"].to_csv(SAIDA / "lula3_sensibilidade.csv", sep=";", index=False)
@@ -295,7 +303,7 @@ if __name__ == "__main__":
     l3["periodo"] = pd.cut(pd.to_datetime(l3.data), [pd.Timestamp("2023-01-01"), SAIDA_UNIAO_PP,
                            pd.Timestamp("2026-04-01"), pd.Timestamp("2027-01-01")],
                            labels=["jan/23-ago/25", "set/25-mar/26", "abr/26-nov/26"])
-    sub = l3.groupby("periodo", observed=True)[["coalescencia", "tamanho", "cadeiras_coalizao_pct", "prop_kd_v1", "ministros_np"]].mean().round(1)
+    sub = l3.groupby("periodo", observed=True)[["prop_kd_v1", "prop_kd_v2", "tamanho", "cadeiras_coalizao_pct", "coalescencia", "ministros_np"]].mean().round(1)
     sub.to_csv(SAIDA / "lula3_subperiodos.csv", sep=";")
     print("\nLula 3 por subperíodo:\n", sub)
     val = validar_lula3()

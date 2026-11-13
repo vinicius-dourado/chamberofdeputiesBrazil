@@ -76,12 +76,12 @@ def tabela_gabinetes():
             "tamanho": sum(p != "np" for p, _, _ in comp),
             "cadeiras_coalizao": sum(s for _, _, s in comp),
             "cadeiras_coalizao_pct": round(100 * sum(s for _, _, s in comp) / ic.tamanho_camara(r.inicio), 1),
-            "proporcionalidade": round(ic.coalescencia(comp), 1),
-            "proporc_np_grupo": round(ic.coalescencia(comp, np_em_grupo=True), 1),
+            "proporcionalidade": round(ic.koppel_diskin(comp, True), 1),      # Ipea/Almeida Prop_v1
+            "proporcionalidade_v2": round(ic.koppel_diskin(comp, False), 1),  # Ipea/Almeida Prop_v2
+            "coalescencia": round(ic.coalescencia(comp), 1),                   # Bertholini & Pereira
+            "coalescencia_np_grupo": round(ic.coalescencia(comp, np_em_grupo=True), 1),
             "heterogeneidade": round(het, 1) if het == het else None,
             "partidos_sem_ideologia": sem,
-            "prop_v1_kd": round(ic.koppel_diskin(comp, True), 1),
-            "prop_v2_kd": round(ic.koppel_diskin(comp, False), 1),
             "composicao": " ".join(f"{p}({m},{s})" for p, m, s in comp),
             "fonte": r.fonte, "descricao": r.descricao,
         })
