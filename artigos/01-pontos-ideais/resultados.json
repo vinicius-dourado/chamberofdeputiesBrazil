@@ -667,6 +667,31 @@
  ],
  "dentro_da_amostra_maioria": 0.7485189491459735,
  "estrutura": {
+  "periodos_por_partido": {
+   "AVANTE": 9,
+   "CIDADANIA": 5,
+   "MDB": 55,
+   "MISSÃO": 1,
+   "NOVO": 5,
+   "PATRIOTA": 5,
+   "PCdoB": 10,
+   "PDT": 21,
+   "PL": 127,
+   "PODE": 28,
+   "PP": 71,
+   "PRD": 7,
+   "PSB": 20,
+   "PSC": 3,
+   "PSD": 66,
+   "PSDB": 22,
+   "PSOL": 15,
+   "PT": 76,
+   "PV": 8,
+   "REDE": 6,
+   "REPUBLICANOS": 64,
+   "SOLIDARIEDADE": 6,
+   "UNIÃO": 77
+  },
   "partidos": [
    {
     "partido": "NOVO",
@@ -917,6 +942,12 @@
    "dif_PP_PL_dim1": 1.2659606889462853,
    "dif_REPUBLICANOS_PL_dim1": 1.295279251536588
   },
+  "coef_dim1_conjunta": {
+   "const": -1.723516603012659,
+   "esquerda": 0.7367915687328268,
+   "direita": -0.03647588322121952,
+   "alinhamento_governo": 2.3176489581614503
+  },
   "r_dim1_campo": -0.7524334092570499,
   "r_dim2_campo": -0.3288093284058659,
   "r_campo_alinh_governo": -0.6063568080066724,
@@ -1114,6 +1145,46 @@
    }
   ],
   "dim2_polo_positivo_vota_nao": 0.6236559139784946,
+  "coalizoes_dim2": {
+   "n": 343,
+   "psol_e_novo_juntos_contra_centrao": 0.3673469387755102,
+   "so_psol_contra_centrao": 0.21574344023323616,
+   "so_novo_contra_centrao": 0.2886297376093295,
+   "algum_polo_contra_centrao": 0.8717201166180758,
+   "pt_com_centrao": 0.8862973760932945,
+   "pl_com_centrao": 0.7755102040816326
+  },
+  "coalizoes_dim1": {
+   "n": 825,
+   "psol_e_novo_juntos_contra_centrao": 0.007272727272727273,
+   "so_psol_contra_centrao": 0.28363636363636363,
+   "so_novo_contra_centrao": 0.6218181818181818,
+   "algum_polo_contra_centrao": 0.9127272727272727,
+   "pt_com_centrao": 0.7018181818181818,
+   "pl_com_centrao": 0.3563636363636364
+  },
+  "pec3_2021": {
+   "PSOL": [
+    0.0,
+    100.0
+   ],
+   "PT": [
+    11.475409836065573,
+    100.0
+   ],
+   "centrão": [
+    9.803921568627452,
+    92.23744292237443
+   ],
+   "PL": [
+    1.25,
+    100.0
+   ],
+   "NOVO": [
+    0.0,
+    100.0
+   ]
+  },
   "dim2_dominante_aprovadas_centrao_sim": 0.6129032258064516,
   "tipos": [
    {

@@ -702,6 +702,7 @@ def etapa_estrutura(P, m):
     tp["alinh. Governo"] = vv.groupby("deputado_siglaPartido")["seguiu_orientacao_governo"].apply(
         lambda s: s.astype(float).mean())
     tp["campo"] = [ROT_CAMPO.get(CAMPO.get(p), "") for p in tp.index]
+    r["periodos_por_partido"] = {k: int(x) for k, x in tp["períodos"].items()}
     tp = tp[tp["períodos"] >= 3].sort_values("dim1 (média)")
     tabela(tp.reset_index(), "t5_partidos")
     r["partidos"] = tp.reset_index().to_dict("records")
@@ -740,6 +741,12 @@ def etapa_estrutura(P, m):
     r["angulo_governo"], r["r2_plano_governo"] = direcao(gov, ok)
     r["angulo_campo"], r["r2_plano_campo"] = direcao(campo, okc)
     r["h1"] = estatisticas_h1(P, m["u"], m["x"], gov, campo)
+    # coeficientes da regressão conjunta dim1 ~ esquerda + direita + alinhamento (base: centro)
+    okj = okc & ok
+    Z = np.column_stack([np.ones(okj.sum()), campo[okj] == -1, campo[okj] == 1, gov[okj]]).astype(float)
+    beta, *_ = np.linalg.lstsq(Z, m["u"][okj, 0], rcond=None)
+    r["coef_dim1_conjunta"] = {"const": float(beta[0]), "esquerda": float(beta[1]), "direita": float(beta[2]),
+                               "alinhamento_governo": float(beta[3])}
     r["r_dim1_campo"] = float(pearsonr(m["u"][okc, 0], campo[okc])[0])
     r["r_dim2_campo"] = float(pearsonr(m["u"][okc, 1], campo[okc])[0])
     r["r_campo_alinh_governo"] = float(pearsonr(campo[okc & ok], gov[okc & ok])[0])
@@ -920,6 +927,22 @@ def etapa_dim2(P, m, O):
     # direção: nas votações de dim2 dominante, o polo positivo (PSOL/NOVO) vota Sim ou Não?
     d2 = t[t["dim2_dominante"]]
     r["dim2_polo_positivo_vota_nao"] = float((d2["b2"] < 0).mean())
+    # quem se separa de quem nas votações de dim2 dominante (lado = maioria do grupo > 50% "Sim")
+    lado = {c: (t[f"% Sim {c}"] > 50) for c in ["PSOL", "PT", "centrão", "PL", "NOVO"]}
+    for nome, mk in [("dim2", t["dim2_dominante"]), ("dim1", ~t["dim2_dominante"])]:
+        ok = mk & t[[f"% Sim {c}" for c in lado]].notna().all(axis=1)
+        L = {c: v[ok] for c, v in lado.items()}
+        r[f"coalizoes_{nome}"] = {
+            "n": int(ok.sum()),
+            "psol_e_novo_juntos_contra_centrao": float(((L["PSOL"] == L["NOVO"]) & (L["PSOL"] != L["centrão"])).mean()),
+            "so_psol_contra_centrao": float(((L["PSOL"] != L["centrão"]) & (L["NOVO"] == L["centrão"])).mean()),
+            "so_novo_contra_centrao": float(((L["NOVO"] != L["centrão"]) & (L["PSOL"] == L["centrão"])).mean()),
+            "algum_polo_contra_centrao": float(((L["PSOL"] != L["centrão"]) | (L["NOVO"] != L["centrão"])).mean()),
+            "pt_com_centrao": float((L["PT"] == L["centrão"]).mean()),
+            "pl_com_centrao": float((L["PL"] == L["centrão"]).mean())}
+    pec3 = t["proposição"].fillna("").str.startswith("PEC 3/2021") & t["dim2_dominante"]
+    r["pec3_2021"] = {c: [float(t.loc[pec3, f"% Sim {c}"].min()), float(t.loc[pec3, f"% Sim {c}"].max())]
+                      for c in ["PSOL", "PT", "centrão", "PL", "NOVO"]}
     r["dim2_dominante_aprovadas_centrao_sim"] = float((d2["% Sim centrão"] > 50).mean())
     # tipo de proposição
     tipo = t["proposição"].fillna("?").str.split().str[0]
