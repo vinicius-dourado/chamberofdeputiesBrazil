@@ -19,6 +19,13 @@ as definições do ARS como prompt).
 - dim1 é "predominantemente governo × oposição, com componente ideológico" (H1b não sustentada; ver Apêndice A).
 - dim2 = dissidência dos polos programáticos (PSOL, NOVO; juntos em 37% das votações) frente a consensos amplos de centrão + PT (+ PL com frequência); não se reproduz nas comissões.
 
+## Linha mestra (decisão do autor, 13/11/2026)
+- O artigo se organiza em torno da pergunta "um eixo só explica o voto sob Lula 3?". Resposta: não.
+  Governismo e ideologia se fundem na dim1; a dim2 (polos programáticos × acordos amplos) não é ideológica.
+- Emendas parlamentares/orçamento impositivo NÃO entram como mecanismo ou choque externo (tema de artigo futuro).
+  Pereira & Mueller 2002, Limongi & Figueiredo 2005 e Bonfim et al. 2023 saíram do texto e do .bib.
+- As seções reescritas (título, resumo, 1, 2, 7, 9) ainda não passaram pela verificação de integridade.
+
 ## Decisões e problemas conhecidos
 - Escores numéricos do survey BRC não conferidos (scielo.br bloqueado): usamos codificação ordinal `CAMPO`.
 - Bootstrap: réplicas reescaladas por fator isotrópico, introduzido ao notar ICs que não continham a estimativa pontual (causa: escala identificada só pelos priors; réplicas ~9% menores); ICs de
