@@ -10,14 +10,14 @@ as definições do ARS como prompt).
 | 1 RESEARCH (metodologia) | `pipeline/fase1_blueprint_metodologico.md` (research_architect_agent) | concluído; hipóteses e critérios fixados sem ver os valores |
 | 1 RESEARCH (análise) | `analise.py` → `resultados.json`, `tabelas/`, `figuras/` | concluído (execução completa ~30 min) |
 | 2 WRITE (literatura) | `pipeline/fase2_literatura.md` (literature_strategist_agent; Dados, Lua Nova, RBCP) | concluído; 15 refs verificadas, 7 [verificar] não usadas no texto |
-| 2 WRITE (redação) | `artigo.md`, `referencias.bib` | primeira versão completa |
+| 2 WRITE (redação) | `artigo.md`, `referencias.bib` | versão completa (~11,7 mil palavras com tabelas e referências) |
 | 2.5 INTEGRITY | `pipeline/fase2_5_integridade.md` | rodada 1 FAIL (1 SERIOUS, 7 MEDIUM) → corrigido; rodada 2 PASS WITH NOTES; MINOR restantes resolvidos |
 | 3 REVIEW em diante | — | pendente (checkpoint obrigatório com o usuário) |
 
 ## Achados que divergem de leituras anteriores do projeto
 - 2D não é "suficiente" pelo critério fixado: 3D acrescenta +0,41 pp (IC [0,30; 0,51]).
-- dim1 é "predominantemente governo × oposição, com componente ideológico" (H1b mista).
-- dim2 opõe PSOL e NOVO ao núcleo PT + centrão (não "oposição ideológica × centrão"); some nas comissões.
+- dim1 é "predominantemente governo × oposição, com componente ideológico" (H1b não sustentada; ver Apêndice A).
+- dim2 = dissidência dos polos programáticos (PSOL, NOVO; juntos em 37% das votações) frente a consensos amplos de centrão + PT (+ PL com frequência); não se reproduz nas comissões.
 
 ## Decisões e problemas conhecidos
 - Escores numéricos do survey BRC não conferidos (scielo.br bloqueado): usamos codificação ordinal `CAMPO`.
