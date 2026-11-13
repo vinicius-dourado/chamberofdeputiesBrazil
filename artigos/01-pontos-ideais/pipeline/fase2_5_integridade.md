@@ -213,3 +213,53 @@ Nenhum padrão de citação alucinada foi detectado: nenhuma obra inexistente, n
 - IL-MEDIUM-5: as 11 votações da PEC 3/2021 com dim2 dominante, em `votacoes_cargas.csv`.
 - IL-MEDIUM-6: `analise.py`, `_orgao_tarefa`, partição de teste `np.random.default_rng(7).random(n) < 0.10`; `tabelas/t9a_cv_por_orgao`.
 - IL-MEDIUM-7: `git log`. O Blueprint (`7c95579`) e a execução completa (`52c17fc`) têm o mesmo horário (10:52:07). O Blueprint não mudou depois disso. `e53f967` contém só `t1_dados_por_ano`.
+
+---
+
+## Rodada 2 (re-verificação dos itens corrigidos)
+
+Data: 13/11/2026. Alvo: `artigo.md` no commit `e8d94db`.
+
+**Escopo.** Reverifiquei só os itens IL-SERIOUS-1, IL-MEDIUM-1 a 7 e IL-MINOR-1 a 16. Também conferi se as correções trouxeram números ou afirmações novas sem fonte. Para isso comparei o texto com o commit `e7131ae` (`git diff --word-diff`) e li as chaves novas de `resultados.json`: `dim2.coalizoes_dim2`, `dim2.coalizoes_dim1`, `dim2.pec3_2021`, `estrutura.coef_dim1_conjunta` e `estrutura.periodos_por_partido`. Li também o trecho de código que gera essas chaves em `analise.py` (`etapa_estrutura`, `etapa_dim2`).
+
+### Verdict (Rodada 2)
+
+**PASS WITH NOTES.** Não restam problemas SERIOUS nem MEDIUM, nem nenhum MAJOR_DISTORTION ou UNVERIFIABLE. Ficam 4 MINOR e 1 nota, nenhum deles bloqueia a passagem ao Stage 3. Na Stage 4.5, os MINOR terão de estar resolvidos.
+
+### Status dos itens da Rodada 1
+
+| ID | Status | Evidência |
+|---|---|---|
+| IL-SERIOUS-1 (Hix e Noury, §7) | **Resolvido** | O §7 agora diz que os resultados "convergem com Zucco (2009) e com o padrão que Hix e Noury (2016) encontram na maioria dos legislativos" e que "contrariam… a expectativa desses autores para os presidencialismos com governos de coalizão". Isso confere com o resumo da obra. |
+| IL-MEDIUM-1 (1,2 unidade) | **Resolvido** | Resumo, abstract e §5.2 dizem "entre 1,2 e 1,3", e os valores são 1,199, 1,266 e 1,295. |
+| IL-MEDIUM-2 (H1b "misto") | **Resolvido** | A Tabela 4 diz "não sustentado (ganho do campo = 0,09)". O §5.2 declara que o desenho não tem limiar de refutação e que a decisão é de interpretação, registrada no Apêndice A, item 2. |
+| IL-MEDIUM-3 (RQ1) | **Resolvido** | O §5.1 diz que a resposta à RQ1 é "três dimensões". O abstract e o resumo dizem que "duas dimensões não bastam". A manutenção do modelo 2D está no Apêndice A, item 1, com razões rastreáveis: autovalores 0,14/0,83/0,31 e correlações 0,997/0,984 (`dim3.*`). |
+| IL-MEDIUM-4 (coalizão contra os polos) | **Resolvido** | O texto relata 51 pp, 37%, 22%, 29% e 0,7%, e também PT com o centrão em 89% contra 70% e PL com o centrão em 78% contra 36%. Os números conferem com `dim2.coalizoes_dim2/dim1` (0,367, 0,216, 0,289, 0,0073, 0,886, 0,702, 0,776, 0,356; n = 343 e 825) e com a minha contagem da Rodada 1. A assinatura E1(b) não cumprida está declarada no §5.3 e no Apêndice A, item 6. A RQ3 foi reformulada ("dissidência dos polos, juntos ou separadamente"). |
+| IL-MEDIUM-5 (PEC 3/2021) | **Resolvido** | O PT aparece "do lado dos polos (entre 12% e 18% de 'Sim' nas votações de maior carga, contra 79% a 92% do centrão e 94% a 100% do PL)". Os valores conferem com as linhas da PEC 3/2021 em `t8_top_dim2`, com \|b2\| ≥ 5: PT 11,7, 12,3, 13,6 e 17,5; centrão 79,0–92,2; PL 94,0–100. A chave nova `dim2.pec3_2021` guarda o mínimo e o máximo de **todas** as votações, nos dois sentidos (PT de 11,5 a 100), e não sustenta sozinha o intervalo do texto. A fonte certa é `t8_top_dim2`, citada no parágrafo. |
+| IL-MEDIUM-6 (comissões) | **Resolvido** | O texto diz "não se reproduz…", cita a partição única de 10% sem intervalo, traz a t9a (CCJC: 92,4 contra 92,1, +0,30 pp; demais comissões: 92,5 nos dois modelos, valores 0,92547 e 0,92544) e marca a explicação como não testada. Os números conferem com `cv_por_orgao`. |
+| IL-MEDIUM-7 (transparência) | **Resolvido, com 1 MINOR novo (R2-MINOR-2)** | A nota cita o commit `7c95579` e declara que o autor "havia lido os resultados de uma primeira execução completa do script antes do commit do documento". O §8, item 10, diz o mesmo. Resumo e abstract não dizem mais "antes da leitura dos resultados completos", mas só falam em "resultados preliminares". |
+| IL-MINOR-1 a 13, 15, 16 | **Resolvidos** | Dim3 descrita como "menos estruturada por partido"; "40% maior" na dim2; 0,999 nas duas após Procrustes; "no modelo 3D" no §5.4; "votos analisados" no §3 e na Limitação 4; Missão = 1 em `estrutura.periodos_por_partido`; H1a com critério de refutação e a União declarada como acréscimo; H1c com \|r\| ≤ 0,30; R² 0,29 descrito como "acima do limiar de 0,25"; H2c e H2d relatadas; Apêndice A e *hash* presentes; "menor dependência de recursos" e "cartel" retirados; "não necessariamente com moderação ideológica"; SVD restrita à dim1; coeficientes +0,74 e −0,04 conferem com `estrutura.coef_dim1_conjunta` (0,7368 e −0,0365); "Argelina Cheibub" uniformizado; Zucco e Power com "distância ideológica inédita". |
+| IL-MINOR-14 (DOIs de Zucco 2009 e Clinton 2004) | **Aberto, por decisão declarada** | Os DOIs seguem omitidos porque não foram conferidos. A omissão é aceitável na Stage 2.5. Na Stage 4.5, é preciso acrescentá-los depois de conferir ou declarar a omissão na nota das referências. |
+
+### Novos números e afirmações introduzidos pelas correções
+
+Todos os números novos foram rastreados até `resultados.json` ou `tabelas`: 89/78/70/36%, 37/22/29/0,7%, 51 pp, 12–18/79–92/94–100%, +0,74 e −0,04, 0,3 pp e 92,4/92,1/92,5%, Missão = 1, e 0,14/0,83/0,31 com 0,997/0,984. As análises novas (coalizões e regressão conjunta) estão marcadas como exploratórias no Apêndice A, item 5. Achei 3 pontos menores e 1 nota.
+
+### Pendências (MINOR, não bloqueiam a Stage 3)
+
+| ID | Location | Issue | Suggestion |
+|---|---|---|---|
+| R2-MINOR-1 | §2.3, 2º período ("uma segunda dimensão estável que oponha os dois extremos programáticos ao núcleo de governabilidade") | Ficou a formulação antiga, que não bate com a nova RQ3 | "…que capte a dissidência dos dois extremos programáticos em relação a consensos amplos…" |
+| R2-MINOR-2 | Resumo e abstract (frase sobre os critérios) contra a Nota de transparência e o §8, item 10 | Resumo e abstract falam só em "resultados preliminares"; nota e limitação dizem que o autor leu "uma primeira execução completa" antes do commit do desenho. O resumo informa menos que o corpo. | No resumo e no abstract: "o autor da análise já conhecia resultados preliminares e os de uma primeira execução completa" |
+| R2-MINOR-3 | §5.3 ("O que define a dimensão é a existência de um consenso amplo… e a dissidência de um ou dos dois polos") e RQ3 | A dissidência de pelo menos um polo contra o centrão **não** distingue a dim2: ocorre em 87% das votações de dim2 dominante e em 91% das de dim1 dominante (`coalizoes_*.algum_polo_contra_centrao`). O que distingue a dim2 é a amplitude do consenso (PT com o centrão em 89% contra 70%; PL em 78% contra 36%) e a dissidência conjunta (37% contra 0,7%). | Reescrever a frase com esses contrastes e relatar `algum_polo_contra_centrao` |
+| IL-MINOR-14 | Referências | DOIs omitidos (ver acima) | Resolver até a Stage 4.5 |
+
+**Nota (não é um problema).** O Apêndice A, item 4, diz que o reescalonamento isotrópico do bootstrap foi introduzido "depois de observar que os intervalos de algumas médias partidárias não continham a estimativa pontual". É uma declaração de processo e não há saída que a documente. `NOTAS_PASSAGEM.md` dá outra justificativa: a escala é identificada só pelos priors. Recomenda-se citar o commit em que o reescalonamento entrou (`52c17fc`, "bootstrap reescalado") ou harmonizar as duas justificativas.
+
+### Aviso de limitação (Rodada 2)
+
+Valem as limitações da Rodada 1:
+- Phase D não aplicada.
+- Fontes externas lidas só pelo resumo.
+- Cobertura E1 `E1-COVERAGE-UNRESOLVED`.
+- Não reexecutei `analise.py`. As chaves novas foram conferidas contra o código que as gera e contra a minha contagem independente sobre `votacoes_cargas.csv`, e as duas bateram.

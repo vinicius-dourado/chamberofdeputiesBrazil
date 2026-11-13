@@ -11,7 +11,7 @@ as definições do ARS como prompt).
 | 1 RESEARCH (análise) | `analise.py` → `resultados.json`, `tabelas/`, `figuras/` | concluído (execução completa ~30 min) |
 | 2 WRITE (literatura) | `pipeline/fase2_literatura.md` (literature_strategist_agent; Dados, Lua Nova, RBCP) | concluído; 15 refs verificadas, 7 [verificar] não usadas no texto |
 | 2 WRITE (redação) | `artigo.md`, `referencias.bib` | primeira versão completa |
-| 2.5 INTEGRITY | `pipeline/fase2_5_integridade.md` | em andamento |
+| 2.5 INTEGRITY | `pipeline/fase2_5_integridade.md` | rodada 1 FAIL (1 SERIOUS, 7 MEDIUM) → corrigido; rodada 2 PASS WITH NOTES; MINOR restantes resolvidos |
 | 3 REVIEW em diante | — | pendente (checkpoint obrigatório com o usuário) |
 
 ## Achados que divergem de leituras anteriores do projeto
@@ -21,7 +21,7 @@ as definições do ARS como prompt).
 
 ## Decisões e problemas conhecidos
 - Escores numéricos do survey BRC não conferidos (scielo.br bloqueado): usamos codificação ordinal `CAMPO`.
-- Bootstrap: réplicas reescaladas por fator isotrópico (escala identificada só pelos priors); ICs de
+- Bootstrap: réplicas reescaladas por fator isotrópico, introduzido ao notar ICs que não continham a estimativa pontual (causa: escala identificada só pelos priors; réplicas ~9% menores); ICs de
   correlações/R² ficam abaixo do ponto (réplicas mais ruidosas) — declarado no texto.
 - Bug do 0D na CV: corrigido. Modo `TESTE_RAPIDO=<pasta>` para teste de fumaça.
 - Citações em ABNT autor-data (o checkpoint propôs APA 7; trocado por convenção dos periódicos brasileiros).
