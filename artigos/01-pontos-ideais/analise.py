@@ -974,6 +974,110 @@ def etapa_dim2(P, m, O):
     return t
 
 
+# ------------------------------------------------------- comparação 1D × 2D (eixo central)
+N_BOOT_1D = 100
+
+
+def _boot1d_tarefa(b):
+    P = _G["P"]
+    cl, ncl = _G["cluster"], _G["cluster"].max() + 1
+    c = np.bincount(np.random.default_rng(5000 + b).integers(0, ncl, ncl), minlength=ncl).astype(float)
+    m = ajustar(P.i, P.j, P.y, P.n_i, P.n_j, 1, base=P.base, w=c[cl][P.j], semente=5000 + b, **PADRAO)
+    return P.orientar(m)["u"][:, 0], m["convergiu"]
+
+
+PARTIDOS_COMP = ["PSOL", "PT", "PCdoB", "REDE", "PSB", "PDT", "MDB", "PSD", "PP", "REPUBLICANOS", "UNIÃO", "PL", "NOVO"]
+
+
+def etapa_comparacao(P, pred, finais, tvot, boot1d):
+    """Onde e como a análise de um eixo só difere da de dois eixos (análises exploratórias)."""
+    y, j = P.y, P.j
+    r = {}
+    acerto = lambda k, mk: acc(pred[k][mk], y[mk])
+    # (a) acurácia fora da amostra segundo a dimensão que domina a votação
+    d2 = tvot["dim2_dominante"].to_numpy()[j]
+    lin = []
+    for nome, mk in [("dimensão 2 dominante", d2), ("dimensão 1 dominante", ~d2), ("todas", np.ones_like(d2))]:
+        lin.append({"votações": nome, "n votações": int(np.unique(j[mk]).size), "votos": int(mk.sum()),
+                    "% dos votos": 100 * mk.mean(), "maioria do partido": acerto("maioria_partido", mk),
+                    "orientação": acerto("orientacao", mk), "IRT 1D": acerto(1, mk), "IRT 2D": acerto(2, mk)})
+    t = pd.DataFrame(lin)
+    t["ganho 1D→2D (pp)"] = 100 * (t["IRT 2D"] - t["IRT 1D"])
+    tabela(t, "t15_comparacao_por_votacao")
+    r["por_tipo_votacao"] = t.to_dict("records")
+    # IC por proposição do ganho nas votações de dim2 dominante
+    cl = _G["cluster"][j]
+    ncl = cl.max() + 1
+    W = np.random.default_rng(78).multinomial(ncl, np.full(ncl, 1 / ncl), size=1000).astype(float)
+    dif = (((pred[2] > .5) == (y > .5)).astype(float) - ((pred[1] > .5) == (y > .5)).astype(float))
+    for nome, mk in [("dim2", d2), ("dim1", ~d2)]:
+        sc = np.bincount(cl[mk], dif[mk], ncl)
+        nc = np.bincount(cl[mk], minlength=ncl)
+        bt = (W @ sc) / np.maximum(W @ nc, 1)
+        r[f"ic_ganho_{nome}"] = [float(np.percentile(bt, 2.5)), float(np.percentile(bt, 97.5))]
+    # (b) posição coletiva de cada partido em cada votação (fora da amostra)
+    df = pd.DataFrame({"j": j, "y": y, "p1": pred[1], "p2": pred[2], "part": P.v["deputado_siglaPartido"].to_numpy()})
+    pv = df.groupby(["part", "j"]).agg(y=("y", "mean"), p1=("p1", "mean"), p2=("p2", "mean"), n=("y", "size"))
+    pv = pv[pv["n"] >= 3]
+    lin = []
+    for pa in PARTIDOS_COMP:
+        if pa not in pv.index.get_level_values(0):
+            continue
+        q = pv.loc[pa]
+        lin.append({"partido": pa, "votações": len(q),
+                    "erra a maioria do partido: 1D": int(((q.p1 > .5) != (q.y > .5)).sum()),
+                    "erra a maioria do partido: 2D": int(((q.p2 > .5) != (q.y > .5)).sum()),
+                    "erro médio da % de Sim: 1D": 100 * float((q.p1 - q.y).abs().mean()),
+                    "erro médio da % de Sim: 2D": 100 * float((q.p2 - q.y).abs().mean())})
+    t = pd.DataFrame(lin)
+    tabela(t, "t16_comparacao_por_partido", casas=1)
+    r["por_partido"] = t.to_dict("records")
+    # (c) resultado da votação (lado majoritário entre os votantes)
+    g = df.groupby("j")[["y", "p1", "p2"]].mean()
+    venc = g["y"] > .5
+    apertada = (g["y"] - .5).abs() < .1
+    r["resultado"] = {"votacoes": int(len(g)), "apertadas": int(apertada.sum()),
+                      "erra_vencedor_1D": int(((g.p1 > .5) != venc).sum()), "erra_vencedor_2D": int(((g.p2 > .5) != venc).sum()),
+                      "erro_medio_pct_sim_1D": 100 * float((g.p1 - g.y).abs().mean()),
+                      "erro_medio_pct_sim_2D": 100 * float((g.p2 - g.y).abs().mean())}
+    # (d) posições: modelo de um eixo × dimensão 1 do modelo de dois eixos (escores padronizados)
+    conf = P.nv_dep >= MIN_VOTOS
+    z = lambda v: (v - v[conf].mean()) / v[conf].std()
+    u1, d1, d2v = z(finais[1]["u"][:, 0]), z(finais[2]["u"][:, 0]), finais[2]["u"][:, 1]
+    dd = pd.DataFrame({"p": P.part_dep, "1D": u1, "2D: dim. 1": d1, "2D: dim. 2": d2v})[conf]
+    m = dd.groupby("p").mean().reindex(PARTIDOS_COMP)
+    m["deslocamento"] = m["1D"] - m["2D: dim. 1"]
+    m.index.name = "partido"
+    tabela(m.reset_index(), "t17_posicoes_1d_2d", casas=2)
+    r["posicoes"] = m.reset_index().to_dict("records")
+    r["r_1D_dim1"] = float(np.corrcoef(u1[conf], d1[conf])[0, 1])
+    r["r_1D_dim2"] = float(np.corrcoef(u1[conf], d2v[conf])[0, 1])
+    # incerteza das diferenças no 1D (bootstrap por proposição, escores padronizados por réplica)
+    U1, conv = boot1d
+    U1 = U1[conv]
+
+    def dif_part(a, b, U):
+        out = []
+        for u in U:
+            uz = z(u)
+            out.append(uz[conf & (P.part_dep == a)].mean() - uz[conf & (P.part_dep == b)].mean())
+        return [float(np.percentile(out, 2.5)), float(np.percentile(out, 97.5))]
+    for a_, b_ in [("PSOL", "PT"), ("PSOL", "PCdoB"), ("NOVO", "PL")]:
+        r[f"dif_1D_{a_}_{b_}"] = {"ponto": float(m.loc[a_, "1D"] - m.loc[b_, "1D"]), "ic": dif_part(a_, b_, U1)}
+        r[f"dif_2Ddim1_{a_}_{b_}"] = float(m.loc[a_, "2D: dim. 1"] - m.loc[b_, "2D: dim. 1"])
+    r["boot1d_B"], r["boot1d_convergiram"] = int(len(conv)), int(conv.sum())
+    # correlação do eixo único com alinhamento ao Governo e com o campo
+    gov = finais[2]["gov"]
+    campo = np.array([CAMPO.get(p_, np.nan) for p_ in P.part_dep], float)
+    ok = conf & ~np.isnan(gov) & ~np.isnan(campo)
+    r["r_1D_governo"] = float(np.corrcoef(u1[ok], gov[ok])[0, 1])
+    r["r_1D_campo"] = float(np.corrcoef(u1[ok], campo[ok])[0, 1])
+    r["r_dim1_governo"] = float(np.corrcoef(d1[ok], gov[ok])[0, 1])
+    r["r_dim1_campo"] = float(np.corrcoef(d1[ok], campo[ok])[0, 1])
+    RES["comparacao"] = r
+    return m
+
+
 # ------------------------------------------------------------------------- robustez
 CONFIGS = {
     "padrão": {},
@@ -1534,6 +1638,37 @@ def figuras(P, m, pred, tvot, se, dcom, sc_svd):
     legenda_blocos(ax, loc="lower right", fontsize=8.5)
     fig.savefig(FIGS / "fig8_ganho_por_partido.png"), plt.close(fig)
 
+    # --- Fig. 9: o que o eixo único distorce
+    m = _G["pos12"].dropna(subset=["1D"])
+    tp = pd.DataFrame(RES["comparacao"]["por_partido"]).set_index("partido")
+    fig, axs = plt.subplots(1, 2, figsize=(10.5, 5))
+    ax = axs[0]
+    ordem = m.sort_values("2D: dim. 1").index
+    yy = np.arange(len(ordem))
+    for k, pa in enumerate(ordem):
+        a1, a2 = m.loc[pa, "2D: dim. 1"], m.loc[pa, "1D"]
+        ax.plot([a1, a2], [k, k], color=GRADE, lw=2, zorder=1)
+    ax.scatter(m.loc[ordem, "2D: dim. 1"], yy, s=45, color="#2a78d6", edgecolors=FUNDO, linewidths=1.5, zorder=3,
+               label="dimensão 1 do modelo de dois eixos")
+    ax.scatter(m.loc[ordem, "1D"], yy, s=45, color="#eb6834", edgecolors=FUNDO, linewidths=1.5, zorder=3,
+               label="modelo de um eixo só")
+    ax.set_yticks(yy), ax.set_yticklabels(ordem), ax.axvline(0, color=GRADE, lw=1)
+    ax.set_xlabel("Posição média do partido (escore padronizado; + = governista)")
+    ax.set_title("a) Posições: um eixo × dois eixos")
+    ax.legend(loc="lower right", fontsize=8.5)
+    ax = axs[1]
+    tp = tp.loc[[p_ for p_ in ordem if p_ in tp.index]]
+    pct1 = 100 * tp["erra a maioria do partido: 1D"] / tp["votações"]
+    pct2 = 100 * tp["erra a maioria do partido: 2D"] / tp["votações"]
+    yy = np.arange(len(tp))
+    ax.barh(yy + 0.2, pct1, height=0.38, color="#eb6834", label="modelo de um eixo só")
+    ax.barh(yy - 0.2, pct2, height=0.38, color="#2a78d6", label="modelo de dois eixos")
+    ax.set_yticks(yy), ax.set_yticklabels(tp.index), ax.grid(axis="y", visible=False)
+    ax.set_xlabel("Votações em que o modelo erra o lado da maioria do partido (%)")
+    ax.set_title("b) Posição coletiva dos partidos")
+    ax.legend(loc="center right", fontsize=8.5)
+    fig.tight_layout(), fig.savefig(FIGS / "fig9_um_eixo_x_dois_eixos.png"), plt.close(fig)
+
 
 # =============================================================================== main
 ETAPAS = ["dados", "reproducao", "cv", "final", "estrutura", "dim2", "recortes", "robustez", "bootstrap", "orgaos", "svd",
@@ -1545,12 +1680,13 @@ def main():
     ap.add_argument("--etapas", nargs="*", default=ETAPAS)
     ap.add_argument("--refazer", action="store_true")
     args = ap.parse_args()
-    global CACHE, FIGS, TABS, AQUI_RES, N_BOOT, MIN_VOTOS
+    global CACHE, FIGS, TABS, AQUI_RES, N_BOOT, MIN_VOTOS, N_BOOT_1D
     AQUI_RES = AQUI
     if os.environ.get("TESTE_RAPIDO"):
         base = Path(os.environ["TESTE_RAPIDO"])
         CACHE, FIGS, TABS, AQUI_RES, N_BOOT = base / "cache", base / "figuras", base / "tabelas", base, 4
         MIN_VOTOS = 5
+        N_BOOT_1D = 4
         base.mkdir(parents=True, exist_ok=True)
     for d in (CACHE, FIGS, TABS):
         d.mkdir(exist_ok=True)
@@ -1586,6 +1722,10 @@ def main():
     O = etapa_estrutura(P, m)
     _G["O"] = O
     tvot = etapa_dim2(P, m, O)
+    boot1d = em_cache("bootstrap_1d", lambda: (lambda s_: (np.array([a_ for a_, _ in s_]), np.array([c_ for _, c_ in s_])))(
+        paralelo(_boot1d_tarefa, list(range(N_BOOT_1D)))), rf)
+    pos12 = etapa_comparacao(P, pred, finais, tvot, boot1d)
+    _G["pos12"] = pos12
     if quer("recortes"):
         RES["recortes"] = em_cache("recortes", lambda: (etapa_recortes(P, m), RES["recortes"])[1], rf)
     if quer("robustez"):

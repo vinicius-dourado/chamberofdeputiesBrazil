@@ -134,7 +134,7 @@ const {{ chromium }} = require('playwright');
   await p.evaluate(() => document.fonts.ready);
   await p.pdf({{ path: '{PDF}', format: 'A4', printBackground: true, displayHeaderFooter: true,
     margin: {{ top: '25mm', bottom: '24mm', left: '22mm', right: '22mm' }},
-    headerTemplate: '<div style="font-family:Liberation Serif,serif;font-size:7.5pt;color:#555;width:100%;padding:0 22mm;text-align:right;font-style:italic">Duas dimensões do voto nominal no governo Lula 3</div>',
+    headerTemplate: '<div style="font-family:Liberation Serif,serif;font-size:7.5pt;color:#555;width:100%;padding:0 22mm;text-align:right;font-style:italic">Um eixo ou dois? O voto nominal no governo Lula 3</div>',
     footerTemplate: '<div style="font-family:Liberation Serif,serif;font-size:8.5pt;color:#333;width:100%;text-align:center"><span class="pageNumber"></span></div>' }});
   await b.close();
 }})();

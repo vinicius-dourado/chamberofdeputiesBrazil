@@ -3121,5 +3121,289 @@
    }
   ],
   "prop_votacoes_dim3_dominante": 0.11564625850340136
+ },
+ "comparacao": {
+  "por_tipo_votacao": [
+   {
+    "votações": "dimensão 2 dominante",
+    "n votações": 372,
+    "votos": 137522,
+    "% dos votos": 31.725401175612948,
+    "maioria do partido": 0.9005759078547433,
+    "orientação": 0.8859164351885517,
+    "IRT 1D": 0.8950931487325664,
+    "IRT 2D": 0.9170969008594988,
+    "ganho 1D→2D (pp)": 2.2003752126932397
+   },
+   {
+    "votações": "dimensão 1 dominante",
+    "n votações": 1098,
+    "votos": 295954,
+    "% dos votos": 68.27459882438704,
+    "maioria do partido": 0.877450549747596,
+    "orientação": 0.8229589733539672,
+    "IRT 1D": 0.9166492089986957,
+    "IRT 2D": 0.9195584448934632,
+    "ganho 1D→2D (pp)": 0.2909235894767437
+   },
+   {
+    "votações": "todas",
+    "n votações": 1470,
+    "votos": 433476,
+    "% dos votos": 100.0,
+    "maioria do partido": 0.8847871623803856,
+    "orientação": 0.8429324806909725,
+    "IRT 1D": 0.9098104624016093,
+    "IRT 2D": 0.9187775101735737,
+    "ganho 1D→2D (pp)": 0.8967047771964332
+   }
+  ],
+  "ic_ganho_dim2": [
+   0.01771231913576609,
+   0.026260633697794508
+  ],
+  "ic_ganho_dim1": [
+   0.0018998063939676744,
+   0.0038887702517102023
+  ],
+  "por_partido": [
+   {
+    "partido": "PSOL",
+    "votações": 1103,
+    "erra a maioria do partido: 1D": 168,
+    "erra a maioria do partido: 2D": 12,
+    "erro médio da % de Sim: 1D": 17.171767843998804,
+    "erro médio da % de Sim: 2D": 4.635376848656447
+   },
+   {
+    "partido": "PT",
+    "votações": 1399,
+    "erra a maioria do partido: 1D": 11,
+    "erra a maioria do partido: 2D": 8,
+    "erro médio da % de Sim: 1D": 2.383890229920934,
+    "erro médio da % de Sim: 2D": 1.8907371390850654
+   },
+   {
+    "partido": "PCdoB",
+    "votações": 1054,
+    "erra a maioria do partido: 1D": 19,
+    "erra a maioria do partido: 2D": 22,
+    "erro médio da % de Sim: 1D": 4.442172099579065,
+    "erro médio da % de Sim: 2D": 4.150548319974494
+   },
+   {
+    "partido": "REDE",
+    "votações": 124,
+    "erra a maioria do partido: 1D": 9,
+    "erra a maioria do partido: 2D": 4,
+    "erro médio da % de Sim: 1D": 9.94017246654396,
+    "erro médio da % de Sim: 2D": 8.095198272046098
+   },
+   {
+    "partido": "PSB",
+    "votações": 1039,
+    "erra a maioria do partido: 1D": 46,
+    "erra a maioria do partido: 2D": 55,
+    "erro médio da % de Sim: 1D": 7.871539427419941,
+    "erro médio da % de Sim: 2D": 7.317585816377655
+   },
+   {
+    "partido": "PDT",
+    "votações": 1043,
+    "erra a maioria do partido: 1D": 58,
+    "erra a maioria do partido: 2D": 61,
+    "erro médio da % de Sim: 1D": 8.2272182882111,
+    "erro médio da % de Sim: 2D": 7.892871848698041
+   },
+   {
+    "partido": "MDB",
+    "votações": 1160,
+    "erra a maioria do partido: 1D": 56,
+    "erra a maioria do partido: 2D": 51,
+    "erro médio da % de Sim: 1D": 7.706825079804061,
+    "erro médio da % de Sim: 2D": 6.882974648187201
+   },
+   {
+    "partido": "PSD",
+    "votações": 1193,
+    "erra a maioria do partido: 1D": 60,
+    "erra a maioria do partido: 2D": 57,
+    "erro médio da % de Sim: 1D": 7.656326521357036,
+    "erro médio da % de Sim: 2D": 7.159444109399618
+   },
+   {
+    "partido": "PP",
+    "votações": 1287,
+    "erra a maioria do partido: 1D": 50,
+    "erra a maioria do partido: 2D": 55,
+    "erro médio da % de Sim: 1D": 8.024137618645682,
+    "erro médio da % de Sim: 2D": 7.041969609840628
+   },
+   {
+    "partido": "REPUBLICANOS",
+    "votações": 1281,
+    "erra a maioria do partido: 1D": 80,
+    "erra a maioria do partido: 2D": 38,
+    "erro médio da % de Sim: 1D": 9.803193225898212,
+    "erro médio da % de Sim: 2D": 6.04486515450371
+   },
+   {
+    "partido": "UNIÃO",
+    "votações": 1358,
+    "erra a maioria do partido: 1D": 86,
+    "erra a maioria do partido: 2D": 78,
+    "erro médio da % de Sim: 1D": 7.663291561586251,
+    "erro médio da % de Sim: 2D": 7.324470936756492
+   },
+   {
+    "partido": "PL",
+    "votações": 1411,
+    "erra a maioria do partido: 1D": 35,
+    "erra a maioria do partido: 2D": 29,
+    "erro médio da % de Sim: 1D": 4.647842526396992,
+    "erro médio da % de Sim: 2D": 4.058363079822931
+   },
+   {
+    "partido": "NOVO",
+    "votações": 994,
+    "erra a maioria do partido: 1D": 171,
+    "erra a maioria do partido: 2D": 96,
+    "erro médio da % de Sim: 1D": 18.24083575143522,
+    "erro médio da % de Sim: 2D": 13.59880165608304
+   }
+  ],
+  "resultado": {
+   "votacoes": 1470,
+   "apertadas": 170,
+   "erra_vencedor_1D": 5,
+   "erra_vencedor_2D": 7,
+   "erro_medio_pct_sim_1D": 0.23628629202560805,
+   "erro_medio_pct_sim_2D": 0.3471473866756797
+  },
+  "posicoes": [
+   {
+    "partido": "PSOL",
+    "1D": 1.1273137419845838,
+    "2D: dim. 1": 1.7342549589353422,
+    "2D: dim. 2": 1.742404865624715,
+    "deslocamento": -0.6069412169507584
+   },
+   {
+    "partido": "PT",
+    "1D": 1.4868272573160801,
+    "2D: dim. 1": 1.5891273749867085,
+    "2D: dim. 2": 0.10551331183931334,
+    "deslocamento": -0.10230011767062841
+   },
+   {
+    "partido": "PCdoB",
+    "1D": 1.379730925895289,
+    "2D: dim. 1": 1.369324865444039,
+    "2D: dim. 2": 0.3380330817454601,
+    "deslocamento": 0.010406060451249921
+   },
+   {
+    "partido": "REDE",
+    "1D": 1.1258653878379858,
+    "2D: dim. 1": 1.1261651642066755,
+    "2D: dim. 2": 0.9653511514175686,
+    "deslocamento": -0.0002997763686896082
+   },
+   {
+    "partido": "PSB",
+    "1D": 0.8158280886503765,
+    "2D: dim. 1": 0.7108508517236215,
+    "2D: dim. 2": 0.21868590401107413,
+    "deslocamento": 0.10497723692675498
+   },
+   {
+    "partido": "PDT",
+    "1D": 0.7131374992179838,
+    "2D: dim. 1": 0.6230547836155316,
+    "2D: dim. 2": 0.1390252644910285,
+    "deslocamento": 0.09008271560245218
+   },
+   {
+    "partido": "MDB",
+    "1D": -0.05822771980598225,
+    "2D: dim. 1": -0.09540164595242628,
+    "2D: dim. 2": -0.18142862890194864,
+    "deslocamento": 0.037173926146444033
+   },
+   {
+    "partido": "PSD",
+    "1D": 0.06717034785027684,
+    "2D: dim. 1": 0.009211840112300267,
+    "2D: dim. 2": -0.043601235120798144,
+    "deslocamento": 0.057958507737976575
+   },
+   {
+    "partido": "PP",
+    "1D": -0.16885928235936162,
+    "2D: dim. 1": -0.20447259753724825,
+    "2D: dim. 2": -0.25951456316232313,
+    "deslocamento": 0.03561331517788663
+   },
+   {
+    "partido": "REPUBLICANOS",
+    "1D": 0.0023234713787521747,
+    "2D: dim. 1": -0.11502561369300544,
+    "2D: dim. 2": -0.8111636648699746,
+    "deslocamento": 0.11734908507175762
+   },
+   {
+    "partido": "UNIÃO",
+    "1D": -0.2369142086670863,
+    "2D: dim. 1": -0.2744379324298416,
+    "2D: dim. 2": -0.002171671570080134,
+    "deslocamento": 0.03752372376275531
+   },
+   {
+    "partido": "PL",
+    "1D": -1.3414769470869592,
+    "2D: dim. 1": -1.304460691143216,
+    "2D: dim. 2": 0.171718295936889,
+    "deslocamento": -0.03701625594374325
+   },
+   {
+    "partido": "NOVO",
+    "1D": -1.9235910203919797,
+    "2D: dim. 1": -1.3930910074133056,
+    "2D: dim. 2": 1.1430013657444547,
+    "deslocamento": -0.5305000129786741
+   }
+  ],
+  "r_1D_dim1": 0.9834734721734556,
+  "r_1D_dim2": -0.10498028958531028,
+  "dif_1D_PSOL_PT": {
+   "ponto": -0.35951351533149634,
+   "ic": [
+    -0.5172158875954216,
+    0.04776287660982367
+   ]
+  },
+  "dif_2Ddim1_PSOL_PT": 0.14512758394863368,
+  "dif_1D_PSOL_PCdoB": {
+   "ponto": -0.2524171839107052,
+   "ic": [
+    -0.46466701754709744,
+    0.11408054602573442
+   ]
+  },
+  "dif_2Ddim1_PSOL_PCdoB": 0.3649300934913031,
+  "dif_1D_NOVO_PL": {
+   "ponto": -0.5821140733050205,
+   "ic": [
+    -0.9518051978390902,
+    -0.33785018452570537
+   ]
+  },
+  "dif_2Ddim1_NOVO_PL": -0.08863031627008966,
+  "boot1d_B": 100,
+  "boot1d_convergiram": 100,
+  "r_1D_governo": 0.9504451261192424,
+  "r_1D_campo": -0.7156236201351448,
+  "r_dim1_governo": 0.9116740334273483,
+  "r_dim1_campo": -0.7524334092570498
  }
 }

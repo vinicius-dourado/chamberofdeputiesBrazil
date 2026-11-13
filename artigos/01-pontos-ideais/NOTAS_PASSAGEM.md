@@ -26,6 +26,13 @@ as definições do ARS como prompt).
   Pereira & Mueller 2002, Limongi & Figueiredo 2005 e Bonfim et al. 2023 saíram do texto e do .bib.
 - As seções reescritas (título, resumo, 1, 2, 7, 9) ainda não passaram pela verificação de integridade.
 
+## Eixo central (decisão do autor): comparação um eixo × dois eixos
+- Seções 5.2 (onde o 2º eixo faz diferença: por tipo de votação, partido, posição coletiva, resultado) e
+  5.3 (o que o eixo único distorce: PSOL e NOVO) — etapa `etapa_comparacao` no analise.py, tabelas t15–t17, fig9.
+- Resultado desfavorável relatado: para prever o vencedor das votações, 1D erra 5 e 2D erra 7.
+- PSOL < PT no 1D é só tendência (IC inclui 0); NOVO > PL em oposição no 1D é significativo.
+- Comparações exploratórias (declaradas no Apêndice A, item 6). Estas seções ainda não passaram por integridade.
+
 ## Decisões e problemas conhecidos
 - Escores numéricos do survey BRC não conferidos (scielo.br bloqueado): usamos codificação ordinal `CAMPO`.
 - Bootstrap: réplicas reescaladas por fator isotrópico, introduzido ao notar ICs que não continham a estimativa pontual (causa: escala identificada só pelos priors; réplicas ~9% menores); ICs de
