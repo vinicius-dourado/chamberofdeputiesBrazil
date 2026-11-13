@@ -31,6 +31,7 @@ Medidas (mês a mês, dia 15)
 * prop_kd_v1 / prop_kd_v2: cosseno de Koppel & Diskin (2009), medida de Almeida (np em
   grupo / individualmente). Reproduz exatamente Prop_v1 e Prop_v2 da planilha.
 * tamanho: nº de partidos com ao menos um ministério.
+* cadeiras_coalizao_pct: % das cadeiras da Câmara com os partidos do gabinete.
 * heterogeneidade: coeficiente de variação (x100) da ideologia dos partidos do gabinete.
 
 Uso:  python coalizao/indicadores_coalizao.py
@@ -53,6 +54,16 @@ SAIDA_UNIAO_PP = pd.Timestamp("2025-09-02")  # federação União Progressista d
 # nomes de partido harmonizados (sucessões de sigla)
 NORM = {"PMDB": "MDB", "PFL": "DEM", "PPB": "PP", "PR": "PL", "PRB": "REP",
         "REPUBLICANOS": "REP", "União": "UNIAO", "UNIÃO": "UNIAO", "Rede": "REDE"}
+
+# tamanho da Câmara dos Deputados (a partir da data)
+TAMANHO_CAMARA = [("1983-02-01", 479), ("1987-02-01", 487), ("1991-02-01", 503), ("1995-01-01", 513)]
+
+
+def tamanho_camara(t):
+    """Nº de cadeiras da Câmara na data t. A partir de 1995-01-01 usa 513 (o 1º gabinete de
+    FHC, na planilha de Almeida, já traz as bancadas da legislatura eleita em 1994)."""
+    return [n for d, n in TAMANHO_CAMARA if pd.Timestamp(d) <= pd.Timestamp(t)][-1]
+
 
 MANDATOS = [  # (rótulo, início, fim exclusivo)
     ("Sarney", "1985-03-15", "1990-03-15"),
@@ -230,6 +241,7 @@ def painel_mensal():
                 "heterogeneidade": het,
                 "partidos_sem_ideologia": sem_ide,
                 "cadeiras_coalizao": sum(s for _, _, s in comp),
+                "cadeiras_coalizao_pct": 100 * sum(s for _, _, s in comp) / tamanho_camara(t),
                 "composicao": " ".join(f"{p}({m},{s})" for p, m, s in comp),
             })
     return pd.DataFrame(linhas)
@@ -244,6 +256,7 @@ def tabela_por_mandato(painel, versao="base"):
         prop_media=("coalescencia", "mean"), prop_dp=("coalescencia", "std"),
         tam_media=("tamanho", "mean"), tam_dp=("tamanho", "std"),
         het_media=("heterogeneidade", "mean"), het_dp=("heterogeneidade", "std"),
+        cad_media=("cadeiras_coalizao_pct", "mean"), cad_dp=("cadeiras_coalizao_pct", "std"),
     ).reindex(ordem).round(1).reset_index()
     return t
 
@@ -282,7 +295,7 @@ if __name__ == "__main__":
     l3["periodo"] = pd.cut(pd.to_datetime(l3.data), [pd.Timestamp("2023-01-01"), SAIDA_UNIAO_PP,
                            pd.Timestamp("2026-04-01"), pd.Timestamp("2027-01-01")],
                            labels=["jan/23-ago/25", "set/25-mar/26", "abr/26-nov/26"])
-    sub = l3.groupby("periodo", observed=True)[["coalescencia", "tamanho", "prop_kd_v1", "ministros_np"]].mean().round(1)
+    sub = l3.groupby("periodo", observed=True)[["coalescencia", "tamanho", "cadeiras_coalizao_pct", "prop_kd_v1", "ministros_np"]].mean().round(1)
     sub.to_csv(SAIDA / "lula3_subperiodos.csv", sep=";")
     print("\nLula 3 por subperíodo:\n", sub)
     val = validar_lula3()

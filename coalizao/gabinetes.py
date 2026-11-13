@@ -75,6 +75,7 @@ def tabela_gabinetes():
             "ministros_np": sum(m for p, m, _ in comp if p == "np"),
             "tamanho": sum(p != "np" for p, _, _ in comp),
             "cadeiras_coalizao": sum(s for _, _, s in comp),
+            "cadeiras_coalizao_pct": round(100 * sum(s for _, _, s in comp) / ic.tamanho_camara(r.inicio), 1),
             "proporcionalidade": round(ic.coalescencia(comp), 1),
             "proporc_np_grupo": round(ic.coalescencia(comp, np_em_grupo=True), 1),
             "heterogeneidade": round(het, 1) if het == het else None,
