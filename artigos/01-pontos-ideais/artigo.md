@@ -51,11 +51,15 @@ Três problemas dessa literatura organizam as escolhas deste artigo. O primeiro 
 
 A literatura brasileira mudou a leitura do Legislativo nos anos 1990 ao mostrar que, ao contrário do que previam os diagnósticos de fragmentação e indisciplina, os partidos na Câmara votam de forma previsível e seguem as lideranças, e que o Executivo controla a agenda por meio de prerrogativas institucionais e da centralização dos trabalhos nos líderes (Figueiredo; Limongi, 1999). Essa previsibilidade, porém, não implica que o voto seja ideológico. Zucco (2009) mostra que o comportamento nominal dos deputados se afasta de suas posições ideológicas declaradas na direção do presidente, e associa esse deslocamento à distribuição de ministérios e de recursos. Zucco e Lauderdale (2011) separam, com um survey auxiliar de legisladores, as influências ideológicas das influências partidárias e governamentais sobre os pontos ideais. Em perspectiva comparada, Hix e Noury (2016) concluem que, na maioria dos legislativos, o voto é estruturado mais pela divisão governo × oposição do que pela posição dos partidos na escala esquerda–direita, e que a formação de coalizões caso a caso ao longo de uma dimensão de políticas só aparece em contextos institucionais restritos, entre eles os presidencialismos com governos de coalizão.
 
-[LIT-BR: síntese da busca em *Dados*, *Lua Nova* e *RBCP* — ver Seção 2.3]
+Os trabalhos que escalonaram votações nominais da Câmara chegaram a leituras diferentes da primeira dimensão conforme o período. Para os anos FHC, Leoni (2002) estimou posições a partir das votações nominais e encontrou uma ordenação compatível com a escala esquerda–direita, com o PT num extremo e o PFL no outro. Para o Senado entre 1989 e 2010, Izumi (2016) argumentou que uma única dimensão, de governo × oposição, basta para representar as preferências dos senadores. Para o governo Dilma, Scheeffer (2018) contrapôs as duas explicações e concluiu que a ideologia prevalece, exceto nas matérias que envolvem recursos financeiros, em que os partidos seguem o Executivo. O resultado comum é que a literatura brasileira tende a descrever o espaço de votação como essencialmente unidimensional, e que o significado da dimensão depende de quanto a coalizão de governo coincide com um dos lados do espectro ideológico.
+
+A base institucional dessa previsibilidade está nos poderes de agenda do Executivo e na centralização dos trabalhos legislativos nos líderes (Limongi; Figueiredo, 1998). Ao testar explicações rivais, Cheibub, Figueiredo e Limongi (2009) encontraram nos partidos, e não nos governadores, o principal determinante do voto dos deputados. A relação entre apoio ao governo e recursos orçamentários é objeto de controvérsia: Pereira e Mueller (2002) descrevem a execução das emendas individuais como instrumento de recompensa aos deputados governistas, ao passo que Limongi e Figueiredo (2005) mostram que a filiação partidária explica tanto o voto quanto a execução das emendas. Depois da Emenda Constitucional 86/2015, que tornou impositivas as emendas individuais, a dominância do Executivo sobre o ciclo orçamentário diminuiu (Bonfim; Luz; Vasquez, 2023), o que muda os termos da barganha que sustenta as coalizões. Em paralelo, o apoio legislativo ao governo ultrapassa a coalizão formal: aliados que não ocupam ministérios são decisivos para a aprovação da agenda do Executivo (Assis; Silva, 2026).
+
+Quanto à medida da ideologia partidária, os surveys de especialistas indicam um deslocamento do sistema partidário para a direita, a predominância de partidos orientados a cargos e votos, e não a políticas (Bolognesi; Ribeiro; Codato, 2023), e o esvaziamento do centro ideológico entre 2018 e 2022 (Bolognesi et al., 2025). A literatura sobre o "centrão" o caracteriza por demandas clientelistas, com a agenda ideológica em segundo plano (Testa; Mesquita; Bolognesi, 2024). Os surveys com legisladores mostram, por fim, que o terceiro governo Lula começou com a maior distância ideológica já registrada entre o presidente e o Congresso, num presidencialismo de coalizão "sob estresse" (Zucco; Power, 2024).
 
 ### 2.3 Lacuna e relação com os demais trabalhos do projeto
 
-[LIT-BR-LACUNA]
+Até onde a busca alcançou (ver `pipeline/fase2_literatura.md`), não há estimativa publicada dos pontos ideais da 57ª Legislatura a partir das votações nominais; as posições disponíveis para o período vêm de surveys (Zucco; Power, 2024). A literatura tampouco relata uma segunda dimensão estável que oponha os dois extremos programáticos ao núcleo de governabilidade, compara a estrutura do voto no plenário e nas comissões ou mede quanto as posições individuais acrescentam à informação partidária fora da amostra. Este artigo trata dessas quatro lacunas.
 
 Este artigo é o primeiro de um conjunto de sete trabalhos sobre a 57ª Legislatura construídos sobre a mesma base de dados. Os demais tratam da disciplina intrapartidária (Artigo 2), das trocas de partido (Artigo 3), da agenda temática das proposições (Artigo 4), das frentes parlamentares (Artigo 5), dos discursos (Artigo 6) e da fusão das várias representações dos deputados (Artigo 7). As coordenadas estimadas aqui são insumo para vários deles; por isso, a sua incerteza e a sua sensibilidade a escolhas de especificação recebem atenção detalhada.
 
@@ -362,7 +366,7 @@ Por fim, a segunda dimensão importa para poucos partidos. O ganho de acerto de 
 
 ## 7. Discussão
 
-[DISCUSSAO-LIT]
+Os resultados também dialogam com a literatura brasileira sobre a dimensionalidade do voto. Ao contrário da leitura unidimensional predominante (Leoni, 2002; Izumi, 2016), encontramos uma segunda dimensão estável, que melhora a previsão em todas as especificações e anos e não é um efeito de curvatura de um eixo único. Ela se concentra justamente no tipo de matéria em que Scheeffer (2018) observou que a lógica do apoio ao Executivo se sobrepõe à ideológica, as matérias fiscais e orçamentárias, e nas votações sobre as regras do próprio jogo político. O fato de a dimensão desaparecer nas comissões é coerente com isso, porque as PECs e os PLPs que a definem são decididos no plenário. Quanto à primeira dimensão, a posição central de PP, Republicanos e União é o que se esperaria de partidos que os especialistas classificam à direita, mas como orientados a cargos e votos mais que a políticas (Bolognesi; Ribeiro; Codato, 2023; Testa; Mesquita; Bolognesi, 2024). O "centro" que desaparece nos surveys de especialistas (Bolognesi et al., 2025) reaparece no voto, como centro de governismo, e não de ideologia. Uma divergência merece registro: a caracterização de especialistas do "centrão" inclui o PL (Testa; Mesquita; Bolognesi, 2024), mas na 57ª Legislatura o PL vota no polo da oposição, junto ao NOVO, longe dos partidos fisiológicos. A previsibilidade das orientações de partidos e federações, contra a menor previsibilidade das de blocos, é coerente com a centralidade dos líderes partidários (Limongi; Figueiredo, 1998; Cheibub; Figueiredo; Limongi, 2009).
 
 Os resultados sustentam a tese, consolidada na literatura brasileira e comparada, de que o voto nominal num presidencialismo de coalizão se organiza primeiro pela relação com o Executivo (Zucco, 2009; Hix; Noury, 2016). Na 57ª Legislatura, partidos de direita que ocuparam ministérios ficam, no eixo principal, muito mais perto do PT do que do PL, e o grau de alinhamento ao Governo explica a posição dos deputados de direita quase perfeitamente. Mas o eixo não é governo × oposição puro: o campo ideológico acrescenta poder explicativo ao alinhamento, e quando o conflito com o governo sai de cena (nas votações em que Governo e PL orientam igual), a ordem esquerda–direita reaparece. Uma leitura coerente com os dois achados é que o governismo dos partidos de centro e de direita é condicional (alto nas votações de agenda do governo, menor nas de conteúdo ideológico), o que faz o eixo principal misturar as duas lógicas.
 
@@ -409,4 +413,52 @@ Dois resultados contradizem leituras anteriores do próprio projeto e merecem se
 
 ## Referências
 
-[REFERENCIAS]
+ASSIS, Pedro Paulo de; SILVA, Glauco Peres da. Informal Coalitions in Action: Party Legislative Performance in Brazilian Presidentialism. **Brazilian Political Science Review**, v. 20, n. 1, e0001, 2026. DOI: 10.1590/1981-3821202600010001.
+
+BAFUMI, Joseph; GELMAN, Andrew; PARK, David K.; KAPLAN, Noah. Practical Issues in Implementing and Understanding Bayesian Ideal Point Estimation. **Political Analysis**, v. 13, n. 2, p. 171–187, 2005. DOI: 10.1093/pan/mpi010.
+
+BOLOGNESI, Bruno; RIBEIRO, Ednaldo; CODATO, Adriano. Uma nova classificação ideológica dos partidos políticos brasileiros. **Dados – Revista de Ciências Sociais**, v. 66, n. 2, e20210164, 2023. DOI: 10.1590/dados.2023.66.2.303.
+
+BOLOGNESI, Bruno; RIBEIRO, Ednaldo; CODATO, Adriano; SILVA, Bruno Fernando da. O desaparecimento do centro ideológico no sistema partidário brasileiro. **Opinião Pública**, v. 31, e31120, 2025. DOI: 10.1590/1807-0191202531120.
+
+BONFIM, Raul; LUZ, Joyce Hellen; VASQUEZ, Vitor. Mandatory Individual Amendments: a Change in the Pattern of Executive Dominance in the Brazilian Budgetary and Financial Cycle. **Brazilian Political Science Review**, v. 17, n. 2, e0001, 2023. DOI: 10.1590/1981-3821202300020001.
+
+CHEIBUB, José Antonio; FIGUEIREDO, Argelina; LIMONGI, Fernando. Partidos políticos e governadores como determinantes do comportamento legislativo na Câmara dos Deputados, 1988-2006. **Dados – Revista de Ciências Sociais**, v. 52, n. 2, p. 263–299, 2009. DOI: 10.1590/S0011-52582009000200001.
+
+CLINTON, Joshua; JACKMAN, Simon; RIVERS, Douglas. The Statistical Analysis of Roll Call Data. **American Political Science Review**, v. 98, n. 2, p. 355–370, 2004.
+
+FIGUEIREDO, Argelina Cheibub; LIMONGI, Fernando. **Executivo e Legislativo na nova ordem constitucional**. Rio de Janeiro: Editora FGV, 1999.
+
+HIX, Simon; NOURY, Abdul. Government-Opposition or Left-Right? The Institutional Determinants of Voting in Legislatures. **Political Science Research and Methods**, v. 4, n. 2, p. 249–273, 2016. DOI: 10.1017/psrm.2015.9.
+
+IMAI, Kosuke; LO, James; OLMSTED, Jonathan. Fast Estimation of Ideal Points with Massive Data. **American Political Science Review**, v. 110, n. 4, p. 631–656, 2016. DOI: 10.1017/S000305541600037X.
+
+IZUMI, Mauricio Yoshida. Governo e oposição no Senado brasileiro (1989-2010). **Dados – Revista de Ciências Sociais**, v. 59, n. 1, p. 91–138, 2016. DOI: 10.1590/00115258201672.
+
+JACKMAN, Simon. Multidimensional Analysis of Roll Call Data via Bayesian Simulation: Identification, Estimation, Inference, and Model Checking. **Political Analysis**, v. 9, n. 3, p. 227–241, 2001. DOI: 10.1093/polana/9.3.227.
+
+KOREN, Yehuda; BELL, Robert; VOLINSKY, Chris. Matrix Factorization Techniques for Recommender Systems. **Computer**, v. 42, n. 8, p. 30–37, 2009. DOI: 10.1109/MC.2009.263.
+
+LEONI, Eduardo. Ideologia, democracia e comportamento parlamentar: a Câmara dos Deputados (1991-1998). **Dados – Revista de Ciências Sociais**, v. 45, n. 3, p. 361–386, 2002. DOI: 10.1590/S0011-52582002000300002.
+
+LIMONGI, Fernando; FIGUEIREDO, Argelina. Bases institucionais do presidencialismo de coalizão. **Lua Nova: Revista de Cultura e Política**, n. 44, p. 81–106, 1998. DOI: 10.1590/S0102-64451998000200005.
+
+LIMONGI, Fernando; FIGUEIREDO, Argelina. Processo orçamentário e comportamento legislativo: emendas individuais, apoio ao Executivo e programas de governo. **Dados – Revista de Ciências Sociais**, v. 48, n. 4, p. 737–776, 2005. DOI: 10.1590/S0011-52582005000400002.
+
+PEREIRA, Carlos; MUELLER, Bernardo. Comportamento estratégico em presidencialismo de coalizão: as relações entre Executivo e Legislativo na elaboração do orçamento brasileiro. **Dados – Revista de Ciências Sociais**, v. 45, n. 2, p. 265–301, 2002. DOI: 10.1590/S0011-52582002000200004.
+
+POOLE, Keith T.; ROSENTHAL, Howard. A Spatial Model for Legislative Roll Call Analysis. **American Journal of Political Science**, v. 29, n. 2, p. 357–384, 1985. DOI: 10.2307/2111172.
+
+POOLE, Keith T.; ROSENTHAL, Howard. **Congress: A Political-Economic History of Roll Call Voting**. New York: Oxford University Press, 1997.
+
+SCHEEFFER, Fernando. Ideologia e comportamento parlamentar na Câmara dos Deputados. **Teoria & Pesquisa: Revista de Ciência Política**, v. 27, n. 2, p. 167–188, 2018. DOI: 10.31068/tp.27208.
+
+TESTA, Graziella; MESQUITA, Lara; BOLOGNESI, Bruno. Do fisiologismo ao centro do poder: as reformas eleitorais e o centrão 2.0. **Caderno CRH**, v. 37, e024003, 2024. DOI: 10.9771/ccrh.v37i0.55537.
+
+ZUCCO, Cesar. Ideology or What? Legislative Behavior in Multiparty Presidential Settings. **The Journal of Politics**, v. 71, n. 3, p. 1076–1092, 2009.
+
+ZUCCO, Cesar; LAUDERDALE, Benjamin E. Distinguishing Between Influences on Brazilian Legislative Behavior. **Legislative Studies Quarterly**, v. 36, n. 3, p. 363–396, 2011. DOI: 10.1111/j.1939-9162.2011.00019.x.
+
+ZUCCO, Cesar; POWER, Timothy J. The Ideology of Brazilian Parties and Presidents: A Research Note on Coalitional Presidentialism Under Stress. **Latin American Politics and Society**, v. 66, n. 1, p. 178–188, 2024. DOI: 10.1017/lap.2023.24.
+
+*Referências em formato ABNT (autor-data); metadados conferidos em bases bibliográficas (ver `referencias.bib` e `pipeline/fase2_literatura.md`).*
