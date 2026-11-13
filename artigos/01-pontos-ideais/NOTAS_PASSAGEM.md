@@ -33,6 +33,13 @@ as definições do ARS como prompt).
 - PSOL < PT no 1D é só tendência (IC inclui 0); NOVO > PL em oposição no 1D é significativo.
 - Comparações exploratórias (declaradas no Apêndice A, item 6). Estas seções ainda não passaram por integridade.
 
+## Equilíbrio quanti/quali (decisão do autor)
+- Corpo: resultados quantitativos enxutos (Seção 5), estudos de caso de 4 matérias (Seção 6: PL 709/2023,
+  PEC 9/2023, PLP 210/2024, PEC 3/2021; etapa `etapa_casos`, tabela t18), discussão e agenda de pesquisa (Seção 8).
+- Apêndices: A desvios; B método/hipóteses/testes de H1; C robustez e incerteza; D terceira dimensão.
+- Casos descritos só com o que os registros da Câmara informam; sem reconstituir negociações.
+- Seções 5.2, 5.3, 6 e 8 ainda não passaram pela verificação de integridade.
+
 ## Decisões e problemas conhecidos
 - Escores numéricos do survey BRC não conferidos (scielo.br bloqueado): usamos codificação ordinal `CAMPO`.
 - Bootstrap: réplicas reescaladas por fator isotrópico, introduzido ao notar ICs que não continham a estimativa pontual (causa: escala identificada só pelos priors; réplicas ~9% menores); ICs de

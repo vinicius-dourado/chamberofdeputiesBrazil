@@ -1,0 +1,47 @@
+| caso | data | órgão | descricao | Sim | votantes | % Sim PSOL | % Sim PT | % Sim centrão | % Sim PL | % Sim NOVO | or. Governo | or. Oposição | b1 | b2 | acerto 1D | acerto 2D |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| PEC 9/2023 | 2023-05-02 | CCJC | Rejeitado o Requerimento de Retirada de Pauta. Resultado: 12 votos "Sim", 38 votos "Não". Quórum de votação: 5 | 12 | 50 | 100,00 | 0,00 | 27,78 | 0,00 | 100,00 |  |  | 0,15 | 2,15 | 0,76 | 0,84 |
+| PEC 9/2023 | 2023-05-16 | CCJC | Aprovado o Parecer com o seguinte resultado: 45 votos "Sim", 10 votos "Não". Quórum de votação: 55 votos, apre | 45 | 55 | 0,00 | 100,00 | 79,17 | 100,00 | 0,00 | Sim |  | -0,10 | -6,60 | 0,82 | 0,89 |
+| PEC 9/2023 | 2024-07-11 | PLEN | Rejeitado o Requerimento. Sim: 58; não: 302; abstenção: 2; total: 362. | 58 | 360 | 100,00 | 6,52 | 11,59 | 23,08 | 100,00 |  |  | -0,19 | 4,88 | 0,84 | 0,91 |
+| PEC 9/2023 | 2024-07-11 | PLEN | Rejeitado o Requerimento. Sim: 72; não: 336; abstenção: 2; total: 410. | 72 | 408 | 100,00 | 5,26 | 9,63 | 35,14 | 100,00 |  | Sim | -0,67 | 6,82 | 0,84 | 0,92 |
+| PEC 9/2023 | 2024-07-11 | PLEN | Rejeitado o Requerimento. Sim: 83; não: 323; abstenção: 1; total: 407. | 83 | 406 | 100,00 | 5,08 | 11,41 | 44,44 | 100,00 |  |  | -0,88 | 6,61 | 0,84 | 0,92 |
+| PEC 9/2023 | 2024-07-11 | PLEN | Aprovado, em primeiro turno, o Substitutivo adotado pelo Relator da Comissão Especial à Proposta de Emenda à C | 344 | 433 | 0,00 | 93,33 | 87,56 | 61,04 | 0,00 |  | Não | 0,51 | -6,12 | 0,82 | 0,91 |
+| PEC 9/2023 | 2024-07-11 | PLEN | Mantido o texto. Sim: 404; não: 23; abstenção: 1; total: 428. | 404 | 427 | 0,00 | 96,83 | 98,45 | 100,00 | 100,00 |  | Sim | -0,86 | -3,20 | 0,95 | 0,98 |
+| PEC 9/2023 | 2024-07-11 | PLEN | Rejeitado o Requerimento. Sim: 49; não: 318; abstenção: 1; total: 368. | 49 | 367 | 100,00 | 2,00 | 5,75 | 28,79 | 100,00 |  |  | -0,83 | 8,00 | 0,87 | 0,95 |
+| PEC 9/2023 | 2024-07-11 | PLEN | Aprovada, em segundo turno, a Proposta de Emenda à Constituição n° 9, de 2023, ressalvado o destaque. Sim: 338 | 338 | 421 | 0,00 | 95,00 | 88,66 | 61,84 | 0,00 |  |  | 0,52 | -7,64 | 0,81 | 0,91 |
+| PEC 9/2023 | 2024-07-11 | PLEN | Mantido o texto. Sim: 379; não: 23; abstenção: 1; total: 403. | 379 | 402 | 0,00 | 98,15 | 98,38 | 100,00 | 100,00 |  | Sim | -0,89 | -3,64 | 0,94 | 0,98 |
+| PEC 9/2023 | 2024-07-11 | PLEN | Aprovado o Requerimento nº 2.581/2024, dos Senhores Líderes, que solicita a quebra de interstício de 5 sessões | 300 | 350 | 0,00 | 97,92 | 94,23 | 73,85 | 0,00 |  |  | 0,66 | -9,37 | 0,86 | 0,95 |
+| PLP 210/2024 | 2024-12-04 | PLEN | Aprovado o Requerimento de Urgência (Art. 155 do RICD). Sim: 260; Não: 98; Abstenção: 2; Total: 360. | 260 | 429 | 0,00 | 100,00 | 61,39 | 6,58 | 0,00 | Sim | Não | 2,23 | -2,70 | 0,84 | 0,87 |
+| PLP 210/2024 | 2024-12-17 | PLEN | Rejeitado o Requerimento. Sim: 75; Não: 379; Abstenção: 2; Total: 456. | 75 | 454 | 100,00 | 1,64 | 10,33 | 41,67 | 0,00 | Não |  | -0,67 | 2,02 | 0,83 | 0,85 |
+| PLP 210/2024 | 2024-12-17 | PLEN | Aprovado o Requerimento. Sim: 308; Não: 148; Total: 456. | 308 | 456 | 0,00 | 100,00 | 79,05 | 3,61 | 0,00 | Sim | Não | 2,91 | -4,40 | 0,90 | 0,93 |
+| PLP 210/2024 | 2024-12-17 | PLEN | Aprovado o Substitutivo ao Projeto de Lei Complementar nº 210, de 2024, adotado pelo relator da Comissão Espec | 318 | 467 | 0,00 | 98,46 | 78,44 | 13,41 | 0,00 | Sim | Não | 2,70 | -5,20 | 0,90 | 0,94 |
+| PLP 210/2024 | 2024-12-17 | PLEN | Rejeitada a Emenda de Plenário nº 9. Sim: 227; Não: 233; Abstenção: 1; Total: 461. | 227 | 460 | 100,00 | 0,00 | 41,31 | 95,18 | 75,00 | Não | Sim | -1,92 | 3,09 | 0,77 | 0,85 |
+| PLP 210/2024 | 2024-12-17 | PLEN | Rejeitada a Emenda de Plenário nº 19. Sim: 186; Não: 256; Total: 442. | 186 | 442 | 100,00 | 49,21 | 21,46 | 94,81 | 75,00 | Não | Sim | -0,69 | 3,61 | 0,80 | 0,80 |
+| PLP 210/2024 | 2024-12-17 | PLEN | Rejeitada a Emenda de Plenário n° 38. Sim: 59; Não: 385; Abstenção: 1; Total: 445. | 59 | 444 | 100,00 | 6,35 | 6,31 | 1,30 | 0,00 | Não | Não | 0,47 | 1,53 | 0,87 | 0,90 |
+| PLP 210/2024 | 2024-12-18 | PLEN | Rejeitado o Requerimento. Sim: 137; Não: 302; Abstenção: 1; Total: 440. | 137 | 439 | 100,00 | 0,00 | 19,19 | 91,57 | 100,00 | Não | Não | -3,45 | 5,32 | 0,92 | 0,95 |
+| PLP 210/2024 | 2024-12-18 | PLEN | Aprovada a Emenda Aglutinativa nº 1. Sim: 444; Não: 16; Abstenção: 1; Total: 461. | 444 | 460 | 0,00 | 98,41 | 99,07 | 98,84 | 100,00 | Sim | Sim | -0,59 | -2,78 | 0,97 | 0,99 |
+| PEC 3/2021 | 2025-09-16 | PLEN | Rejeitado o Requerimento. Sim: 144; Não: 266; Total: 410. | 144 | 410 | 100,00 | 100,00 | 14,14 | 10,61 | 100,00 |  | Não | 2,21 | 3,89 | 0,87 | 0,90 |
+| PEC 3/2021 | 2025-09-16 | PLEN | Rejeitado o Requerimento. Sim: 137; Não: 324; Total: 461. | 137 | 461 | 100,00 | 100,00 | 10,60 | 1,25 | 100,00 |  | Não | 3,29 | 6,04 | 0,91 | 0,92 |
+| PEC 3/2021 | 2025-09-16 | PLEN | Aprovado o Requerimento. Sim: 346; Não: 122; Total: 468. | 346 | 468 | 0,00 | 11,67 | 92,24 | 100,00 | 0,00 |  | Sim | -2,38 | -5,38 | 0,90 | 0,92 |
+| PEC 3/2021 | 2025-09-16 | PLEN | Aprovado, em primeiro turno, o Substitutivo Reformulado à Proposta de Emenda à Constituição nº 3, de 2021, ado | 353 | 487 | 0,00 | 19,05 | 87,01 | 100,00 | 0,00 |  | Sim | -1,92 | -4,62 | 0,86 | 0,89 |
+| PEC 3/2021 | 2025-09-16 | PLEN | Mantido o texto. Sim: 322; Não: 147; Abstenção: 1; Total: 470. | 322 | 469 | 0,00 | 13,11 | 84,75 | 96,20 | 100,00 |  | Sim | -2,09 | -3,81 | 0,87 | 0,87 |
+| PEC 3/2021 | 2025-09-16 | PLEN | Mantido o texto. Sim: 317; Não: 156; Abstenção: 1; Total: 474. | 317 | 473 | 0,00 | 11,48 | 81,78 | 98,73 | 0,00 |  | Sim | -1,95 | -4,36 | 0,84 | 0,86 |
+| PEC 3/2021 | 2025-09-16 | PLEN | Aprovada, em segundo turno, a Proposta de Emenda à Constituição n° 3, de 2021, ressalvado os destaques. Sim: 3 | 344 | 477 | 0,00 | 16,67 | 86,34 | 100,00 | 0,00 |  | Sim | -2,01 | -4,77 | 0,86 | 0,90 |
+| PEC 3/2021 | 2025-09-16 | PLEN | Suprimido o texto. Sim: 296; Não: 174; Total: 470. | 296 | 470 | 0,00 | 13,56 | 79,00 | 93,98 | 0,00 |  | Sim | -2,06 | -4,98 | 0,83 | 0,88 |
+| PEC 3/2021 | 2025-09-16 | PLEN | Aprovado o Requerimento nº 3.818/2025, dos Senhores Líderes, que solicita a quebra de interstício de 5 sessões | 332 | 449 | 0,00 | 17,54 | 90,95 | 100,00 | 0,00 |  | Sim | -2,20 | -5,16 | 0,89 | 0,90 |
+| PEC 3/2021 | 2025-09-17 | PLEN | Rejeitado o Requerimento. Sim: 132; Não: 309; Total: 441. | 132 | 441 | 100,00 | 85,96 | 9,80 | 4,05 | 100,00 |  | Não | 2,03 | 4,68 | 0,88 | 0,91 |
+| PEC 3/2021 | 2025-09-17 | PLEN | Aprovada a Emenda Aglutinativa de Plenário nº 1. Sim: 314; Não: 168; Total: 482. | 314 | 482 | 0,00 | 12,31 | 81,19 | 100,00 | 0,00 |  | Sim | -2,27 | -5,32 | 0,84 | 0,87 |
+| PL 709/2023 | 2024-04-23 | CCJC | Rejeitado o Requerimento de Retirada de Pauta. Resultado: 17 votos "Sim", 42 votos "Não". Quórum de votação: 5 | 17 | 59 | 100,00 | 100,00 | 4,00 | 0,00 |  | Sim | Não | 6,01 | -0,72 | 0,97 | 0,97 |
+| PL 709/2023 | 2024-04-23 | CCJC | Rejeitado o Requerimento de Adiamento de Votação, de autoria do Deputado Patrus Ananias. Resultado: 2 votos "S | 2 | 40 |  |  | 4,55 | 0,00 | 0,00 | Não | Não | 4,53 | 0,33 | 0,97 | 0,97 |
+| PL 709/2023 | 2024-04-23 | CCJC | Aprovado o Parecer com Complementação de Voto com o seguinte resultado: 38 votos "Sim", 8 votos "Não", 1 Abste | 38 | 46 | 0,00 | 0,00 | 100,00 | 100,00 |  | Não | Sim | -4,27 | -0,95 | 1,00 | 1,00 |
+| PL 709/2023 | 2024-05-21 | PLEN | Rejeitado o Requerimento. Sim: 124; não: 327; abstenção: 1; total: 452. | 124 | 451 | 100,00 | 100,00 | 5,83 | 1,18 | 0,00 | Sim | Não | 5,39 | 1,89 | 0,96 | 0,96 |
+| PL 709/2023 | 2024-05-21 | PLEN | Aprovado o Requerimento. Sim: 313; não: 120; total: 433. | 313 | 433 | 0,00 | 0,00 | 94,27 | 98,82 | 100,00 | Não | Sim | -5,88 | -2,04 | 0,97 | 0,97 |
+| PL 709/2023 | 2024-05-21 | PLEN | Rejeitado o Requerimento. Sim: 112; não: 317; total: 429. | 112 | 429 | 92,31 | 100,00 | 3,11 | 1,12 | 0,00 | Sim | Não | 5,50 | 0,98 | 0,97 | 0,97 |
+| PL 709/2023 | 2024-05-21 | PLEN | Aprovada a Subemenda Substitutiva Global ao Projeto de Lei nº 709, de 2023, adotada pelo relator da Comissão d | 336 | 456 | 0,00 | 0,00 | 96,62 | 98,89 | 100,00 | Não | Sim | -8,03 | -2,17 | 0,97 | 0,97 |
+| PL 709/2023 | 2024-05-21 | PLEN | Mantido o texto. Sim: 322; não: 116; total: 438. | 322 | 438 | 0,00 | 0,00 | 95,41 | 98,88 | 100,00 | Não | Sim | -6,22 | -1,88 | 0,97 | 0,97 |
+| PL 709/2023 | 2024-05-21 | PLEN | Mantido o texto. Sim: 320; não: 119; total: 439. | 320 | 439 | 0,00 | 1,59 | 95,96 | 98,80 | 66,67 | Não | Sim | -4,24 | -2,86 | 0,97 | 0,96 |
+| PL 709/2023 | 2024-05-21 | PLEN | Mantido o texto. Sim: 315; não: 120; total: 435. | 315 | 435 | 0,00 | 1,56 | 95,34 | 98,82 | 100,00 | Não | Sim | -5,45 | -1,18 | 0,97 | 0,97 |
+| PL 709/2023 | 2024-05-21 | PLEN | Mantido o texto. Sim: 313; não: 119; total: 432. | 313 | 432 | 0,00 | 0,00 | 95,43 | 98,80 | 100,00 | Não | Sim | -6,00 | -1,58 | 0,97 | 0,96 |
+| PL 709/2023 | 2024-05-22 | PLEN | Rejeitado o Requerimento. Sim: 115; não: 305; total: 420. | 115 | 420 | 100,00 | 96,77 | 2,78 | 2,50 | 0,00 | Sim | Não | 3,79 | 3,12 | 0,97 | 0,96 |
+| PL 709/2023 | 2024-05-22 | PLEN | Mantido o texto. Sim: 320; não: 113; total: 433. | 320 | 433 | 8,33 | 0,00 | 97,37 | 98,88 | 100,00 | Não | Sim | -5,15 | -2,88 | 0,97 | 0,97 |
+| PL 709/2023 | 2024-05-22 | PLEN | Rejeitado o Destaque. Sim: 148; não: 292; total: 440. | 148 | 440 | 100,00 | 100,00 | 12,18 | 9,09 | 0,00 | Sim | Não | 2,39 | 2,44 | 0,92 | 0,92 |

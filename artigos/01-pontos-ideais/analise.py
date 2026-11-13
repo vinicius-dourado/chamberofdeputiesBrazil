@@ -1078,6 +1078,41 @@ def etapa_comparacao(P, pred, finais, tvot, boot1d):
     return m
 
 
+# ---------------------------------------------------------------- estudos de caso
+CASOS = {"PEC 9/2023": "anistia a sanções aplicadas a partidos",
+         "PLP 210/2024": "ajuste do regime fiscal",
+         "PEC 3/2021": "prerrogativas parlamentares",
+         "PL 709/2023": "impedimentos a ocupantes e invasores de propriedades"}
+
+
+def etapa_casos(P, pred, tvot):
+    """Votações das matérias usadas como estudos de caso, com o acerto fora da amostra de 1D e 2D."""
+    y, j = P.y, P.j
+    ok1 = ((pred[1] > .5) == (y > .5)).astype(float)
+    ok2 = ((pred[2] > .5) == (y > .5)).astype(float)
+    g = pd.DataFrame({"j": j, "a1": ok1, "a2": ok2, "y": y}).groupby("j").agg(
+        a1=("a1", "mean"), a2=("a2", "mean"), sim=("y", "sum"), n=("y", "size"))
+    t = tvot.reset_index(drop=True).copy()
+    t["acerto 1D"], t["acerto 2D"] = g["a1"].to_numpy(), g["a2"].to_numpy()
+    t["Sim"], t["votantes"] = g["sim"].to_numpy().astype(int), g["n"].to_numpy()
+    lin, r = [], {}
+    for prop, rot in CASOS.items():
+        mk = t["proposição"].fillna("").str.startswith(prop).to_numpy()
+        d = t[mk]
+        vm = mk[j]
+        r[prop] = {"tema": rot, "votacoes": int(mk.sum()), "votos": int(vm.sum()),
+                   "dim2_dominante": int(d["dim2_dominante"].sum()),
+                   "acerto_1D": float(ok1[vm].mean()), "acerto_2D": float(ok2[vm].mean()),
+                   "datas": [str(d["data"].min()), str(d["data"].max())]}
+        d = d.assign(caso=prop, descricao=d["descricao"].fillna("").str.replace(r"\s+", " ", regex=True).str.slice(0, 110))
+        lin.append(d[["caso", "data", "órgão", "descricao", "Sim", "votantes", "% Sim PSOL", "% Sim PT", "% Sim centrão",
+                      "% Sim PL", "% Sim NOVO", "or. Governo", "or. Oposição", "b1", "b2", "acerto 1D", "acerto 2D"]])
+    c = pd.concat(lin)
+    tabela(c, "t18_casos", casas=2)
+    r["votacoes"] = c.to_dict("records")
+    RES["casos"] = r
+
+
 # ------------------------------------------------------------------------- robustez
 CONFIGS = {
     "padrão": {},
@@ -1726,6 +1761,7 @@ def main():
         paralelo(_boot1d_tarefa, list(range(N_BOOT_1D)))), rf)
     pos12 = etapa_comparacao(P, pred, finais, tvot, boot1d)
     _G["pos12"] = pos12
+    etapa_casos(P, pred, tvot)
     if quer("recortes"):
         RES["recortes"] = em_cache("recortes", lambda: (etapa_recortes(P, m), RES["recortes"])[1], rf)
     if quer("robustez"):
