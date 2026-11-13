@@ -108,6 +108,46 @@ def ajustar(i, j, y, n_i, n_j, ndim, base=None, w=None, th0=None, semente=0,
                 nit=int(res.nit))
 
 
+def ajustar_quad(i, j, y, n_i, n_j, base, semente=0, lam_x=1.0, lam_b=0.04, lam_a=0.01, lam_d=4.0,
+                 lam_c=None, maxiter=15000):
+    """Modelo 1D com termo quadrático por votação: P(Sim) = σ(a_j + b_j x_i + c_j x_i²).
+    Utilidade de proximidade num único eixo gera, em 2D linear, a 'ferradura' (extremos × meio);
+    este modelo captura essa não linearidade sem uma segunda dimensão latente."""
+    lam_c = lam_b if lam_c is None else lam_c
+    n_u = int(base.max()) + 1
+    cortes = np.cumsum([0, n_j, n_j, n_j, n_i, n_u])
+
+    def desemp(th):
+        a, b, c = th[:cortes[1]], th[cortes[1]:cortes[2]], th[cortes[2]:cortes[3]]
+        d, u = th[cortes[3]:cortes[4]], th[cortes[4]:cortes[5]]
+        return a, b, c, d, u, d + u[base]
+
+    def f(th):
+        a, b, c, d, u, x = desemp(th)
+        xi = x[i]
+        p = expit(a[j] + b[j] * xi + c[j] * xi ** 2)
+        ll = -np.sum(y * np.log(p + 1e-12) + (1 - y) * np.log(1 - p + 1e-12))
+        pen = lam_a * a @ a + lam_b * b @ b + lam_c * c @ c + lam_d * d @ d + lam_x * u @ u
+        r = p - y
+        ga = np.bincount(j, r, n_j) + 2 * lam_a * a
+        gb = np.bincount(j, r * xi, n_j) + 2 * lam_b * b
+        gc = np.bincount(j, r * xi ** 2, n_j) + 2 * lam_c * c
+        gx = np.bincount(i, r * (b[j] + 2 * c[j] * xi), n_i)
+        gd = gx + 2 * lam_d * d
+        gu = np.bincount(base, gx, n_u) + 2 * lam_x * u
+        return ll + pen, np.concatenate([ga, gb, gc, gd, gu])
+
+    th0 = np.random.default_rng(semente).normal(0, 0.1, cortes[-1])
+    res = minimize(f, th0, jac=True, method="L-BFGS-B", options={"maxiter": maxiter, "maxfun": 2 * maxiter})
+    a, b, c, d, u, x = desemp(res.x)
+    return dict(a=a, b=b, c=c, x=x, u=u, convergiu=bool(res.success), nll=float(res.fun), _f=f, th=res.x)
+
+
+def prever_quad(m, i, j):
+    xi = m["x"][i]
+    return expit(m["a"][j] + m["b"][j] * xi + m["c"][j] * xi ** 2)
+
+
 def prever(m, i, j):
     return expit(m["a"][j] + np.einsum("nk,nk->n", m["b"][j], m["x"][i]))
 
@@ -343,6 +383,23 @@ def _cv_tarefa(t):
     return fold, tipo, prever(m, P.i[te], P.j[te])
 
 
+def _cv_quad_tarefa(fold):
+    P = _G["P"]
+    te = _G["fold"] == fold
+    tr = ~te
+    m = ajustar_quad(P.i[tr], P.j[tr], P.y[tr], P.n_i, P.n_j, P.base, **PADRAO)
+    return fold, prever_quad(m, P.i[te], P.j[te]), m["convergiu"]
+
+
+def etapa_cv_quad(P):
+    pred = np.full(len(P.y), np.nan)
+    conv = []
+    for f, p, c in paralelo(_cv_quad_tarefa, list(range(N_FOLDS))):
+        pred[_G["fold"] == f] = p
+        conv.append(c)
+    return pred, conv
+
+
 def etapa_cv(P):
     fold = _G["fold"]
     saida = paralelo(_cv_tarefa, [(f, t) for f in range(N_FOLDS) for t in DIMS + ["partido"]])
@@ -376,7 +433,7 @@ def resumo_cv(P, pred):
     y, fold = P.y, _G["fold"]
     nomes = {"maioria": "Maioria da votação (0D)", "orientacao": "Orientação da bancada",
              "maioria_partido": "Maioria do partido na votação", "partido": "IRT 2D, um ponto por partido",
-             1: "IRT 1D", 2: "IRT 2D", 3: "IRT 3D", 4: "IRT 4D"}
+             1: "IRT 1D", "quad": "IRT 1D quadrático", 2: "IRT 2D", 3: "IRT 3D", 4: "IRT 4D"}
     linhas = []
     err_mai = (pred["maioria"] > .5) != (y > .5)
     for k, nome in nomes.items():
@@ -402,6 +459,24 @@ def resumo_cv(P, pred):
                   for f in range(N_FOLDS)])
     r["ganho_2D_vs_maioria_partido"] = {"media": float(d.mean()), "dp": float(d.std(ddof=1)),
                                         "min": float(d.min()), "max": float(d.max())}
+    # IC 95% por bootstrap de proposições (sem reajuste: reamostra os votos de teste em blocos)
+    cl = _G["cluster"][P.j]
+    ncl = cl.max() + 1
+    W = np.random.default_rng(77).multinomial(ncl, np.full(ncl, 1 / ncl), size=1000).astype(float)
+    nc = np.bincount(cl, minlength=ncl)
+
+    def ic(d):
+        sc = np.bincount(cl, d, minlength=ncl)
+        bt = (W @ sc) / (W @ nc)
+        return {"media": float(d.mean()), "ic": [float(np.percentile(bt, 2.5)), float(np.percentile(bt, 97.5))]}
+
+    cor = {k: ((pred[k] > .5) == (y > .5)).astype(float) for k in pred}
+    pl = lambda k: -(y * np.log(np.clip(pred[k], 1e-6, 1)) + (1 - y) * np.log(np.clip(1 - pred[k], 1e-6, 1)))
+    for a, b in [(1, 2), (2, 3), ("quad", 2), (1, "quad"), ("maioria_partido", 2), ("orientacao", 2), ("partido", 2)]:
+        r[f"ic_acuracia_{a}_para_{b}"] = ic(cor[b] - cor[a])
+        if a != "orientacao":
+            r[f"ic_logloss_{a}_para_{b}"] = ic(pl(b) - pl(a))
+    r["cv_quad_convergiu"] = _G.get("cv_quad_conv")
     RES["cv"] = r
 
     # ---- o que as coordenadas acrescentam à orientação: por fonte da orientação
@@ -570,6 +645,48 @@ def orientacoes_por_votacao(P):
     return w.reindex(P.votacoes)
 
 
+def angulo_reta(graus):
+    """Ângulo de uma direção em relação ao eixo 1, tratada como reta (sem sentido): [0°, 90°]."""
+    a = abs(graus) % 180
+    return float(min(a, 180 - a))
+
+
+def estatisticas_h1(P, u, x, gov, campo):
+    """Estatísticas do teste governo × campo ideológico, para a estimativa pontual e para cada
+    réplica do bootstrap (gov e campo fixos; u e x variam)."""
+    conf_d = P.nv_dep >= MIN_VOTOS
+    conf_p = P.nv_periodo >= MIN_VOTOS
+    ok = conf_d & ~np.isnan(gov) & ~np.isnan(campo)
+    out = {}
+
+    def ols(Xm, yv):
+        Z = np.column_stack([np.ones(len(yv)), Xm])
+        beta, *_ = np.linalg.lstsq(Z, yv, rcond=None)
+        res = yv - Z @ beta
+        return beta, float(1 - res @ res / np.sum((yv - yv.mean()) ** 2))
+
+    bg, out["r2_plano_governo"] = ols(u[ok], gov[ok])
+    bc, out["r2_plano_campo"] = ols(u[ok], campo[ok])
+    out["theta_governo"] = angulo_reta(np.degrees(np.arctan2(bg[2], bg[1])))
+    out["theta_campo"] = angulo_reta(np.degrees(np.arctan2(bc[2], bc[1])))
+    out["angulo_entre_governo_e_campo"] = angulo_reta(np.degrees(np.arctan2(bg[2], bg[1]) - np.arctan2(bc[2], bc[1])))
+    esq, dire = campo[ok] == -1, campo[ok] == 1
+    _, out["r2_dim1_campo"] = ols(np.column_stack([esq, dire]).astype(float), u[ok, 0])
+    _, out["r2_dim1_governo"] = ols(gov[ok][:, None], u[ok, 0])
+    _, out["r2_dim1_ambos"] = ols(np.column_stack([esq, dire, gov[ok]]).astype(float), u[ok, 0])
+    d = ok & (campo == 1)
+    out["direita_r_dim1_governo"] = float(np.corrcoef(u[d, 0], gov[d])[0, 1])
+    opos = conf_d & np.isin(P.part_dep, ["PL", "NOVO", "MISSÃO"])
+    cen = conf_d & np.isin(P.part_dep, ["PP", "REPUBLICANOS", "UNIÃO"])
+    e = ok & (campo == -1)
+    out["fracao_distancia_direita_interna"] = float((u[cen, 0].mean() - u[opos, 0].mean())
+                                                    / (u[e, 0].mean() - u[opos, 0].mean()))
+    for pa in ["UNIÃO", "PP", "REPUBLICANOS"]:
+        out[f"dif_{pa}_PL_dim1"] = float(x[conf_p & (P.part_periodo == pa), 0].mean()
+                                         - x[conf_p & (P.part_periodo == "PL"), 0].mean())
+    return out
+
+
 def etapa_estrutura(P, m):
     v = P.v
     conf_p = P.nv_periodo >= MIN_VOTOS
@@ -622,7 +739,7 @@ def etapa_estrutura(P, m):
 
     r["angulo_governo"], r["r2_plano_governo"] = direcao(gov, ok)
     r["angulo_campo"], r["r2_plano_campo"] = direcao(campo, okc)
-    r["angulo_entre_governo_e_campo"] = float(abs(r["angulo_governo"] - r["angulo_campo"]))
+    r["h1"] = estatisticas_h1(P, m["u"], m["x"], gov, campo)
     r["r_dim1_campo"] = float(pearsonr(m["u"][okc, 0], campo[okc])[0])
     r["r_dim2_campo"] = float(pearsonr(m["u"][okc, 1], campo[okc])[0])
     r["r_campo_alinh_governo"] = float(pearsonr(campo[okc & ok], gov[okc & ok])[0])
@@ -724,6 +841,37 @@ def classe_objeto(desc, titulo):
     return "texto principal / parecer"
 
 
+def etapa_dim3(P, m3, m2):
+    """Exploratório: a terceira dimensão do modelo 3D (H2b não sustentou "2D suficiente")."""
+    conf = P.nv_dep >= MIN_VOTOS
+    u3 = m3["u"]
+    r = {"autovalores": [float(e) for e in np.linalg.eigvalsh(np.cov(u3[conf].T))[::-1]],
+         "r_dim1_3D_2D": float(np.corrcoef(u3[conf, 0], m2["u"][conf, 0])[0, 1]),
+         "r_dim2_3D_2D": float(np.corrcoef(u3[conf, 1], m2["u"][conf, 1])[0, 1]),
+         "r_dim3_com_2D": [float(np.corrcoef(u3[conf, 2], m2["u"][conf, k])[0, 1]) for k in (0, 1)]}
+    d = pd.DataFrame(u3, columns=["d1", "d2", "d3"]).assign(p=P.part_dep)[conf]
+    for c in ["d1", "d2", "d3"]:
+        r[f"eta2_partido_{c}"] = float(((d.groupby("p")[c].transform("mean") - d[c].mean()) ** 2).sum()
+                                       / ((d[c] - d[c].mean()) ** 2).sum())
+    t = d.groupby("p").agg(deputados=("d3", "size"), dim1=("d1", "mean"), dim2=("d2", "mean"),
+                           dim3=("d3", "mean"), dim3_dp=("d3", "std"))
+    t = t[t["deputados"] >= 4].sort_values("dim3")
+    t.index.name = "partido"
+    tabela(t.reset_index(), "t14_dim3_partidos", casas=2)
+    r["partidos"] = t.reset_index().to_dict("records")
+    vt = pd.read_parquet(DADOS / "votacoes.parquet").set_index("idVotacao").reindex(P.votacoes)
+    b = m3["b"]
+    pureza = np.abs(b[:, 2]) / np.linalg.norm(b, axis=1)
+    top = np.argsort(-(pureza * np.abs(b[:, 2])))[:15]
+    tt = pd.DataFrame({"data": vt["data"].to_numpy()[top], "proposição": vt["proposicao_titulo"].to_numpy()[top],
+                       "ementa": vt["proposicao_ementa"].fillna("").str.replace(r"\s+", " ", regex=True)
+                       .str.slice(0, 90).to_numpy()[top], "b1": b[top, 0], "b2": b[top, 1], "b3": b[top, 2]})
+    tabela(tt, "t14b_dim3_votacoes", casas=1)
+    r["top"] = tt.to_dict("records")
+    r["prop_votacoes_dim3_dominante"] = float(np.mean(np.abs(b[:, 2]) > np.abs(b[:, :2]).max(1)))
+    RES["dim3"] = r
+
+
 def etapa_dim2(P, m, O):
     vt = pd.read_parquet(DADOS / "votacoes.parquet").set_index("idVotacao").reindex(P.votacoes)
     b = m["b"]
@@ -787,6 +935,9 @@ def etapa_dim2(P, m, O):
     em = t.drop_duplicates("proposição").set_index("proposição")["ementa"]
     pr["ementa"] = em.reindex(pr.index).fillna("").str.slice(0, 110)
     tabela(pr.reset_index(), "t8d_proposicoes_dim2", casas=2)
+    cont = t[t["dim2_dominante"]].groupby("proposição").size().sort_values(ascending=False)
+    r["n_proposicoes_dim2"] = int(len(cont))
+    r["prop_top10_proposicoes_dim2"] = float(cont.head(10).sum() / cont.sum())
     r["proposicoes_dim2"] = pr.reset_index().to_dict("records")
     # as votações que mais carregam na dim2 (b2 padronizado alto e direção quase pura)
     top = t[t["razao"] > 0.8].assign(ab2=lambda d: d["b2"].abs()).sort_values("ab2", ascending=False).head(25)
@@ -980,6 +1131,12 @@ def resumo_bootstrap(P, m, U, X, conv, ang):
     r["dif_REPUBLICANOS_PP_dim2"] = dif("REPUBLICANOS", "PP", 1)
     r["dif_PP_PL_dim1"] = dif("PP", "PL", 0)
     r["dif_REPUBLICANOS_PL_dim1"] = dif("REPUBLICANOS", "PL", 0)
+    r["dif_UNIÃO_PL_dim1"] = dif("UNIÃO", "PL", 0)
+    campo = np.array([CAMPO.get(p, np.nan) for p in P.part_dep], float)
+    pt = estatisticas_h1(P, m["u"], m["x"], m["gov"], campo)
+    reps = [estatisticas_h1(P, U[b], X[b], m["gov"], campo) for b in range(len(U))]
+    r["h1_ic"] = {k: {"ponto": pt[k], "ic": [float(np.percentile([q[k] for q in reps], 2.5)),
+                                             float(np.percentile([q[k] for q in reps], 97.5))]} for k in pt}
     RES["bootstrap"] = r
     d = pd.DataFrame({"deputado_id": P.deps, "partido": P.part_dep, "n_votos": P.nv_dep, "dim1": m["u"][:, 0],
                       "dim1_ep": se[:, 0], "dim1_ic_inf": lo[:, 0], "dim1_ic_sup": hi[:, 0], "dim2": m["u"][:, 1],
@@ -1209,7 +1366,10 @@ def figuras(P, m, pred, tvot, se, dcom, sc_svd):
     fig, ax = plt.subplots(figsize=(8.2, 6.4))
     ax.scatter(m["x"][conf_p, 0], m["x"][conf_p, 1], s=16, c=cor_p[conf_p], alpha=0.55, edgecolors=FUNDO, linewidths=0.4)
     cent = pd.DataFrame(m["x"][conf_p], columns=["x", "y"]).assign(p=P.part_periodo[conf_p]).groupby("p")
-    cent = cent.mean()[cent.size() >= 3]
+    n_per = cent.size()
+    cent = cent.mean()
+    # rótulos só para bancadas grandes (≥ 15 períodos) e para os polos da dim2; o resto está na Tabela 5
+    cent = cent[cent.index.isin(["PL", "NOVO", "UNIÃO", "REPUBLICANOS", "MDB", "PSB", "PT", "PCdoB", "REDE", "PSOL"])]
     rotulos_partidos(ax, cent)
     ax.axhline(0, color=GRADE, lw=1), ax.axvline(0, color=GRADE, lw=1)
     ax.set_xlabel("Dimensão 1: oposição (−)  ×  governo (+)")
@@ -1264,13 +1424,14 @@ def figuras(P, m, pred, tvot, se, dcom, sc_svd):
     for c in range(3):
         idx = np.where(xs == c)[0]
         idx = idx[np.argsort(tp["dim1 (média)"].to_numpy()[idx])]
-        xs[idx] = c + np.linspace(-0.25, 0.25, len(idx)) if len(idx) > 1 else c
+        xs[idx] = c + np.linspace(-0.4, 0.4, len(idx)) if len(idx) > 1 else c
     ax.scatter(xs, tp["dim1 (média)"], s=40, c=[COR[bloco_de(p)] for p in tp["partido"]], edgecolors=FUNDO,
                linewidths=1, zorder=3)
-    for x_, (_, l) in zip(xs, tp.iterrows()):
-        ax.annotate(l["partido"], (x_, l["dim1 (média)"]), xytext=(6, -3), textcoords="offset points",
-                    fontsize=7.5, color=TINTA)
-    ax.set_xticks([0, 1, 2]), ax.set_xticklabels(["Esquerda", "Centro", "Direita"]), ax.set_xlim(-0.5, 2.7)
+    for k, (x_, (_, l)) in enumerate(zip(xs, tp.iterrows())):
+        lado = 1 if k % 2 == 0 else -1
+        ax.annotate(l["partido"], (x_, l["dim1 (média)"]), xytext=(6 * lado, -3), textcoords="offset points",
+                    fontsize=7, color=TINTA, ha="left" if lado > 0 else "right")
+    ax.set_xticks([0, 1, 2]), ax.set_xticklabels(["Esquerda", "Centro", "Direita"]), ax.set_xlim(-0.8, 2.8)
     ax.grid(axis="x", visible=False)
     ax.set_xlabel("Campo ideológico (classificação convencional)")
     ax.set_ylabel("Dimensão 1 (média do partido)")
@@ -1307,9 +1468,9 @@ def figuras(P, m, pred, tvot, se, dcom, sc_svd):
             ax.plot([tb[f"{d} IC2,5"].iloc[k], tb[f"{d} IC97,5"].iloc[k]], [yy[k], yy[k]], color=cs[k], lw=2, solid_capstyle="round")
         ax.scatter(tb[d], yy, s=45, c=cs, edgecolors=FUNDO, linewidths=1.5, zorder=3)
         ax.axvline(0, color=GRADE, lw=1)
-        ax.set_title(tit), ax.set_xlabel("Média do partido e IC 95% (bootstrap por votação)")
+        ax.set_title(tit), ax.set_xlabel("Média do partido e IC 95% (bootstrap por proposição)")
     axs[0].set_yticks(yy), axs[0].set_yticklabels(tb["partido"])
-    legenda_blocos(axs[1], loc="lower right", fontsize=8.5)
+    legenda_blocos(axs[0], loc="lower right", fontsize=8.5)
     fig.tight_layout(), fig.savefig(FIGS / "fig5_incerteza_partidos.png"), plt.close(fig)
 
     # --- Fig. 6: incerteza individual × nº de votos
@@ -1345,8 +1506,8 @@ def figuras(P, m, pred, tvot, se, dcom, sc_svd):
     fig, ax = plt.subplots(figsize=(7, 5))
     ax.barh(t["partido"], 100 * t["ganho 1D→2D"], height=0.6, color=[COR[bloco_de(p)] for p in t["partido"]])
     for p, g in zip(t["partido"], 100 * t["ganho 1D→2D"]):
-        ax.annotate(f"{g:+.1f}".replace(".", ","), (g, p), xytext=(4 if g >= 0 else -4, 0), textcoords="offset points",
-                    va="center", ha="left" if g >= 0 else "right", fontsize=8.5)
+        ax.annotate(f"{g:+.1f}".replace(".", ","), (max(g, 0), p), xytext=(4, 0), textcoords="offset points",
+                    va="center", ha="left", fontsize=8.5)
     ax.axvline(0, color=TINTA2, lw=1), ax.grid(axis="y", visible=False)
     ax.set_xlabel("Ganho de acerto fora da amostra de 1D para 2D (pontos percentuais)")
     ax.set_title("Onde a segunda dimensão ajuda a prever o voto")
@@ -1388,13 +1549,20 @@ def main():
         etapa_dados(P, bruto)
     if quer("reproducao"):
         RES["reproducao"] = em_cache("reproducao", lambda: paralelo(_reproducao, [0])[0], rf)
+    vt = pd.read_parquet(DADOS / "votacoes.parquet").set_index("idVotacao")["proposicao_id"]
+    prop = vt.reindex(P.votacoes).fillna(pd.Series(P.votacoes, index=P.votacoes)).to_numpy()
+    _G["cluster"] = pd.factorize(prop)[0]
     pred = em_cache("cv", lambda: etapa_cv(P), rf)
+    pq, cq = em_cache("cv_quad", lambda: etapa_cv_quad(P), rf)
+    pred["quad"] = pq
+    _G["cv_quad_conv"] = [bool(c) for c in cq]
     if quer("cv"):
         resumo_cv(P, pred)
     finais = em_cache("finais", lambda: dict(zip([1, 2, 3, 4], paralelo(_final_tarefa, [1, 2, 3, 4]))), rf)
     m = finais[2]
     if quer("final"):
         ajuste_dentro_da_amostra(P, finais)
+        etapa_dim3(P, P.orientar(finais[3]) if "R" not in finais[3] else finais[3], m)
     O = etapa_estrutura(P, m)
     _G["O"] = O
     tvot = etapa_dim2(P, m, O)
@@ -1403,9 +1571,6 @@ def main():
     if quer("robustez"):
         em_cache("robustez", lambda: (etapa_robustez(P, m), RES["robustez"])[1], rf)
         RES["robustez"] = pickle.loads((CACHE / "robustez.pkl").read_bytes())
-    vt = pd.read_parquet(DADOS / "votacoes.parquet").set_index("idVotacao")["proposicao_id"]
-    prop = vt.reindex(P.votacoes).fillna(pd.Series(P.votacoes, index=P.votacoes)).to_numpy()
-    _G["cluster"] = pd.factorize(prop)[0]
     U, X, conv, ang = em_cache("bootstrap", lambda: etapa_bootstrap(P, m), rf)
     se = resumo_bootstrap(P, m, U, X, conv, ang)
     dcom = em_cache("orgaos", lambda: (etapa_orgaos(P, m), RES["orgaos"]), rf)
