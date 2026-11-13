@@ -178,6 +178,23 @@ Partidos de Lula 3, com médias ponderadas pela duração dos gabinetes em que t
 | PDT | 0,90 | 0,89 | 6,4% | 6,9% | +0,5 | 0,73 | 0,69 |
 | PT | 0,98 | 0,99 | 26,6% | 30,9% | +4,3 | 1,60 | 1,36 |
 
+### Governos anteriores (legislaturas 55 e 56)
+
+Os votos de 2015 a 2022 vêm de `python baixar_legislatura.py --legislatura 55` (e `56`), que gera os parquets em `dados/leg55` e `dados/leg56`. São cerca de 56 MB de parquet e alguns minutos de download. Os CSVs brutos ficam em `dados/brutos`, fora do git.
+* **Correção no download:** de 2019 a 2022, a bancada do Governo aparece como "GOV." nos arquivos da Câmara, e o parser não a reconhecia. Sem a correção em `baixar_legislatura.norm`, a orientação do governo só existia em 2020–2021. Com ela, há orientação Sim/Não em 70% a 88% das votações do plenário em todos os anos de 2015 a 2022.
+* **Composições:** os gabinetes de Almeida (`comp_almeida()`), com as cadeiras da data de início.
+
+| Mandato | Cadeiras (DP) | Entregue (DP) | Dif. | Entregue c/ ausência | Governismo médio da base |
+|---|---|---|---|---|---|
+| Rousseff 2 (fev/2015–mai/2016) | 75,6 (1,0) | 79,1 (2,1) | +3,6 | 80,4 | 0,79 |
+| Temer | 77,6 (2,3) | 78,2 (2,4) | +0,6 | 79,1 | 0,93 |
+| Bolsonaro | 39,2 (26,8) | 39,2 (26,8) | 0,0 | 39,2 | — |
+| Lula 3 | 75,1 (5,1) | 78,3 (5,9) | +3,2 | 79,4 | 0,84 |
+
+* **Rousseff 2:** tem o mesmo padrão de Lula 3. O PT é sobrerrepresentado (retorno de 1,92 por cadeira e de 1,64 por voto) e entrega 93%. PP (64%), PSD e PTB (71–73%) entregam menos. A diferença é de +5,0 em Dilma 2-1. Dilma 2-3 (abr–mai/2016) tem só 4 votações e não deve ser interpretado.
+* **Temer:** a base vota com o governo em cerca de 93% das vezes e de modo homogêneo, com o PSB como exceção (80%). Por isso as duas réguas quase coincidem (+0,6). A proporcionalidade de Temer não depende da escolha entre potencial e entregue.
+* **Bolsonaro:** a diferença é zero por construção. Com 1 a 3 partidos e 16 a 18 ministros sem partido, Sᵢ > Mᵢ para todo partido, e o índice não depende de S (ver o item 4 abaixo).
+
 ### O que muda na interpretação
 
 1. **A coalizão de Lula 3 é mais proporcional em votos entregues do que em cadeiras** (cerca de 3 pontos no mandato e até 6,5 pontos em alguns gabinetes). A desproporção medida pela lei de Gamson vem, em boa parte, de o PT ter mais ministérios do que as suas cadeiras justificam e de o "centrão" do gabinete (União, PSD, MDB, PP) ter menos. Como o PT entrega quase 100% e esses partidos entregam de 68% a 78%, o peso real do PT cresce e o dos aliados de centro-direita encolhe. Os dois pesos se aproximam da distribuição de ministérios. Parte do que parecia "pagamento abaixo do preço" ao centrão reflete o fato de esse apoio ser parcial.
@@ -191,5 +208,5 @@ Partidos de Lula 3, com médias ponderadas pela duração dos gabinetes em que t
 * **Votações consensuais:** elas inflam a taxa de todos os partidos, até da oposição. A variante "disputadas" corrige isso e dá resultados muito parecidos, com União, MDB, PSD e PP de 7 a 10 pontos mais baixos.
 * **Agenda:** o governo escolhe o que orienta. Partidos com pauta própria podem ter taxas diferentes sem que isso signifique menos apoio nas votações decisivas. Não há ponderação pela importância da votação (MPs, PECs, LDO).
 * **Unidade partidária:** a taxa é do partido inteiro. O aliado que "entrega" pode ser só a ala que tem o ministro. Aqui não se mede a entrega por ministro.
-* **Cobertura temporal:** as votações nominais de 2023 começam em 14/03/2023. O 2º semestre de 2026 (eleições) tem poucas votações (49 no Lula 3-9).
+* **Cobertura temporal:** em Dilma 2-3 há só 4 votações. As votações nominais de 2023 começam em 14/03/2023. O 2º semestre de 2026 (eleições) tem poucas votações (49 no Lula 3-9).
 * **Presença:** a variante usa as cadeiras em exercício no dia 15 de cada mês como denominador, o que é uma aproximação. Com mudanças de partido no meio do mês, a presença pode passar de 1 e é truncada.
