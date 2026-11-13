@@ -1063,6 +1063,7 @@ def regressao_desvio(base, dep, per, dist):
         entre = g.groupby("partido")["obs"].transform("mean").var()
         num(f"var_{nome}_total", total, 6); num(f"var_{nome}_sinal", sinal, 6)
         num(f"var_{nome}_share_sinal", sinal / total)
+        num(f"var_{nome}_share_sinal_compl", 1 - sinal / total)
         num(f"var_{nome}_share_partido_no_sinal", entre / sinal)
         num(f"var_{nome}_share_intra_no_sinal", 1 - entre / sinal)
         out[nome] = (tab, g, z)
@@ -1103,6 +1104,10 @@ def estudo_evento(base, dep):
         for k, r in tab.iterrows():
             for c in ["coef", "lo", "hi"]:
                 num(f"ev_{nome}_{k}_{c}", r[c], 5)
+            # versão negada (queda do desvio), com o IC invertido
+            num(f"ev_{nome}_{k}_negcoef", -r["coef"], 5)
+            num(f"ev_{nome}_{k}_neglo", -r["hi"], 5)
+            num(f"ev_{nome}_{k}_neghi", -r["lo"], 5)
         res[nome] = tab
     num("ev_n_trocadores_ind", int(ind.index.isin(base["u"]["deputado_id"]).sum()))
     num("ev_n_fusao", int(fus.index.isin(base["u"]["deputado_id"]).sum()))
@@ -1228,6 +1233,7 @@ def dispersao_pivos(A, base_p, dep, per):
         cont[np.argsort(dd)[:5]] += 1
     U["p_top5_mediana"] = cont / Ub.shape[0]
     tp = U.sort_values("p_top5_mediana", ascending=False).head(8)
+    num("pivos_boot_max", float(tp["p_top5_mediana"].max()))
     num("pivos_boot_top", "; ".join(f"{n} ({pct(q, 0)}%)" for n, q in zip(tp["nome"], tp["p_top5_mediana"])))
     # pivôs por semestre entre os deputados em exercício na data de referência
     filiacao = pd.read_parquet(DADOS / "deputados_partidos.parquet")
@@ -1263,6 +1269,13 @@ def dispersao_pivos(A, base_p, dep, per):
     X["sd_partido"] = X["partido"].map(disp["std"])
     X["rel_z"] = X["rel"] / X["sd_partido"]
     diss = X[(X["n_votos"] >= 100) & X["partido"].isin(disp.index) & ((X["rel_lo"] > 0) | (X["rel_hi"] < 0))]
+    atual = dep.set_index("id")["siglaPartido"]
+    pl = X[(X["partido"] == "PL") & (X["n_votos"] >= 100)].copy()
+    pl["saiu"] = pl["deputado_id"].map(atual) != "PL"
+    gov_pl = pl[pl["rel_z"] > 1]
+    num("pl_gov_n", len(gov_pl)); num("pl_gov_saiu", int(gov_pl["saiu"].sum()))
+    num("pl_resto_share_saiu", pl.loc[pl["rel_z"] <= 1, "saiu"].mean())
+    num("pl_gov_share_saiu", gov_pl["saiu"].mean())
     num("diss_n_ic_exclui_0", len(diss)); num("diss_n_elegiveis", int(((X["n_votos"] >= 100) & X["partido"].isin(disp.index)).sum()))
     return dict(f=f, U=U, X=X, disp=disp, piv=piv, Ub=Ub, Xb=Xb)
 
@@ -1314,6 +1327,7 @@ def interpretar_intra(A, vt, dep, glob, temas_vt):
     info = vt.set_index("idVotacao")
     vv["descricao"] = vv["idVotacao"].map(info["descricao"])
     vv["proposicao"] = vv["idVotacao"].map(info["proposicao_titulo"])
+    vv["ementa"] = vv["idVotacao"].map(info["proposicao_ementa"])
     vv["data"] = vv["idVotacao"].map(info["data"])
     vv["tipo"] = vv["descricao"].map(classificar_votacao)
     og = A["df"].drop_duplicates("idVotacao").set_index("idVotacao")
@@ -1429,10 +1443,10 @@ def tabela_cargas(vv, k=8):
     for lado, t in [("+ (governistas relativos votam Sim)", vv.nlargest(k, "carga")),
                     ("− (governistas relativos votam Não)", vv.nsmallest(k, "carga"))]:
         for _, r in t.iterrows():
-            d = re.sub(r"\s+", " ", str(r["descricao"]))
-            d = d if len(d) <= 110 else d[:107] + "..."
-            linhas.append({"Sinal": lado, "Data": str(r["data"])[:10], "Proposição": r["proposicao"],
-                           "Tipo": r["tipo"], "Votação": d, "Gov.": r["orientacao_governo"] or "–",
+            d = re.sub(r"\s+", " ", str(r["ementa"]))
+            d = d if len(d) <= 120 else d[:117] + "..."
+            linhas.append({"Sinal": lado, "Data": str(r["data"])[:10], "Proposição": str(r["proposicao"]).split(",")[0],
+                           "Tipo": r["tipo"], "Ementa": d, "Gov.": r["orientacao_governo"] or "–",
                            "Carga": br(r["carga"], 2)})
     return pd.DataFrame(linhas)
 
@@ -1460,6 +1474,12 @@ def partido_vs_governo(base, cvP, A, dep, per, dist, camadas=("própria", "bloco
         return x, t
     for k, s in xb.groupby("camada"):
         num(f"div_base_camada_{k}_segue_partido", s["segue_partido"].mean()); num(f"div_base_camada_{k}_n", len(s))
+    for q in ["PSB", "PDT"]:
+        s = xb[xb["partido"] == q]
+        num(f"div_{q}_share_inferido", (s["camada"] == "bloco inferido").mean())
+        num(f"div_{q}_propria_segue_partido", s.loc[s["camada"] == "própria", "segue_partido"].mean())
+        num(f"div_{q}_propria_n", int((s["camada"] == "própria").sum()))
+        num(f"div_{q}_inferido_segue_partido", s.loc[s["camada"] == "bloco inferido", "segue_partido"].mean())
     for k, s in xb.groupby("tipo_votacao"):
         num(f"div_base_tipo_{k}_segue_partido", s["segue_partido"].mean())
     # quem a orientação 'Liberado' deixa seguir o Governo
@@ -1561,6 +1581,37 @@ def ausencia_pec(p, per):
     num("pec_disc_com_ausencia", t["seguiu"].sum() / (t["presentes"] + t["ausentes"]).sum())
     num("pec_share_ausentes", t["ausentes"].sum() / (t["presentes"] + t["ausentes"]).sum())
     return t
+
+
+# ====================================================== montagem do manuscrito
+FORMATOS = {
+    "pct": lambda x: pct(x, 1), "pct0": lambda x: pct(x, 0), "pct2": lambda x: pct(x, 2),
+    "pp": lambda x: br(100 * x, 1), "pp2": lambda x: br(100 * x, 2),
+    "d1": lambda x: br(x, 1), "d2": lambda x: br(x, 2), "d3": lambda x: br(x, 3), "d4": lambda x: br(x, 4),
+    "int": lambda x: milhar(x), "raw": lambda x: str(x),
+    "data": lambda x: pd.Timestamp(x).strftime("%d/%m/%Y"),
+}
+
+
+def montar_artigo():
+    """Gera artigo.md a partir de artigo_fonte.md: {{fmt:chave}} vira o número de R formatado e
+    {{tab:nome}} vira a tabela tabelas/<nome>.md. Chave ausente interrompe a execução."""
+    fonte = (AQUI / "artigo_fonte.md").read_text(encoding="utf-8")
+    faltam = []
+
+    def sub(m):
+        fmt, chave = m.group(1), m.group(2)
+        if fmt == "tab":
+            return (TAB / f"{chave}.md").read_text(encoding="utf-8").strip()
+        if chave not in R or R[chave] is None:
+            faltam.append(chave)
+            return "??"
+        return FORMATOS[fmt](R[chave])
+    txt = re.sub(r"\{\{(\w+):([^}]+)\}\}", sub, fonte)
+    if faltam:
+        raise KeyError(f"chaves ausentes em resultados.json: {sorted(set(faltam))}")
+    cab = ("<!-- Arquivo gerado por analise.py a partir de artigo_fonte.md; não edite à mão. -->\n")
+    (AQUI / "artigo.md").write_text(cab + txt, encoding="utf-8")
 
 
 # ============================================================================ figuras
@@ -1859,7 +1910,10 @@ def main():
         partido_vs_governo(base, P, A, dep, per, dist, camadas=("própria", "bloco"), sufixo="_seminf")
         fig_governo(t5, cf)
     R["tempo_execucao_s"] = round(time.time() - t0)
+    R["n_chaves"] = len(R) + 1
     (AQUI / "resultados.json").write_text(json.dumps(R, indent=1, ensure_ascii=False, allow_nan=False))
+    if tudo and (AQUI / "artigo_fonte.md").exists():
+        montar_artigo()
     print(f"{len(R)} números em resultados.json; tempo: {time.time() - t0:.0f}s")
 
 
