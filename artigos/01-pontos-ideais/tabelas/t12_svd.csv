@@ -1,0 +1,7 @@
+método,dimensões,acurácia fora da amostra,r dim1 com IRT,r dim2 com IRT
+"SVD, ausentes na média da votação",1,0.8728278223847097,,
+SVD com imputação iterativa,1,0.896198255316195,,
+"SVD, ausentes na média da votação",2,0.8939769072355785,0.9180511274464749,0.7099112938644987
+SVD com imputação iterativa,2,0.9099197075225027,0.9735055248990113,0.7549162676589609
+"SVD, ausentes na média da votação",3,0.8982576300992665,,
+SVD com imputação iterativa,3,0.91614410995673,,

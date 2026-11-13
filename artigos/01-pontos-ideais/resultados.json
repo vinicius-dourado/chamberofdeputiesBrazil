@@ -1,0 +1,2527 @@
+{
+ "dados": {
+  "votacoes_total": 43631,
+  "votacoes_nominais": 1604,
+  "votacoes_nominais_plenario": 1128,
+  "votacoes_plenario_total": 6855,
+  "registros_voto_brutos": 473323,
+  "tipos_voto_brutos": {
+   "Sim": 277294,
+   "Não": 187694,
+   "Obstrução": 5272,
+   "Abstenção": 1131,
+   "Artigo 17": 1045,
+   "nan": 887
+  },
+  "votos": 433476,
+  "votacoes": 1470,
+  "deputados": 644,
+  "periodos": 831,
+  "deputados_confiaveis": 621,
+  "periodos_confiaveis": 707,
+  "deputados_com_mais_de_um_periodo": 171,
+  "densidade_matriz": 0.35485154350548886,
+  "prop_sim": 0.5669979422159473,
+  "data_min": "2023-03-14",
+  "data_max": "2026-11-04",
+  "votacoes_plenario": 1039,
+  "votacoes_comissoes": 431,
+  "votos_plenario": 417902,
+  "votos_comissoes": 15574,
+  "votacoes_ccjc": 276,
+  "obstrucao_na_amostra": 4895,
+  "orientacao_fonte": {
+   "bloco": 0.45907962609233266,
+   "partido": 0.18459384141221197,
+   "bloco (inferido)": 0.17983694599008943,
+   "federacao": 0.16507949690409618,
+   "nan": 0.011410089601269735
+  },
+  "orientacao_utilizavel": 0.6674625584807463,
+  "orientacao_liberado": 0.06444186067971468,
+  "orientacao_ausente": 0.268095580839539,
+  "por_ano": [
+   {
+    "ano": "2023",
+    "votacoes": 418,
+    "votos": 121231,
+    "no plenário": 284,
+    "prop. Sim": 0.5659773490278889
+   },
+   {
+    "ano": "2024",
+    "votacoes": 403,
+    "votos": 102967,
+    "no plenário": 242,
+    "prop. Sim": 0.5653753144211252
+   },
+   {
+    "ano": "2025",
+    "votacoes": 502,
+    "votos": 161135,
+    "no plenário": 398,
+    "prop. Sim": 0.5575325038011605
+   },
+   {
+    "ano": "2026",
+    "votacoes": 147,
+    "votos": 48143,
+    "no plenário": 115,
+    "prop. Sim": 0.604719273830048
+   }
+  ]
+ },
+ "reproducao": {
+  "original_acuracia": 0.919383575907629,
+  "original_logloss": 0.207570223036449,
+  "reimpl_acuracia": 0.919383575907629,
+  "reimpl_logloss": 0.20757558566049042,
+  "nll_original": 77846.37247062918,
+  "nll_reimpl": 77846.35027632455,
+  "concordancia_previsoes": 1.0,
+  "corr_probabilidades": 0.9999997420513709,
+  "n_teste": 43217
+ },
+ "cv": {
+  "Maioria da votação (0D)": {
+   "acurácia": 0.7476775561916109,
+   "dp entre partições": 0.00250311822826661,
+   "APRE": 0.0,
+   "log-loss": 0.5311514752278821,
+   "GMP": 0.5879275957012835
+  },
+  "Orientação da bancada": {
+   "acurácia": 0.8429304342780094,
+   "dp entre partições": 0.0025869076574696944,
+   "APRE": 0.3775028800263317,
+   "log-loss": NaN,
+   "GMP": NaN
+  },
+  "Maioria do partido na votação": {
+   "acurácia": 0.8847851467817531,
+   "dp entre partições": 0.001957955110140595,
+   "APRE": 0.5433832537897489,
+   "log-loss": 0.41876712117551496,
+   "GMP": 0.6578573784835411
+  },
+  "IRT 2D, um ponto por partido": {
+   "acurácia": 0.8801106509400928,
+   "dp entre partições": 0.002559581750422167,
+   "APRE": 0.5248596558597107,
+   "log-loss": 0.30296256226974,
+   "GMP": 0.7386267483618334
+  },
+  "IRT 1D": {
+   "acurácia": 0.9098090327321368,
+   "dp entre partições": 0.0015977340108783052,
+   "APRE": 0.6425567319472636,
+   "log-loss": 0.24070179264786412,
+   "GMP": 0.7860760050839372
+  },
+  "IRT 2D": {
+   "acurácia": 0.9187769508241093,
+   "dp entre partições": 0.0014815377267436943,
+   "APRE": 0.6780953425859894,
+   "log-loss": 0.20902266373459155,
+   "GMP": 0.8113768466055249
+  },
+  "IRT 3D": {
+   "acurácia": 0.9228861567395376,
+   "dp entre partições": 0.0016533747460016743,
+   "APRE": 0.6943789200358403,
+   "log-loss": 0.20131446808822173,
+   "GMP": 0.8176552646326901
+  },
+  "IRT 4D": {
+   "acurácia": 0.9256404690959625,
+   "dp entre partições": 0.0013361913315517154,
+   "APRE": 0.7052955912739773,
+   "log-loss": 0.19542874309999048,
+   "GMP": 0.8224819489901359
+  },
+  "ganho_0D_1D": {
+   "media": 0.16213147654052587,
+   "dp": 0.0019398535057162667,
+   "min": 0.15820105820105823,
+   "max": 0.1641481757433234
+  },
+  "ganho_1D_2D": {
+   "media": 0.008967918091972383,
+   "dp": 0.0007555916634259168,
+   "min": 0.00797510660366485,
+   "max": 0.010225231449495609
+  },
+  "ganho_2D_3D": {
+   "media": 0.004109205915428293,
+   "dp": 0.0006555699588905462,
+   "min": 0.0027567828344321477,
+   "max": 0.005270304480909482
+  },
+  "ganho_3D_4D": {
+   "media": 0.0027543123564251594,
+   "dp": 0.0006869086892343639,
+   "min": 0.0017513942019633522,
+   "max": 0.0035496139218623712
+  },
+  "ganho_2D_vs_maioria_partido": {
+   "media": 0.03399180404235604,
+   "dp": 0.0016772336943719425,
+   "min": 0.03105590062111796,
+   "max": 0.03562704521362403
+  }
+ },
+ "por_fonte": [
+  {
+   "situação da orientação": "orientada: partido",
+   "votos": 70146,
+   "% dos votos": 16.18221077983556,
+   "orientação": 0.9103726513272318,
+   "maioria": 0.5662903087845351,
+   "maioria do partido": 0.9123684885809598,
+   "IRT 1D": 0.9196390385766829,
+   "IRT 2D": 0.9268810766116385
+  },
+  {
+   "situação da orientação": "orientada: federacao",
+   "votos": 68401,
+   "% dos votos": 15.779651007206857,
+   "orientação": 0.9820178067572112,
+   "maioria": 0.739492112688411,
+   "maioria do partido": 0.9784506074472595,
+   "IRT 1D": 0.958523998187161,
+   "IRT 2D": 0.9824563968363036
+  },
+  {
+   "situação da orientação": "orientada: bloco",
+   "votos": 116420,
+   "% dos votos": 26.857311592798677,
+   "orientação": 0.8599982820821165,
+   "maioria": 0.8557292561415565,
+   "maioria do partido": 0.8677289125579797,
+   "IRT 1D": 0.9051022161140697,
+   "IRT 2D": 0.9090362480673424
+  },
+  {
+   "situação da orientação": "orientada: bloco (inferido)",
+   "votos": 34362,
+   "% dos votos": 7.927082468233536,
+   "orientação": 0.8707874978173564,
+   "maioria": 0.8688376695186544,
+   "maioria do partido": 0.8869972644199988,
+   "IRT 1D": 0.9133635993248356,
+   "IRT 2D": 0.9193294918805658
+  },
+  {
+   "situação da orientação": "liberada",
+   "votos": 27934,
+   "% dos votos": 6.444186067971468,
+   "orientação": NaN,
+   "maioria": 0.6715114197751844,
+   "maioria do partido": 0.792152931910933,
+   "IRT 1D": 0.786854729004081,
+   "IRT 2D": 0.8055416338512207
+  },
+  {
+   "situação da orientação": "sem orientação",
+   "votos": 116213,
+   "% dos votos": 26.8095580839539,
+   "orientação": NaN,
+   "maioria": 0.7362343283453658,
+   "maioria do partido": 0.8517119427258568,
+   "IRT 1D": 0.9084267680896285,
+   "IRT 2D": 0.9132196914286698
+  }
+ ],
+ "dissidencia": {
+  "prop_votos_orientados": 0.6674625584807463,
+  "taxa_disciplina": 0.902339551168393,
+  "n_dissidentes": 28256,
+  "irt2d_acerta_dissidentes": 0.5498301245753114,
+  "irt1d_acerta_dissidentes": 0.5026896942242356,
+  "maioria_partido_acerta_dissidentes": 0.17061862967157418,
+  "irt2d_acerta_disciplinados": 0.9732986559314828,
+  "orientacao_so_orientados": 0.902339551168393,
+  "irt2d_so_orientados": 0.9319425290931777,
+  "irt2d_nao_orientados": 0.892352945257272,
+  "maioria_nao_orientados": 0.723691786856473
+ },
+ "ganho_por_partido": [
+  {
+   "partido": "PSOL",
+   "votos": 11653,
+   "maioria": 0.6277353471209131,
+   "orientação": 0.9491118166995623,
+   "IRT 1D": 0.8354930060928516,
+   "IRT 2D": 0.9782030378443319,
+   "IRT 3D": 0.9792328155839698,
+   "ganho 1D→2D": 0.14271003175148034,
+   "ganho 2D→3D": 0.0010297777396378605
+  },
+  {
+   "partido": "NOVO",
+   "votos": 4002,
+   "maioria": 0.33983008495752126,
+   "orientação": 0.9690154922538731,
+   "IRT 1D": 0.8353323338330835,
+   "IRT 2D": 0.9087956021989005,
+   "IRT 3D": 0.9010494752623688,
+   "ganho 1D→2D": 0.07346326836581707,
+   "ganho 2D→3D": -0.007746126936531761
+  },
+  {
+   "partido": "REPUBLICANOS",
+   "votos": 37375,
+   "maioria": 0.8841204013377927,
+   "orientação": 0.8893913043478261,
+   "IRT 1D": 0.9099933110367893,
+   "IRT 2D": 0.9292307692307692,
+   "IRT 3D": 0.9356521739130435,
+   "ganho 1D→2D": 0.01923745819397993,
+   "ganho 2D→3D": 0.0064214046822742565
+  },
+  {
+   "partido": "CIDADANIA",
+   "votos": 2782,
+   "maioria": 0.6944644140905823,
+   "orientação": 0.6923076923076923,
+   "IRT 1D": 0.8076923076923077,
+   "IRT 2D": 0.8256649892163911,
+   "IRT 3D": 0.8328540618260244,
+   "ganho 1D→2D": 0.017972681524083378,
+   "ganho 2D→3D": 0.007189072609633307
+  },
+  {
+   "partido": "PSDB",
+   "votos": 11258,
+   "maioria": 0.7904601172499556,
+   "orientação": 0.7899271629063777,
+   "IRT 1D": 0.8541481613075147,
+   "IRT 2D": 0.8639189909397762,
+   "IRT 3D": 0.8657843311422988,
+   "ganho 1D→2D": 0.009770829632261502,
+   "ganho 2D→3D": 0.001865340202522603
+  },
+  {
+   "partido": "SOLIDARIEDADE",
+   "votos": 3820,
+   "maioria": 0.8534031413612565,
+   "orientação": 0.8589005235602094,
+   "IRT 1D": 0.9018324607329843,
+   "IRT 2D": 0.9078534031413612,
+   "IRT 3D": 0.9099476439790576,
+   "ganho 1D→2D": 0.006020942408376917,
+   "ganho 2D→3D": 0.0020942408376963817
+  },
+  {
+   "partido": "PSB",
+   "votos": 13241,
+   "maioria": 0.8035646854467186,
+   "orientação": 0.8536364322936334,
+   "IRT 1D": 0.911789139793067,
+   "IRT 2D": 0.9165470885884752,
+   "IRT 3D": 0.9210784683936258,
+   "ganho 1D→2D": 0.004757948795408251,
+   "ganho 2D→3D": 0.004531379805150615
+  },
+  {
+   "partido": "UNIÃO",
+   "votos": 48613,
+   "maioria": 0.7725094110628844,
+   "orientação": 0.7754510110464279,
+   "IRT 1D": 0.8763910888034065,
+   "IRT 2D": 0.881019480385905,
+   "IRT 3D": 0.8862444202168144,
+   "ganho 1D→2D": 0.004628391582498503,
+   "ganho 2D→3D": 0.005224939830909325
+  },
+  {
+   "partido": "PDT",
+   "votos": 14961,
+   "maioria": 0.8540872936301049,
+   "orientação": 0.8755430786712118,
+   "IRT 1D": 0.9174520419758038,
+   "IRT 2D": 0.9218635117973397,
+   "IRT 3D": 0.9319564200253994,
+   "ganho 1D→2D": 0.004411469821535952,
+   "ganho 2D→3D": 0.010092908228059638
+  },
+  {
+   "partido": "MDB",
+   "votos": 32405,
+   "maioria": 0.8295941984261688,
+   "orientação": 0.8335750655762999,
+   "IRT 1D": 0.8902329887363061,
+   "IRT 2D": 0.8934732294399013,
+   "IRT 3D": 0.8987810523067428,
+   "ganho 1D→2D": 0.0032402407035951875,
+   "ganho 2D→3D": 0.005307822866841505
+  },
+  {
+   "partido": "PL",
+   "votos": 80341,
+   "maioria": 0.5021719918845919,
+   "orientação": 0.7559527513971696,
+   "IRT 1D": 0.9183107006385283,
+   "IRT 2D": 0.9214348838077694,
+   "IRT 3D": 0.9274716520829962,
+   "ganho 1D→2D": 0.0031241831692411237,
+   "ganho 2D→3D": 0.0060367682752268115
+  },
+  {
+   "partido": "PSD",
+   "votos": 35496,
+   "maioria": 0.8504056795131846,
+   "orientação": 0.8525749380211854,
+   "IRT 1D": 0.8891424385846293,
+   "IRT 2D": 0.8916497633536173,
+   "IRT 3D": 0.8956220419202163,
+   "ganho 1D→2D": 0.002507324768988073,
+   "ganho 2D→3D": 0.003972278566598986
+  },
+  {
+   "partido": "PP",
+   "votos": 40111,
+   "maioria": 0.8353818154620927,
+   "orientação": 0.8406172870284959,
+   "IRT 1D": 0.9007254867742016,
+   "IRT 2D": 0.9029193986686944,
+   "IRT 3D": 0.9066839520331081,
+   "ganho 1D→2D": 0.002193911894492806,
+   "ganho 2D→3D": 0.0037645533644137252
+  },
+  {
+   "partido": "PT",
+   "votos": 60947,
+   "maioria": 0.7769373389994585,
+   "orientação": 0.9491853577698656,
+   "IRT 1D": 0.9819351239601621,
+   "IRT 2D": 0.983165701347072,
+   "IRT 3D": 0.9836579323018361,
+   "ganho 1D→2D": 0.0012305773869099035,
+   "ganho 2D→3D": 0.000492230954764028
+  },
+  {
+   "partido": "PV",
+   "votos": 4296,
+   "maioria": 0.7807262569832403,
+   "orientação": 0.9322625698324022,
+   "IRT 1D": 0.9615921787709497,
+   "IRT 2D": 0.9625232774674115,
+   "IRT 3D": 0.9632216014897579,
+   "ganho 1D→2D": 0.0009310986964617962,
+   "ganho 2D→3D": 0.0006983240223463749
+  },
+  {
+   "partido": "PRD",
+   "votos": 2524,
+   "maioria": 0.6747226624405706,
+   "orientação": 0.6731378763866878,
+   "IRT 1D": 0.8882725832012678,
+   "IRT 2D": 0.8886687797147385,
+   "IRT 3D": 0.8894611727416799,
+   "ganho 1D→2D": 0.0003961965134706702,
+   "ganho 2D→3D": 0.0007923930269414514
+  },
+  {
+   "partido": "PCdoB",
+   "votos": 7568,
+   "maioria": 0.7540961945031712,
+   "orientação": 0.9353858350951374,
+   "IRT 1D": 0.9710623678646935,
+   "IRT 2D": 0.9705338266384778,
+   "IRT 3D": 0.9698731501057083,
+   "ganho 1D→2D": -0.0005285412262157063,
+   "ganho 2D→3D": -0.0006606765327694664
+  },
+  {
+   "partido": "AVANTE",
+   "votos": 6020,
+   "maioria": 0.8538205980066446,
+   "orientação": 0.8554817275747508,
+   "IRT 1D": 0.9099667774086379,
+   "IRT 2D": 0.9093023255813953,
+   "IRT 3D": 0.9116279069767442,
+   "ganho 1D→2D": -0.0006644518272425071,
+   "ganho 2D→3D": 0.0023255813953488857
+  },
+  {
+   "partido": "PODE",
+   "votos": 13464,
+   "maioria": 0.8397207367795603,
+   "orientação": 0.8400920974450387,
+   "IRT 1D": 0.8887403446226976,
+   "IRT 2D": 0.8879233511586453,
+   "IRT 3D": 0.8905971479500892,
+   "ganho 1D→2D": -0.0008169934640522847,
+   "ganho 2D→3D": 0.002673796791443861
+  }
+ ],
+ "cv_por_orgao": [
+  {
+   "órgão": "Plenário",
+   "votações": 1039,
+   "votos": 417902,
+   "maioria": 0.7497666917124111,
+   "orientação": 0.842154380692124,
+   "maioria do partido": 0.8853558968370575,
+   "IRT 1D": 0.9093543462342846,
+   "IRT 2D": 0.9185646395566425,
+   "IRT 3D": 0.923039372867323
+  },
+  {
+   "órgão": "CCJC",
+   "votações": 276,
+   "votos": 12422,
+   "maioria": 0.6866044115279343,
+   "orientação": 0.8668491386250201,
+   "maioria do partido": 0.8693447109966189,
+   "IRT 1D": 0.921268716792787,
+   "IRT 2D": 0.9242473031717919,
+   "IRT 3D": 0.9191756560940267
+  },
+  {
+   "órgão": "Outras comissões",
+   "votações": 155,
+   "votos": 3152,
+   "maioria": 0.7119289340101523,
+   "orientação": 0.8518401015228426,
+   "maioria do partido": 0.870241116751269,
+   "IRT 1D": 0.9251269035532995,
+   "IRT 2D": 0.9254441624365483,
+   "IRT 3D": 0.9171954314720813
+  }
+ ],
+ "cv_por_ano": [
+  {
+   "ano": "2023",
+   "maioria": 0.7639217691844495,
+   "orientação": 0.8715097623545133,
+   "IRT 1D": 0.8953238033176333,
+   "IRT 2D": 0.9055769563890425
+  },
+  {
+   "ano": "2024",
+   "maioria": 0.7523769751473773,
+   "orientação": 0.8752221585556538,
+   "IRT 1D": 0.9139724377713248,
+   "IRT 2D": 0.9257529111268659
+  },
+  {
+   "ano": "2025",
+   "maioria": 0.7309957489061967,
+   "orientação": 0.7919260247618457,
+   "IRT 1D": 0.9154187482545691,
+   "IRT 2D": 0.9223942656778478
+  },
+  {
+   "ano": "2026",
+   "maioria": 0.7525912386016659,
+   "orientação": 0.8726294580728247,
+   "IRT 1D": 0.9186174521737325,
+   "IRT 2D": 0.9249942878507779
+  }
+ ],
+ "dentro_da_amostra": [
+  {
+   "dimensões": 1,
+   "classificação correta": 0.9120781773385378,
+   "APRE": 0.6503839062112997,
+   "GMP": 0.7935315473253433,
+   "parâmetros": 4415,
+   "convergiu": true
+  },
+  {
+   "dimensões": 2,
+   "classificação correta": 0.9227338999160276,
+   "APRE": 0.6927557769399418,
+   "GMP": 0.8230434158024764,
+   "parâmetros": 7360,
+   "convergiu": true
+  },
+  {
+   "dimensões": 3,
+   "classificação correta": 0.9287411529127334,
+   "APRE": 0.716643274531928,
+   "GMP": 0.834296613890023,
+   "parâmetros": 10305,
+   "convergiu": true
+  },
+  {
+   "dimensões": 4,
+   "classificação correta": 0.933860236783582,
+   "APRE": 0.7369990184476796,
+   "GMP": 0.8443118647319962,
+   "parâmetros": 13250,
+   "convergiu": true
+  }
+ ],
+ "dentro_da_amostra_maioria": 0.7485189491459735,
+ "estrutura": {
+  "partidos": [
+   {
+    "partido": "NOVO",
+    "períodos": 5,
+    "dim1 (média)": -1.490644007197956,
+    "dim1 (dp)": 0.08104606516076449,
+    "dim2 (média)": 1.4948504655876775,
+    "dim2 (dp)": 0.0634066235886696,
+    "alinh. Governo": 0.11258922777417261,
+    "campo": "direita"
+   },
+   {
+    "partido": "PL",
+    "períodos": 127,
+    "dim1 (média)": -1.4452841277380313,
+    "dim1 (dp)": 0.5250340292961243,
+    "dim2 (média)": 0.2011549626817989,
+    "dim2 (dp)": 0.3751782560658064,
+    "alinh. Governo": 0.24587803181075352,
+    "campo": "direita"
+   },
+   {
+    "partido": "PATRIOTA",
+    "períodos": 5,
+    "dim1 (média)": -0.4188654913845011,
+    "dim1 (dp)": 1.046874663080807,
+    "dim2 (média)": 0.11476002502568897,
+    "dim2 (dp)": 0.5133448146663295,
+    "alinh. Governo": 0.6305818673883626,
+    "campo": ""
+   },
+   {
+    "partido": "CIDADANIA",
+    "períodos": 5,
+    "dim1 (média)": -0.4176945396712247,
+    "dim1 (dp)": 0.46778393184372624,
+    "dim2 (média)": 0.2607058750651386,
+    "dim2 (dp)": 0.40232341144349115,
+    "alinh. Governo": 0.5862862402208928,
+    "campo": "centro"
+   },
+   {
+    "partido": "PRD",
+    "períodos": 7,
+    "dim1 (média)": -0.3210179695713083,
+    "dim1 (dp)": 0.8384934021121166,
+    "dim2 (média)": 0.09541415512633525,
+    "dim2 (dp)": 0.3024563440507154,
+    "alinh. Governo": 0.5170831208567057,
+    "campo": "centro"
+   },
+   {
+    "partido": "UNIÃO",
+    "períodos": 77,
+    "dim1 (média)": -0.24607609693709842,
+    "dim1 (dp)": 0.5718997731999996,
+    "dim2 (média)": -0.04869954714101426,
+    "dim2 (dp)": 0.4313187675225702,
+    "alinh. Governo": 0.6117165488278136,
+    "campo": "direita"
+   },
+   {
+    "partido": "PP",
+    "períodos": 71,
+    "dim1 (média)": -0.1793234387917458,
+    "dim1 (dp)": 0.5712116420309052,
+    "dim2 (média)": -0.3513316208452124,
+    "dim2 (dp)": 0.5711185759151175,
+    "alinh. Governo": 0.6843155556986064,
+    "campo": "direita"
+   },
+   {
+    "partido": "REPUBLICANOS",
+    "períodos": 64,
+    "dim1 (média)": -0.15000487620144307,
+    "dim1 (dp)": 0.4149531694098464,
+    "dim2 (média)": -1.0306392116333345,
+    "dim2 (dp)": 0.6473970054345983,
+    "alinh. Governo": 0.7321669842369651,
+    "campo": "direita"
+   },
+   {
+    "partido": "PSDB",
+    "períodos": 22,
+    "dim1 (média)": -0.10323751984571095,
+    "dim1 (dp)": 0.4588521264334247,
+    "dim2 (média)": -0.030078948529887028,
+    "dim2 (dp)": 0.4667987534842081,
+    "alinh. Governo": 0.6710090275397097,
+    "campo": "centro"
+   },
+   {
+    "partido": "MDB",
+    "períodos": 55,
+    "dim1 (média)": -0.07517034651176666,
+    "dim1 (dp)": 0.6304193650031534,
+    "dim2 (média)": -0.23669284154475811,
+    "dim2 (dp)": 0.42689672542086465,
+    "alinh. Governo": 0.7185788011115523,
+    "campo": "centro"
+   },
+   {
+    "partido": "PODE",
+    "períodos": 28,
+    "dim1 (média)": -0.05091193246000164,
+    "dim1 (dp)": 0.7483417359464977,
+    "dim2 (média)": 0.01887708743589465,
+    "dim2 (dp)": 0.3548331873869491,
+    "alinh. Governo": 0.7520845452782625,
+    "campo": "centro"
+   },
+   {
+    "partido": "PSD",
+    "períodos": 66,
+    "dim1 (média)": 0.07594231926300041,
+    "dim1 (dp)": 0.5108555515016134,
+    "dim2 (média)": -0.06701390959242454,
+    "dim2 (dp)": 0.3946688437909736,
+    "alinh. Governo": 0.7518484793298125,
+    "campo": "centro"
+   },
+   {
+    "partido": "PSC",
+    "períodos": 3,
+    "dim1 (média)": 0.1909567989523282,
+    "dim1 (dp)": 0.5438929082714127,
+    "dim2 (média)": -0.0444688424695932,
+    "dim2 (dp)": 0.37124285401380186,
+    "alinh. Governo": 0.8232558139534883,
+    "campo": ""
+   },
+   {
+    "partido": "AVANTE",
+    "períodos": 9,
+    "dim1 (média)": 0.3429056562091288,
+    "dim1 (dp)": 0.5899146952796659,
+    "dim2 (média)": -0.239887106817112,
+    "dim2 (dp)": 0.5723723948886664,
+    "alinh. Governo": 0.8093393587260598,
+    "campo": "centro"
+   },
+   {
+    "partido": "SOLIDARIEDADE",
+    "períodos": 6,
+    "dim1 (média)": 0.4055805170108553,
+    "dim1 (dp)": 0.531205453803609,
+    "dim2 (média)": -0.049369531135644816,
+    "dim2 (dp)": 0.42185453832252306,
+    "alinh. Governo": 0.8223350253807107,
+    "campo": "centro"
+   },
+   {
+    "partido": "PDT",
+    "períodos": 21,
+    "dim1 (média)": 0.7314550376884281,
+    "dim1 (dp)": 0.2285536155068936,
+    "dim2 (média)": 0.15957926391346924,
+    "dim2 (dp)": 0.3317741354255857,
+    "alinh. Governo": 0.8962772785622594,
+    "campo": "esquerda"
+   },
+   {
+    "partido": "PSB",
+    "períodos": 20,
+    "dim1 (média)": 0.8375189717367171,
+    "dim1 (dp)": 0.23118227257615015,
+    "dim2 (média)": 0.25288921893152,
+    "dim2 (dp)": 0.2655509605088164,
+    "alinh. Governo": 0.9178348909657321,
+    "campo": "esquerda"
+   },
+   {
+    "partido": "REDE",
+    "períodos": 6,
+    "dim1 (média)": 1.2480586197353976,
+    "dim1 (dp)": 0.37820539508346845,
+    "dim2 (média)": 1.136602829243705,
+    "dim2 (dp)": 0.46350182812533225,
+    "alinh. Governo": 0.8968968968968969,
+    "campo": "esquerda"
+   },
+   {
+    "partido": "PV",
+    "períodos": 8,
+    "dim1 (média)": 1.3228738579029526,
+    "dim1 (dp)": 0.3322469911091891,
+    "dim2 (média)": 0.27922824448466055,
+    "dim2 (dp)": 0.3298696174506571,
+    "alinh. Governo": 0.9657738095238095,
+    "campo": "esquerda"
+   },
+   {
+    "partido": "PCdoB",
+    "períodos": 10,
+    "dim1 (média)": 1.5314666401763994,
+    "dim1 (dp)": 0.24612075736432457,
+    "dim2 (média)": 0.3430111596552575,
+    "dim2 (dp)": 0.21691492031903148,
+    "alinh. Governo": 0.9630326886873182,
+    "campo": "esquerda"
+   },
+   {
+    "partido": "PT",
+    "períodos": 76,
+    "dim1 (média)": 1.7905531362814628,
+    "dim1 (dp)": 0.2456472278683528,
+    "dim2 (média)": 0.12019770900360198,
+    "dim2 (dp)": 0.2913235242788809,
+    "alinh. Governo": 0.9756854957961891,
+    "campo": "esquerda"
+   },
+   {
+    "partido": "PSOL",
+    "períodos": 15,
+    "dim1 (média)": 1.9386041551092628,
+    "dim1 (dp)": 0.30486962315060684,
+    "dim2 (média)": 2.1766331310407687,
+    "dim2 (dp)": 0.27532741676893174,
+    "alinh. Governo": 0.8401918144306904,
+    "campo": "esquerda"
+   }
+  ],
+  "dp_dim1": 0.8978631356184533,
+  "dp_dim2": 0.5357111154787442,
+  "var_dim1_share": 0.7374671230683758,
+  "eta2_partido_d1": 0.7804108304536193,
+  "eta2_partido_d2": 0.5949810538207058,
+  "r_dim1_alinh_governo": 0.911684490407485,
+  "rho_dim1_alinh_governo": 0.9573052124548688,
+  "r_dim2_alinh_governo": -0.2629655930778407,
+  "r_dim2_alinh_partido": -0.2616876268458539,
+  "angulo_governo": -25.80052883122036,
+  "r2_plano_governo": 0.9003195131923363,
+  "angulo_campo": -143.8270670719867,
+  "r2_plano_campo": 0.6739312098117539,
+  "angulo_entre_governo_e_campo": 118.02653824076634,
+  "r_dim1_campo": -0.7524334092570499,
+  "r_dim2_campo": -0.3288093284058659,
+  "r_campo_alinh_governo": -0.6063568080066724,
+  "direita_n_deputados": 304,
+  "direita_r_dim1_governo": 0.9606237528835517,
+  "dim1_media_direita_oposicao": -1.1740692340721883,
+  "dim1_media_direita_centrao": -0.18330327071309563,
+  "dim1_media_esquerda": 1.1895849601639448,
+  "dim1_media_centro": -0.03648350799355745,
+  "fracao_distancia_direita_interna": 0.41916705319040143,
+  "r2_dim1_campo": 0.5964588381414304,
+  "r2_dim1_governo": 0.8311495432256898,
+  "r2_dim1_ambos": 0.9233085922221096,
+  "r2_dim2_em_dim1_linear": 3.3306690738754696e-16,
+  "r2_dim2_em_dim1_quadratico": 0.28612482162316133,
+  "coef_quadratico": 0.3075532137529461,
+  "autovalores_u": [
+   0.8074584654805087,
+   0.287449280536589
+  ],
+  "liderancas_eixos": [
+   {
+    "liderança": "Governo",
+    "votações orientadas": 1072,
+    "concorda com o sinal de b1": 0.9309701492537313,
+    "idem, |b1| acima da mediana": 0.9702276707530648,
+    "concorda com o sinal de b2": 0.3414179104477612
+   },
+   {
+    "liderança": "PT-PCdoB-PV",
+    "votações orientadas": 1165,
+    "concorda com o sinal de b1": 0.9210300429184549,
+    "idem, |b1| acima da mediana": 0.9676320272572402,
+    "concorda com o sinal de b2": 0.4051502145922747
+   },
+   {
+    "liderança": "PSOL-REDE",
+    "votações orientadas": 1120,
+    "concorda com o sinal de b1": 0.8758928571428571,
+    "idem, |b1| acima da mediana": 0.9602763385146805,
+    "concorda com o sinal de b2": 0.5205357142857143
+   },
+   {
+    "liderança": "Oposição",
+    "votações orientadas": 1119,
+    "concorda com o sinal de b1": 0.1063449508489723,
+    "idem, |b1| acima da mediana": 0.018461538461538463,
+    "concorda com o sinal de b2": 0.4915102770330652
+   },
+   {
+    "liderança": "PL",
+    "votações orientadas": 1057,
+    "concorda com o sinal de b1": 0.18353831598864712,
+    "idem, |b1| acima da mediana": 0.018315018315018316,
+    "concorda com o sinal de b2": 0.39924314096499525
+   },
+   {
+    "liderança": "NOVO",
+    "votações orientadas": 1130,
+    "concorda com o sinal de b1": 0.12477876106194691,
+    "idem, |b1| acima da mediana": 0.0498220640569395,
+    "concorda com o sinal de b2": 0.6168141592920354
+   }
+  ],
+  "testes_orientacao": [
+   {
+    "situação": "Governo ≠ PSOL-REDE",
+    "votações": 115,
+    "% das orientadas por ambos": 13.27944572748268,
+    "b1 com o 1º": 0.6434782608695652,
+    "|b2| > |b1|": 0.8695652173913043,
+    "média |b1|": 1.5900038152068872,
+    "média |b2|": 3.1528517590042977
+   },
+   {
+    "situação": "Governo ≠ PT-PCdoB-PV",
+    "votações": 14,
+    "% das orientadas por ambos": 1.5538290788013318,
+    "b1 com o 1º": 0.2857142857142857,
+    "|b2| > |b1|": 0.21428571428571427,
+    "média |b1|": 3.230023584021255,
+    "média |b2|": 2.0101065449307556
+   },
+   {
+    "situação": "Governo = PL",
+    "votações": 196,
+    "% das orientadas por ambos": 24.347826086956523,
+    "b1 com o 1º": 0.7091836734693877,
+    "|b2| > |b1|": 0.6785714285714286,
+    "média |b1|": 1.4559767694063472,
+    "média |b2|": 2.017477806864732
+   },
+   {
+    "situação": "Governo = Oposição",
+    "votações": 148,
+    "% das orientadas por ambos": 16.818181818181817,
+    "b1 com o 1º": 0.6216216216216216,
+    "|b2| > |b1|": 0.6283783783783784,
+    "média |b1|": 1.4252035362567734,
+    "média |b2|": 1.6643068615390566
+   },
+   {
+    "situação": "PSOL-REDE = NOVO",
+    "votações": 211,
+    "% das orientadas por ambos": 22.59100642398287,
+    "b1 com o 1º": 0.4786729857819905,
+    "|b2| > |b1|": 0.6966824644549763,
+    "média |b1|": 1.684191720344999,
+    "média |b2|": 2.5926939881156588
+   },
+   {
+    "situação": "PSOL-REDE = PL",
+    "votações": 186,
+    "% das orientadas por ambos": 22.40963855421687,
+    "b1 com o 1º": 0.6236559139784946,
+    "|b2| > |b1|": 0.6505376344086021,
+    "média |b1|": 1.7913944173985927,
+    "média |b2|": 1.977215590248913
+   }
+  ],
+  "media_abs_b1": 3.048761659052833,
+  "media_abs_b2": 1.7487778640907734,
+  "prop_votacoes_dim2_dominante": 0.2530612244897959
+ },
+ "dim2": {
+  "n_dim2_dominante": 372,
+  "perfil": [
+   {
+    "grupo": "dim2 dominante (|b2| > |b1|)",
+    "votações": 372,
+    "% no plenário": 89.51612903225806,
+    "% Governo = Oposição": 55.688622754491014,
+    "minoria média (%)": 16.633983082177075,
+    "|PSOL − PT| (pp)": 46.110012763164605,
+    "|NOVO − PL| (pp)": 43.50607136515576,
+    "|PSOL − NOVO| (pp)": 51.39740402131072,
+    "|PT − PL| (pp)": 34.29259139110763,
+    "|centrão − PT| (pp)": 18.787022662702665
+   },
+   {
+    "grupo": "dim1 dominante",
+    "votações": 1098,
+    "% no plenário": 64.29872495446266,
+    "% Governo = Oposição": 7.713884992987377,
+    "minoria média (%)": 28.932307861248553,
+    "|PSOL − PT| (pp)": 2.6810144662768476,
+    "|NOVO − PL| (pp)": 12.676610535653424,
+    "|PSOL − NOVO| (pp)": 89.66869426869428,
+    "|PT − PL| (pp)": 88.5415796755768,
+    "|centrão − PT| (pp)": 45.65655884615541
+   }
+  ],
+  "classes": [
+   {
+    "classe": "outro requerimento",
+    "votações": 705,
+    "prop. dim2 dominante": 0.3191489361702128,
+    "|b2| médio": 1.9424257508848888,
+    "|b1| médio": 2.919339805697328
+   },
+   {
+    "classe": "requerimento procedimental (pauta, adiamento)",
+    "votações": 307,
+    "prop. dim2 dominante": 0.08469055374592833,
+    "|b2| médio": 1.2293289262898945,
+    "|b1| médio": 3.4249917590154837
+   },
+   {
+    "classe": "requerimento de urgência",
+    "votações": 185,
+    "prop. dim2 dominante": 0.33513513513513515,
+    "|b2| médio": 2.076701475315959,
+    "|b1| médio": 2.9497255897879535
+   },
+   {
+    "classe": "texto principal / parecer",
+    "votações": 164,
+    "prop. dim2 dominante": 0.1951219512195122,
+    "|b2| médio": 1.5292141299551238,
+    "|b1| médio": 3.159960251961259
+   },
+   {
+    "classe": "destaque / emenda",
+    "votações": 99,
+    "prop. dim2 dominante": 0.25252525252525254,
+    "|b2| médio": 1.6808831093003962,
+    "|b1| médio": 2.725250200762675
+   },
+   {
+    "classe": "redação final",
+    "votações": 10,
+    "prop. dim2 dominante": 0.2,
+    "|b2| médio": 2.250100740176056,
+    "|b1| médio": 3.8340120465372594
+   }
+  ],
+  "dim2_polo_positivo_vota_nao": 0.6236559139784946,
+  "dim2_dominante_aprovadas_centrao_sim": 0.6129032258064516,
+  "tipos": [
+   {
+    "tipo": "PL",
+    "votações": 963,
+    "prop. dim2 dominante": 0.21287642782969884,
+    "|b2| médio": 1.661942655810938
+   },
+   {
+    "tipo": "PLP",
+    "votações": 165,
+    "prop. dim2 dominante": 0.4303030303030303,
+    "|b2| médio": 2.14866818041098
+   },
+   {
+    "tipo": "PEC",
+    "votações": 142,
+    "prop. dim2 dominante": 0.4225352112676056,
+    "|b2| médio": 2.4766912876816654
+   },
+   {
+    "tipo": "MPV",
+    "votações": 72,
+    "prop. dim2 dominante": 0.2916666666666667,
+    "|b2| médio": 1.3605861132201917
+   },
+   {
+    "tipo": "PDL",
+    "votações": 52,
+    "prop. dim2 dominante": 0.09615384615384616,
+    "|b2| médio": 1.3836547337965397
+   },
+   {
+    "tipo": "REQ",
+    "votações": 23,
+    "prop. dim2 dominante": 0.043478260869565216,
+    "|b2| médio": 0.962898637044415
+   }
+  ],
+  "proposicoes_dim2": [
+   {
+    "proposição": "PEC 3/2021",
+    "votações": 11,
+    "b2_medio_abs": 4.818974394227653,
+    "ementa": "Altera os arts. 14, 27, 53, 102 e 105 da Constituição Federal, para dispor sobre as prerrogativas parlamentare"
+   },
+   {
+    "proposição": "PEC 9/2023",
+    "votações": 11,
+    "b2_medio_abs": 5.910945477759916,
+    "ementa": "Altera a Emenda Constitucional nº 117, de 5 de abril de 2022, quanto à aplicação de sanções aos partidos que n"
+   },
+   {
+    "proposição": "PL 4438/2023",
+    "votações": 10,
+    "b2_medio_abs": 2.456368009504648,
+    "ementa": "Altera a Lei nº 4.737, de julho de 1965 (Código Eleitoral), a Lei nº 9.096, de 19 de setembro de 1995 (Lei dos"
+   },
+   {
+    "proposição": "PLP 210/2024",
+    "votações": 9,
+    "b2_medio_abs": 3.4046187145565145,
+    "ementa": "Altera a Lei Complementar nº 200, de 30 de agosto de 2023, que institui regime fiscal sustentável para garanti"
+   },
+   {
+    "proposição": "PEC 31/2007",
+    "votações": 8,
+    "b2_medio_abs": 4.555289265881406,
+    "ementa": "Altera o Sistema Tributário Nacional, unifica a legislação do Imposto sobre Operações Relativas à Circulação d"
+   },
+   {
+    "proposição": "PLP 93/2023",
+    "votações": 8,
+    "b2_medio_abs": 3.1719870461606785,
+    "ementa": "Institui regime fiscal sustentável para garantir a estabilidade macroeconômica do País e criar as condições ad"
+   },
+   {
+    "proposição": "PLP 175/2024",
+    "votações": 7,
+    "b2_medio_abs": 4.145732843480981,
+    "ementa": "Dispõe sobre a proposição e execução de emendas parlamentares na lei orçamentária anual e dá outras providênci"
+   },
+   {
+    "proposição": "PL 182/2024 (Nº Anterior: PL 2148/2015)",
+    "votações": 7,
+    "b2_medio_abs": 2.935514556604271,
+    "ementa": "Estabelece redução de tributos para produtos adequados à economia verde de baixo carbono.\r\n\r\nNOVA EMENTA: Inst"
+   },
+   {
+    "proposição": "PLP 177/2023",
+    "votações": 6,
+    "b2_medio_abs": 3.1820410960241303,
+    "ementa": "Altera a redação da Lei Complementar nº 78, de 30 de dezembro de 1993."
+   },
+   {
+    "proposição": "PL 528/2020",
+    "votações": 6,
+    "b2_medio_abs": 2.338139545997754,
+    "ementa": "Altera as Leis nº 13.033, de 24 de setembro de 2014, e nº 9.478, de 6 de agosto de 1997.\r\n\r\nNOVA EMENTA: Dispõ"
+   },
+   {
+    "proposição": "MPV 1185/2023",
+    "votações": 6,
+    "b2_medio_abs": 0.9961774302842473,
+    "ementa": "Dispõe sobre o crédito fiscal decorrente de subvenção para a implantação ou a expansão de empreendimento econô"
+   },
+   {
+    "proposição": "PEC 293/2004",
+    "votações": 5,
+    "b2_medio_abs": 1.4421317419857718,
+    "ementa": "Altera o Sistema Tributário Nacional e dá outras providências.  (Desmembramento da PEC nº 255/04, devendo os a"
+   },
+   {
+    "proposição": "PEC 45/2019",
+    "votações": 5,
+    "b2_medio_abs": 2.7337256809071695,
+    "ementa": "Altera o Sistema Tributário Nacional e dá outras providências.\r\n\r\nNOVA EMENTA: Altera o Sistema Tributário Nac"
+   },
+   {
+    "proposição": "PL 4497/2024",
+    "votações": 5,
+    "b2_medio_abs": 5.232174591742904,
+    "ementa": "Dispõe sobre a ratificação dos registros imobiliários decorrentes de alienações e concessões de terras pública"
+   },
+   {
+    "proposição": "PL 3899/2012",
+    "votações": 5,
+    "b2_medio_abs": 3.8328570196705494,
+    "ementa": "Institui a Política Nacional de Estímulo à Produção e ao Consumo Sustentáveis."
+   }
+  ],
+  "top": [
+   {
+    "data": "2024-07-11",
+    "órgão": "PLEN",
+    "proposição": "PEC 9/2023",
+    "descricao": "Aprovado o Requerimento nº 2.581/2024, dos Senhores Líderes, que solicita a quebra de interstício de 5 sessões previsto no § 6º do art. 202 ",
+    "b1": 0.6564296352144597,
+    "b2": -9.366655129278024,
+    "% Sim PSOL": 0.0,
+    "% Sim PT": 97.91666666666666,
+    "% Sim centrão": 94.23076923076923,
+    "% Sim PL": 73.84615384615385,
+    "% Sim NOVO": 0.0,
+    "or. Governo": NaN,
+    "or. Oposição": NaN
+   },
+   {
+    "data": "2024-07-11",
+    "órgão": "PLEN",
+    "proposição": "PEC 9/2023",
+    "descricao": "Rejeitado o Requerimento. Sim: 49; não: 318; abstenção: 1; total: 368.",
+    "b1": -0.8251723338799262,
+    "b2": 7.995946652512275,
+    "% Sim PSOL": 100.0,
+    "% Sim PT": 2.0,
+    "% Sim centrão": 5.747126436781609,
+    "% Sim PL": 28.78787878787879,
+    "% Sim NOVO": 100.0,
+    "or. Governo": NaN,
+    "or. Oposição": NaN
+   },
+   {
+    "data": "2024-07-11",
+    "órgão": "PLEN",
+    "proposição": "PEC 9/2023",
+    "descricao": "Aprovada, em segundo turno, a Proposta de Emenda à Constituição n° 9, de 2023, ressalvado o destaque. Sim: 338; não: 83; abstenção: 4; Total",
+    "b1": 0.5187542559197917,
+    "b2": -7.6383568803347845,
+    "% Sim PSOL": 0.0,
+    "% Sim PT": 95.0,
+    "% Sim centrão": 88.65979381443299,
+    "% Sim PL": 61.8421052631579,
+    "% Sim NOVO": 0.0,
+    "or. Governo": NaN,
+    "or. Oposição": NaN
+   },
+   {
+    "data": "2024-07-11",
+    "órgão": "PLEN",
+    "proposição": "PEC 9/2023",
+    "descricao": "Rejeitado o Requerimento. Sim: 72; não: 336; abstenção: 2; total: 410.",
+    "b1": -0.6689888182321541,
+    "b2": 6.81628070170676,
+    "% Sim PSOL": 100.0,
+    "% Sim PT": 5.263157894736842,
+    "% Sim centrão": 9.62566844919786,
+    "% Sim PL": 35.13513513513514,
+    "% Sim NOVO": 100.0,
+    "or. Governo": NaN,
+    "or. Oposição": "Sim"
+   },
+   {
+    "data": "2024-07-11",
+    "órgão": "PLEN",
+    "proposição": "PEC 9/2023",
+    "descricao": "Rejeitado o Requerimento. Sim: 83; não: 323; abstenção: 1; total: 407.",
+    "b1": -0.8778373130283745,
+    "b2": 6.609947233719699,
+    "% Sim PSOL": 100.0,
+    "% Sim PT": 5.084745762711865,
+    "% Sim centrão": 11.41304347826087,
+    "% Sim PL": 44.44444444444444,
+    "% Sim NOVO": 100.0,
+    "or. Governo": NaN,
+    "or. Oposição": NaN
+   },
+   {
+    "data": "2023-05-16",
+    "órgão": "CCJC",
+    "proposição": "PEC 9/2023",
+    "descricao": "Aprovado o Parecer com o seguinte resultado: 45 votos \"Sim\", 10 votos \"Não\". Quórum de votação: 55 votos, apresentaram votos em separado os ",
+    "b1": -0.10192510726647956,
+    "b2": -6.602731934170647,
+    "% Sim PSOL": 0.0,
+    "% Sim PT": 100.0,
+    "% Sim centrão": 79.16666666666666,
+    "% Sim PL": 100.0,
+    "% Sim NOVO": 0.0,
+    "or. Governo": "Sim",
+    "or. Oposição": NaN
+   },
+   {
+    "data": "2024-12-19",
+    "órgão": "PLEN",
+    "proposição": "PEC 31/2007",
+    "descricao": "Aprovada, em segundo turno, a Proposta de Emenda à Constituição n° 31, de 2007, ressalvado o destaque. Sim: 348; Não: 146; Total: 494.",
+    "b1": 2.894745765350953,
+    "b2": -6.1805960093379735,
+    "% Sim PSOL": 0.0,
+    "% Sim PT": 97.05882352941177,
+    "% Sim centrão": 80.34188034188034,
+    "% Sim PL": 19.318181818181817,
+    "% Sim NOVO": 0.0,
+    "or. Governo": "Sim",
+    "or. Oposição": "Não"
+   },
+   {
+    "data": "2024-07-11",
+    "órgão": "PLEN",
+    "proposição": "PEC 9/2023",
+    "descricao": "Aprovado, em primeiro turno, o Substitutivo adotado pelo Relator da Comissão Especial à Proposta de Emenda à Constituição nº 9, de 2023, res",
+    "b1": 0.5143911487119917,
+    "b2": -6.124663839644303,
+    "% Sim PSOL": 0.0,
+    "% Sim PT": 93.33333333333333,
+    "% Sim centrão": 87.56218905472637,
+    "% Sim PL": 61.038961038961034,
+    "% Sim NOVO": 0.0,
+    "or. Governo": NaN,
+    "or. Oposição": "Não"
+   },
+   {
+    "data": "2025-09-16",
+    "órgão": "PLEN",
+    "proposição": "PEC 3/2021",
+    "descricao": "Rejeitado o Requerimento. Sim: 137; Não: 324; Total: 461.",
+    "b1": 3.291861612184244,
+    "b2": 6.038056757861262,
+    "% Sim PSOL": 100.0,
+    "% Sim PT": 100.0,
+    "% Sim centrão": 10.599078341013826,
+    "% Sim PL": 1.25,
+    "% Sim NOVO": 100.0,
+    "or. Governo": NaN,
+    "or. Oposição": "Não"
+   },
+   {
+    "data": "2025-09-16",
+    "órgão": "PLEN",
+    "proposição": "PEC 3/2021",
+    "descricao": "Aprovado o Requerimento. Sim: 346; Não: 122; Total: 468.",
+    "b1": -2.377121516105916,
+    "b2": -5.382687780988073,
+    "% Sim PSOL": 0.0,
+    "% Sim PT": 11.666666666666666,
+    "% Sim centrão": 92.23744292237443,
+    "% Sim PL": 100.0,
+    "% Sim NOVO": 0.0,
+    "or. Governo": NaN,
+    "or. Oposição": "Sim"
+   },
+   {
+    "data": "2024-12-19",
+    "órgão": "PLEN",
+    "proposição": "PEC 31/2007",
+    "descricao": "Aprovada, em primeiro turno, a Emenda Aglutinativa Substitutiva à Proposta de Emenda à Constituição nº 31, de 2007. Sim: 344; Não: 154; Abst",
+    "b1": 2.595257847168059,
+    "b2": -5.328131137270661,
+    "% Sim PSOL": 0.0,
+    "% Sim PT": 95.58823529411765,
+    "% Sim centrão": 78.54077253218884,
+    "% Sim PL": 19.78021978021978,
+    "% Sim NOVO": 0.0,
+    "or. Governo": "Sim",
+    "or. Oposição": "Não"
+   },
+   {
+    "data": "2025-09-17",
+    "órgão": "PLEN",
+    "proposição": "PEC 3/2021",
+    "descricao": "Aprovada a Emenda Aglutinativa de Plenário nº 1. Sim: 314; Não: 168; Total: 482.",
+    "b1": -2.270893885006959,
+    "b2": -5.323830586234564,
+    "% Sim PSOL": 0.0,
+    "% Sim PT": 12.307692307692308,
+    "% Sim centrão": 81.19266055045871,
+    "% Sim PL": 100.0,
+    "% Sim NOVO": 0.0,
+    "or. Governo": NaN,
+    "or. Oposição": "Sim"
+   },
+   {
+    "data": "2024-12-18",
+    "órgão": "PLEN",
+    "proposição": "PLP 210/2024",
+    "descricao": "Rejeitado o Requerimento. Sim: 137; Não: 302; Abstenção: 1; Total: 440.",
+    "b1": -3.4493218490228936,
+    "b2": 5.317833160216035,
+    "% Sim PSOL": 100.0,
+    "% Sim PT": 0.0,
+    "% Sim centrão": 19.19191919191919,
+    "% Sim PL": 91.56626506024097,
+    "% Sim NOVO": 100.0,
+    "or. Governo": "Não",
+    "or. Oposição": "Não"
+   },
+   {
+    "data": "2024-12-18",
+    "órgão": "PLEN",
+    "proposição": "PEC 31/2007",
+    "descricao": "Rejeitado o Requerimento. Sim: 147; Não: 295; Total: 442.",
+    "b1": -3.5308010003466146,
+    "b2": 5.208360901885736,
+    "% Sim PSOL": 100.0,
+    "% Sim PT": 1.5873015873015872,
+    "% Sim centrão": 22.815533980582526,
+    "% Sim PL": 91.35802469135803,
+    "% Sim NOVO": 100.0,
+    "or. Governo": "Não",
+    "or. Oposição": "Sim"
+   },
+   {
+    "data": "2024-12-17",
+    "órgão": "PLEN",
+    "proposição": "PLP 210/2024",
+    "descricao": "Aprovado o Substitutivo ao Projeto de Lei Complementar nº 210, de 2024, adotado pelo relator da Comissão Especial. Sim: 318; Não: 149; Total",
+    "b1": 2.698746522387882,
+    "b2": -5.20001494650191,
+    "% Sim PSOL": 0.0,
+    "% Sim PT": 98.46153846153847,
+    "% Sim centrão": 78.44036697247707,
+    "% Sim PL": 13.414634146341465,
+    "% Sim NOVO": 0.0,
+    "or. Governo": "Sim",
+    "or. Oposição": "Não"
+   },
+   {
+    "data": "2023-11-07",
+    "órgão": "PLEN",
+    "proposição": "PL 4416/2021, REQ 3307/2023",
+    "descricao": "Aprovado o Requerimento de Urgência (Art. 155 do RICD). Sim: 277; não: 33 ; total:310.",
+    "b1": 1.5173458142212761,
+    "b2": -5.168314173791742,
+    "% Sim PSOL": 0.0,
+    "% Sim PT": 100.0,
+    "% Sim centrão": 94.77611940298507,
+    "% Sim PL": 77.96610169491525,
+    "% Sim NOVO": 0.0,
+    "or. Governo": "Sim",
+    "or. Oposição": NaN
+   },
+   {
+    "data": "2025-09-16",
+    "órgão": "PLEN",
+    "proposição": "PEC 3/2021",
+    "descricao": "Aprovado o Requerimento nº 3.818/2025, dos Senhores Líderes, que solicita a quebra de interstício de 5 sessões previsto no § 6º do art. 202 ",
+    "b1": -2.2030714069518225,
+    "b2": -5.156880731733785,
+    "% Sim PSOL": 0.0,
+    "% Sim PT": 17.543859649122805,
+    "% Sim centrão": 90.95238095238095,
+    "% Sim PL": 100.0,
+    "% Sim NOVO": 0.0,
+    "or. Governo": NaN,
+    "or. Oposição": "Sim"
+   },
+   {
+    "data": "2024-06-11",
+    "órgão": "PLEN",
+    "proposição": "PRC 32/2024",
+    "descricao": "Aprovado o Requerimento de Urgência (Art. 155 do RICD). Sim: 302; não: 142; abstenção: 1; total: 445.",
+    "b1": 2.1787648911114976,
+    "b2": -5.139468259774785,
+    "% Sim PSOL": 0.0,
+    "% Sim PT": 96.66666666666667,
+    "% Sim centrão": 79.52380952380952,
+    "% Sim PL": 19.047619047619047,
+    "% Sim NOVO": 0.0,
+    "or. Governo": NaN,
+    "or. Oposição": "Não"
+   },
+   {
+    "data": "2024-06-04",
+    "órgão": "PLEN",
+    "proposição": "PLP 459/2017",
+    "descricao": "Aprovado o Projeto de Lei Complementar nº 459, de 2017. Sim: 384; não: 59; abstenção: 1; total: 444.",
+    "b1": 0.9283170749909729,
+    "b2": -5.127347784812877,
+    "% Sim PSOL": 0.0,
+    "% Sim PT": 98.33333333333333,
+    "% Sim centrão": 94.02985074626866,
+    "% Sim PL": 72.61904761904762,
+    "% Sim NOVO": 0.0,
+    "or. Governo": "Sim",
+    "or. Oposição": NaN
+   },
+   {
+    "data": "2024-10-15",
+    "órgão": "PLEN",
+    "proposição": "PL 2597/2024 (Nº Anterior: PL 3555/2004)",
+    "descricao": "Aprovado o Requerimento de Urgência (Art. 155 do RICD). Sim: 276; Não: 140; Abstenção: 1; Total: 417.",
+    "b1": 3.592893991291265,
+    "b2": -5.114791743164095,
+    "% Sim PSOL": 0.0,
+    "% Sim PT": 100.0,
+    "% Sim centrão": 78.1725888324873,
+    "% Sim PL": 5.194805194805195,
+    "% Sim NOVO": 0.0,
+    "or. Governo": "Sim",
+    "or. Oposição": "Não"
+   },
+   {
+    "data": "2023-09-13",
+    "órgão": "PLEN",
+    "proposição": "PLP 192/2023, REQ 2999/2023",
+    "descricao": "Aprovado o Requerimento de Urgência (Art. 155 do RICD). Sim: 384; não: 51; abstenção: 3; total: 438.",
+    "b1": 0.2499687845011743,
+    "b2": -5.053656228123866,
+    "% Sim PSOL": 0.0,
+    "% Sim PT": 100.0,
+    "% Sim centrão": 95.0,
+    "% Sim PL": 80.95238095238095,
+    "% Sim NOVO": 0.0,
+    "or. Governo": "Sim",
+    "or. Oposição": NaN
+   },
+   {
+    "data": "2024-12-19",
+    "órgão": "PLEN",
+    "proposição": "PEC 31/2007",
+    "descricao": "Rejeitado o Requerimento. Sim: 149; Não: 302; Abstenção: 1; Total: 452.",
+    "b1": -3.3124870493578262,
+    "b2": 5.0090079347176655,
+    "% Sim PSOL": 91.66666666666666,
+    "% Sim PT": 1.7241379310344827,
+    "% Sim centrão": 22.274881516587676,
+    "% Sim PL": 92.6829268292683,
+    "% Sim NOVO": 100.0,
+    "or. Governo": "Não",
+    "or. Oposição": "Sim"
+   },
+   {
+    "data": "2025-09-16",
+    "órgão": "PLEN",
+    "proposição": "PEC 3/2021",
+    "descricao": "Suprimido o texto. Sim: 296; Não: 174; Total: 470.",
+    "b1": -2.0622644800833623,
+    "b2": -4.981866376042494,
+    "% Sim PSOL": 0.0,
+    "% Sim PT": 13.559322033898304,
+    "% Sim centrão": 78.99543378995433,
+    "% Sim PL": 93.97590361445783,
+    "% Sim NOVO": 0.0,
+    "or. Governo": NaN,
+    "or. Oposição": "Sim"
+   },
+   {
+    "data": "2024-11-19",
+    "órgão": "PLEN",
+    "proposição": "PLP 175/2024",
+    "descricao": "Aprovado o Substitutivo do Senado Federal ao Projeto de Lei Complementar nº 175, de 2024, com exceção dos artigos 3º e 7º, da supressão do §",
+    "b1": 1.8045488060441108,
+    "b2": -4.960581995656612,
+    "% Sim PSOL": 0.0,
+    "% Sim PT": 100.0,
+    "% Sim centrão": 98.91891891891892,
+    "% Sim PL": 71.05263157894737,
+    "% Sim NOVO": 0.0,
+    "or. Governo": "Sim",
+    "or. Oposição": NaN
+   },
+   {
+    "data": "2024-11-26",
+    "órgão": "PLEN",
+    "proposição": "PL 3224/2024, REQ 4484/2024",
+    "descricao": "Aprovado o Requerimento de Urgência (Art. 155 do RICD). Sim: 355; Não: 35; Total: 390.",
+    "b1": 3.2202194220781855,
+    "b2": -4.925681397256191,
+    "% Sim PSOL": 100.0,
+    "% Sim PT": 100.0,
+    "% Sim centrão": 93.75,
+    "% Sim PL": 74.64788732394366,
+    "% Sim NOVO": 0.0,
+    "or. Governo": "Sim",
+    "or. Oposição": NaN
+   }
+  ]
+ },
+ "recortes": {
+  "metades_r_dim1_gov": 0.9083263713815503,
+  "metades_r_dim2_gov": -0.23507244357563745,
+  "metades_n": 571,
+  "recortes": [
+   {
+    "recorte": "Governo e PL orientam igual",
+    "votações": 196,
+    "votos": 65979,
+    "var. dim1 / total": 0.6441779919792836,
+    "PSOL": 1.2695679760569532,
+    "PT": 0.6061303533126262,
+    "PSB": 0.16296352281918552,
+    "MDB": -0.08955392690309807,
+    "PSD": -0.10345901280594999,
+    "UNIÃO": -0.2190745018178709,
+    "PP": -0.1070108599805516,
+    "REPUBLICANOS": -0.030633883790151858,
+    "PL": -0.4172651898379762,
+    "NOVO": -1.0119788200731472,
+    "r com dim1 completa": 0.9068718749060579,
+    "r com dim2 completa": 0.08378493337074118
+   },
+   {
+    "recorte": "Governo e PL orientam opostos",
+    "votações": 609,
+    "votos": 169882,
+    "var. dim1 / total": 0.7661802879327265,
+    "PSOL": 1.274475838985301,
+    "PT": 1.1890767111815543,
+    "PSB": 0.6133778634929731,
+    "MDB": 0.011081274813005684,
+    "PSD": -0.008535010405906244,
+    "UNIÃO": -0.1998798747450842,
+    "PP": -0.1092366367992743,
+    "REPUBLICANOS": -0.07303647543104347,
+    "PL": -1.0460159674354093,
+    "NOVO": -1.015786794874649,
+    "r com dim1 completa": 0.9911185735181804,
+    "r com dim2 completa": -0.027563291377849214
+   },
+   {
+    "recorte": "Governo e PSOL-REDE orientam opostos",
+    "votações": 115,
+    "votos": 45417,
+    "var. dim1 / total": 0.6097810269604296,
+    "PSOL": -0.9870941615421839,
+    "PT": 0.5732078417151582,
+    "PSB": 0.12165745706902256,
+    "MDB": 0.12361360272520218,
+    "PSD": 0.05486087277875748,
+    "UNIÃO": -0.10507667071634814,
+    "PP": 0.09875344380935387,
+    "REPUBLICANOS": 0.2150749386915214,
+    "PL": -0.541747793511731,
+    "NOVO": -0.6166880225946421,
+    "r com dim1 completa": 0.6830304247509669,
+    "r com dim2 completa": -0.5840490168799145
+   }
+  ]
+ },
+ "robustez": [
+  {
+   "config": "padrão",
+   "votos": 433476,
+   "votações": 1470,
+   "deputados": 644,
+   "maioria": 0.7442666913260588,
+   "acurácia 1D": 0.9080358794155724,
+   "acurácia 2D": 0.9172600332901794,
+   "log-loss 2D": 0.21107059420760732,
+   "acurácia 2D (células comuns)": 0.913669986230747,
+   "células comuns": 31229,
+   "r dim1": 0.9999999999999999,
+   "r dim2": 1.0,
+   "r dim2 (Procrustes)": 1.0,
+   "dp dim1": 0.8978631356184533,
+   "dp dim2": 0.5357111154787442,
+   "APRE 2D": 0.6764599529922255,
+   "ganho 1D→2D": 0.009224153874606955
+  },
+  {
+   "config": "λx = 0,25 (prior do ponto mais frouxo)",
+   "votos": 433476,
+   "votações": 1470,
+   "deputados": 644,
+   "maioria": 0.7442666913260588,
+   "acurácia 1D": 0.908105233955983,
+   "acurácia 2D": 0.917167560569632,
+   "log-loss 2D": 0.21143305507367696,
+   "acurácia 2D (células comuns)": 0.9135739216753659,
+   "células comuns": 31229,
+   "r dim1": 0.9979657721772573,
+   "r dim2": 0.9963673953468543,
+   "r dim2 (Procrustes)": 0.9971889971970889,
+   "dp dim1": 1.4299965768952785,
+   "dp dim2": 0.8322289185135437,
+   "APRE 2D": 0.6760983547278975,
+   "ganho 1D→2D": 0.00906232661364903
+  },
+  {
+   "config": "λx = 4 (prior do ponto mais apertado)",
+   "votos": 433476,
+   "votações": 1470,
+   "deputados": 644,
+   "maioria": 0.7442666913260588,
+   "acurácia 1D": 0.9079896430552987,
+   "acurácia 2D": 0.9174449787312743,
+   "log-loss 2D": 0.21088389634434487,
+   "acurácia 2D (células comuns)": 0.9138300938230491,
+   "células comuns": 31229,
+   "r dim1": 0.9963227466683614,
+   "r dim2": 0.9950712858722863,
+   "r dim2 (Procrustes)": 0.9957639937457684,
+   "dp dim1": 0.44933067367976703,
+   "dp dim2": 0.2718571989078296,
+   "APRE 2D": 0.6771831495208823,
+   "ganho 1D→2D": 0.009455335675975562
+  },
+  {
+   "config": "λb = 0,01 (discriminação mais livre)",
+   "votos": 433476,
+   "votações": 1470,
+   "deputados": 644,
+   "maioria": 0.7442666913260588,
+   "acurácia 1D": 0.9082901793970779,
+   "acurácia 2D": 0.9172137969299057,
+   "log-loss 2D": 0.2116592168217544,
+   "acurácia 2D (células comuns)": 0.9136059431938263,
+   "células comuns": 31229,
+   "r dim1": 0.9988204341801112,
+   "r dim2": 0.9972836628799228,
+   "r dim2 (Procrustes)": 0.997804620178692,
+   "dp dim1": 0.6671279100260146,
+   "dp dim2": 0.3892228893721563,
+   "APRE 2D": 0.6762791538600614,
+   "ganho 1D→2D": 0.008923617532827777
+  },
+  {
+   "config": "λb = 0,16 (discriminação mais contida)",
+   "votos": 433476,
+   "votações": 1470,
+   "deputados": 644,
+   "maioria": 0.7442666913260588,
+   "acurácia 1D": 0.9079896430552987,
+   "acurácia 2D": 0.917491215091548,
+   "log-loss 2D": 0.21076229253846251,
+   "acurácia 2D (células comuns)": 0.9139261583784303,
+   "células comuns": 31229,
+   "r dim1": 0.9988636028145014,
+   "r dim2": 0.9971765873986324,
+   "r dim2 (Procrustes)": 0.9976153320501331,
+   "dp dim1": 1.2079560110541994,
+   "dp dim2": 0.726107806852026,
+   "APRE 2D": 0.6773639486530463,
+   "ganho 1D→2D": 0.00950157203624924
+  },
+  {
+   "config": "λδ = 0,25 (períodos quase independentes)",
+   "votos": 433476,
+   "votações": 1470,
+   "deputados": 644,
+   "maioria": 0.7442666913260588,
+   "acurácia 1D": 0.908267061216941,
+   "acurácia 2D": 0.9171906787497688,
+   "log-loss 2D": 0.2118122581806114,
+   "acurácia 2D (células comuns)": 0.9136059431938263,
+   "células comuns": 31229,
+   "r dim1": 0.9839335885450067,
+   "r dim2": 0.9769737182835575,
+   "r dim2 (Procrustes)": 0.9769991227208653,
+   "dp dim1": 0.3673962642814892,
+   "dp dim2": 0.22475556123986412,
+   "APRE 2D": 0.6761887542939793,
+   "ganho 1D→2D": 0.008923617532827777
+  },
+  {
+   "config": "λδ = 64 (um ponto por deputado)",
+   "votos": 433476,
+   "votações": 1470,
+   "deputados": 644,
+   "maioria": 0.7442666913260588,
+   "acurácia 1D": 0.9078278157943407,
+   "acurácia 2D": 0.9169363787682634,
+   "log-loss 2D": 0.21126738729107683,
+   "acurácia 2D (células comuns)": 0.9132537064907618,
+   "células comuns": 31229,
+   "r dim1": 0.9983403772870638,
+   "r dim2": 0.9953583651530198,
+   "r dim2 (Procrustes)": 0.995443640988053,
+   "dp dim1": 0.9785850835103528,
+   "dp dim2": 0.6050921295192359,
+   "APRE 2D": 0.6751943590670766,
+   "ganho 1D→2D": 0.009108562973922707
+  },
+  {
+   "config": "sem corte de votações desiguais",
+   "votos": 470260,
+   "votações": 1602,
+   "deputados": 644,
+   "maioria": 0.7635669659040024,
+   "acurácia 1D": 0.91479199095891,
+   "acurácia 2D": 0.9231294112629805,
+   "log-loss 2D": 0.19758396967711714,
+   "acurácia 2D (células comuns)": 0.913509878638445,
+   "células comuns": 31229,
+   "r dim1": 0.9998851089386523,
+   "r dim2": 0.9997536321681763,
+   "r dim2 (Procrustes)": 0.9997710440918789,
+   "dp dim1": 0.8987531216774368,
+   "dp dim2": 0.5369907922672933,
+   "APRE 2D": 0.6748737373737372,
+   "ganho 1D→2D": 0.008337420304070586
+  },
+  {
+   "config": "corte de minoria em 5%",
+   "votos": 405450,
+   "votações": 1379,
+   "deputados": 644,
+   "maioria": 0.7296282573792763,
+   "acurácia 1D": 0.9045819439298506,
+   "acurácia 2D": 0.9136470297641102,
+   "log-loss 2D": 0.21809425858067036,
+   "acurácia 2D (células comuns)": 0.9138941368599699,
+   "células comuns": 31229,
+   "r dim1": 0.999727797530189,
+   "r dim2": 0.9989401000102237,
+   "r dim2 (Procrustes)": 0.9990529700493092,
+   "dp dim1": 0.8957344400118924,
+   "dp dim2": 0.5234332379237775,
+   "APRE 2D": 0.6806139228942079,
+   "ganho 1D→2D": 0.009065085834259579
+  },
+  {
+   "config": "corte de minoria em 10%",
+   "votos": 373814,
+   "votações": 1262,
+   "deputados": 644,
+   "maioria": 0.7130993838735601,
+   "acurácia 1D": 0.9023573533351192,
+   "acurácia 2D": 0.9113849450843825,
+   "log-loss 2D": 0.22076115511198033,
+   "acurácia 2D (células comuns)": 0.9140862659707323,
+   "células comuns": 31229,
+   "r dim1": 0.9994271045798935,
+   "r dim2": 0.9954375876234077,
+   "r dim2 (Procrustes)": 0.9955277930050609,
+   "dp dim1": 0.8900731912780051,
+   "dp dim2": 0.5161733518697674,
+   "APRE 2D": 0.6911297852474323,
+   "ganho 1D→2D": 0.009027591749263264
+  },
+  {
+   "config": "corte de minoria em 20%",
+   "votos": 314505,
+   "votações": 1055,
+   "deputados": 644,
+   "maioria": 0.6862245710101557,
+   "acurácia 1D": 0.9059883480309445,
+   "acurácia 2D": 0.9144248830027697,
+   "log-loss 2D": 0.21468184544200458,
+   "acurácia 2D (células comuns)": 0.9146626533030197,
+   "células comuns": 31229,
+   "r dim1": 0.9976869714643304,
+   "r dim2": 0.9739852937675815,
+   "r dim2 (Procrustes)": 0.9740043694984633,
+   "dp dim1": 0.8696494825265014,
+   "dp dim2": 0.5050484907676237,
+   "APRE 2D": 0.7272727272727272,
+   "ganho 1D→2D": 0.008436534971825171
+  },
+  {
+   "config": "obstrução como ausência",
+   "votos": 425453,
+   "votações": 1461,
+   "deputados": 644,
+   "maioria": 0.7451963831590845,
+   "acurácia 1D": 0.9093905999811623,
+   "acurácia 2D": 0.9185268908354526,
+   "log-loss 2D": 0.20821561408984282,
+   "acurácia 2D (células comuns)": 0.9143424381184155,
+   "células comuns": 31229,
+   "r dim1": 0.9993858588354622,
+   "r dim2": 0.9991845465320961,
+   "r dim2 (Procrustes)": 0.9992128513920386,
+   "dp dim1": 0.9027176850760409,
+   "dp dim2": 0.5388553059824895,
+   "APRE 2D": 0.6802513630902873,
+   "ganho 1D→2D": 0.009136290854290241
+  },
+  {
+   "config": "obstrução e abstenção como Não",
+   "votos": 434568,
+   "votações": 1470,
+   "deputados": 644,
+   "maioria": 0.743336714931292,
+   "acurácia 1D": 0.9069676288849949,
+   "acurácia 2D": 0.9161440560730425,
+   "log-loss 2D": 0.21429268500612061,
+   "acurácia 2D (células comuns)": 0.9140222229338115,
+   "células comuns": 31229,
+   "r dim1": 0.9997138518039662,
+   "r dim2": 0.9985498407790827,
+   "r dim2 (Procrustes)": 0.9985575999645708,
+   "dp dim1": 0.8935545110359782,
+   "dp dim2": 0.5392288101391687,
+   "APRE 2D": 0.6732842256557672,
+   "ganho 1D→2D": 0.009176427188047565
+  }
+ ],
+ "bootstrap": {
+  "B": 200,
+  "convergiram": 200,
+  "reamostragem": "proposições",
+  "n_clusters": 664,
+  "fator_escala_mediano": 1.0911433804840065,
+  "fator_escala_p5": 1.0613439570797478,
+  "fator_escala_p95": 1.112462146672858,
+  "angulo_eixos_mediana_abs": 1.0011913406740824,
+  "angulo_eixos_p95_abs": 2.743337824485537,
+  "angulo_eixos_max_abs": 4.199310932955228,
+  "ep_mediano_dim1": 0.08591434611563607,
+  "ep_mediano_dim2": 0.11881208287313838,
+  "ep_p90_dim1": 0.16131813678017404,
+  "ep_p90_dim2": 0.22206106688150898,
+  "ep_mediano_dim1_nao_conf": 0.168304593631298,
+  "ep_mediano_dim2_nao_conf": 0.16757384046553794,
+  "confiabilidade_dim1": 0.9854230458943809,
+  "confiabilidade_dim2": 0.9192729249724112,
+  "ic_dim1_inclui_zero": 0.1932367149758454,
+  "ic_dim2_inclui_zero": 0.4573268921095008,
+  "vies_medio_abs_dim1": 0.018094196171944257,
+  "vies_medio_abs_dim2": 0.026951143306779873,
+  "rho_ep_nvotos_dim1": -0.21437170434200917,
+  "rho_ep_nvotos_dim2": -0.36599537193661585,
+  "r_replica_dim1_min": 0.9818070007706332,
+  "r_replica_dim2_min": 0.9139563490065521,
+  "r_replica_dim2_mediana": 0.9591698327963709,
+  "largura_ic_rank_dim1_mediana": 65.05000000000001,
+  "n_confiaveis": 621,
+  "partidos": [
+   {
+    "partido": "NOVO",
+    "dim1": -1.490644007197956,
+    "dim1 IC2,5": -1.6852468316151898,
+    "dim1 IC97,5": -1.2575510202855515,
+    "dim2": 1.4948504655876775,
+    "dim2 IC2,5": 1.2465207853329812,
+    "dim2 IC97,5": 1.608993846763915
+   },
+   {
+    "partido": "PL",
+    "dim1": -1.445284127738031,
+    "dim1 IC2,5": -1.4745083131673502,
+    "dim1 IC97,5": -1.3509953210491514,
+    "dim2": 0.20115496268179886,
+    "dim2 IC2,5": 0.10168273766770697,
+    "dim2 IC97,5": 0.31290946925100255
+   },
+   {
+    "partido": "PATRIOTA",
+    "dim1": -0.4188654913845011,
+    "dim1 IC2,5": -0.6512874089619882,
+    "dim1 IC97,5": -0.2824074374725081,
+    "dim2": 0.11476002502568897,
+    "dim2 IC2,5": -0.12978958014072423,
+    "dim2 IC97,5": 0.24915376972214515
+   },
+   {
+    "partido": "CIDADANIA",
+    "dim1": -0.4176945396712246,
+    "dim1 IC2,5": -0.5141350360147962,
+    "dim1 IC97,5": -0.3221168131614501,
+    "dim2": 0.2607058750651386,
+    "dim2 IC2,5": 0.14058416323944192,
+    "dim2 IC97,5": 0.400516614094447
+   },
+   {
+    "partido": "PRD",
+    "dim1": -0.3210179695713083,
+    "dim1 IC2,5": -0.41622533495734826,
+    "dim1 IC97,5": -0.2166708732303008,
+    "dim2": 0.09541415512633525,
+    "dim2 IC2,5": -0.044049166776614364,
+    "dim2 IC97,5": 0.25875728139713444
+   },
+   {
+    "partido": "UNIÃO",
+    "dim1": -0.2460760969370984,
+    "dim1 IC2,5": -0.29932479535189427,
+    "dim1 IC97,5": -0.20325829473619533,
+    "dim2": -0.04869954714101427,
+    "dim2 IC2,5": -0.12066680241052104,
+    "dim2 IC97,5": 0.044747381494501894
+   },
+   {
+    "partido": "PP",
+    "dim1": -0.1793234387917458,
+    "dim1 IC2,5": -0.24789271361488055,
+    "dim1 IC97,5": -0.13884675801734794,
+    "dim2": -0.3513316208452124,
+    "dim2 IC2,5": -0.4415834869528448,
+    "dim2 IC97,5": -0.24516885907507563
+   },
+   {
+    "partido": "REPUBLICANOS",
+    "dim1": -0.15000487620144307,
+    "dim1 IC2,5": -0.2797970681417455,
+    "dim1 IC97,5": -0.0594932576723613,
+    "dim2": -1.0306392116333345,
+    "dim2 IC2,5": -1.1669924592962084,
+    "dim2 IC97,5": -0.8633228142129383
+   },
+   {
+    "partido": "PSDB",
+    "dim1": -0.10323751984571096,
+    "dim1 IC2,5": -0.17857746426220578,
+    "dim1 IC97,5": -0.03619841238640078,
+    "dim2": -0.030078948529887004,
+    "dim2 IC2,5": -0.12997043951506973,
+    "dim2 IC97,5": 0.06900586421891583
+   },
+   {
+    "partido": "MDB",
+    "dim1": -0.07517034651176666,
+    "dim1 IC2,5": -0.1442332043982996,
+    "dim1 IC97,5": -0.029238783746831885,
+    "dim2": -0.23669284154475814,
+    "dim2 IC2,5": -0.3186537073089359,
+    "dim2 IC97,5": -0.10882563687739019
+   },
+   {
+    "partido": "PODE",
+    "dim1": -0.05091193246000165,
+    "dim1 IC2,5": -0.13731635651781676,
+    "dim1 IC97,5": 0.019732397217605828,
+    "dim2": 0.018877087435894658,
+    "dim2 IC2,5": -0.11937061944233006,
+    "dim2 IC97,5": 0.26848569326097826
+   },
+   {
+    "partido": "PSD",
+    "dim1": 0.07594231926300041,
+    "dim1 IC2,5": 0.01716212800243392,
+    "dim1 IC97,5": 0.1072370590840167,
+    "dim2": -0.06701390959242452,
+    "dim2 IC2,5": -0.17287613373146493,
+    "dim2 IC97,5": 0.06793445752321936
+   },
+   {
+    "partido": "PSC",
+    "dim1": 0.1909567989523282,
+    "dim1 IC2,5": -0.016044213348635747,
+    "dim1 IC97,5": 0.4621454166042978,
+    "dim2": -0.0444688424695932,
+    "dim2 IC2,5": -0.3504668318787249,
+    "dim2 IC97,5": 0.18121148729939957
+   },
+   {
+    "partido": "AVANTE",
+    "dim1": 0.3429056562091288,
+    "dim1 IC2,5": 0.2518495830814193,
+    "dim1 IC97,5": 0.41363880824018917,
+    "dim2": -0.23988710681711195,
+    "dim2 IC2,5": -0.38195749377052407,
+    "dim2 IC97,5": -0.07522468396189401
+   },
+   {
+    "partido": "SOLIDARIEDADE",
+    "dim1": 0.40558051701085535,
+    "dim1 IC2,5": 0.30503952983770516,
+    "dim1 IC97,5": 0.49638310402539804,
+    "dim2": -0.049369531135644816,
+    "dim2 IC2,5": -0.18559265072502243,
+    "dim2 IC97,5": 0.07916517843117679
+   },
+   {
+    "partido": "PDT",
+    "dim1": 0.731455037688428,
+    "dim1 IC2,5": 0.6393539719779061,
+    "dim1 IC97,5": 0.8265772660083353,
+    "dim2": 0.15957926391346927,
+    "dim2 IC2,5": 0.0687600532583331,
+    "dim2 IC97,5": 0.29231362963557006
+   },
+   {
+    "partido": "PSB",
+    "dim1": 0.8375189717367171,
+    "dim1 IC2,5": 0.7108767459819053,
+    "dim1 IC97,5": 0.9302603919270895,
+    "dim2": 0.25288921893151994,
+    "dim2 IC2,5": 0.07896389955440446,
+    "dim2 IC97,5": 0.36901098372069213
+   },
+   {
+    "partido": "REDE",
+    "dim1": 1.2480586197353976,
+    "dim1 IC2,5": 1.1084854717505297,
+    "dim1 IC97,5": 1.4032333733549218,
+    "dim2": 1.136602829243705,
+    "dim2 IC2,5": 0.7796290265447654,
+    "dim2 IC97,5": 1.291529647101146
+   },
+   {
+    "partido": "PV",
+    "dim1": 1.3228738579029526,
+    "dim1 IC2,5": 1.207361400403248,
+    "dim1 IC97,5": 1.406713396496898,
+    "dim2": 0.27922824448466055,
+    "dim2 IC2,5": 0.10461397166035086,
+    "dim2 IC97,5": 0.3481232245360307
+   },
+   {
+    "partido": "PCdoB",
+    "dim1": 1.5314666401763994,
+    "dim1 IC2,5": 1.3627919069209034,
+    "dim1 IC97,5": 1.791444476612718,
+    "dim2": 0.34301115965525747,
+    "dim2 IC2,5": 0.08870800121126918,
+    "dim2 IC97,5": 0.5572965032974455
+   },
+   {
+    "partido": "PT",
+    "dim1": 1.7905531362814626,
+    "dim1 IC2,5": 1.690400858497207,
+    "dim1 IC97,5": 1.8865679849242025,
+    "dim2": 0.12019770900360198,
+    "dim2 IC2,5": -0.004722132077951844,
+    "dim2 IC97,5": 0.22276629711384044
+   },
+   {
+    "partido": "PSOL",
+    "dim1": 1.9386041551092628,
+    "dim1 IC2,5": 1.672170779947436,
+    "dim1 IC97,5": 2.2952018523458197,
+    "dim2": 2.1766331310407683,
+    "dim2 IC2,5": 1.828812216053541,
+    "dim2 IC97,5": 2.3802987700238125
+   }
+  ],
+  "dif_PSOL_PT_dim1": {
+   "dif": 0.14805101882780014,
+   "ic": [
+    -0.14557580894026134,
+    0.5462910658288722
+   ]
+  },
+  "dif_PSOL_PT_dim2": {
+   "dif": 2.056435422037166,
+   "ic": [
+    1.7013761932167801,
+    2.3373542311519393
+   ]
+  },
+  "dif_NOVO_PL_dim1": {
+   "dif": -0.045359879459925034,
+   "ic": [
+    -0.29631314688295696,
+    0.15628201258632923
+   ]
+  },
+  "dif_NOVO_PL_dim2": {
+   "dif": 1.2936955029058788,
+   "ic": [
+    0.9808164412738233,
+    1.4432027562685796
+   ]
+  },
+  "dif_PSOL_NOVO_dim2": {
+   "dif": 0.6817826654530907,
+   "ic": [
+    0.3420999133902345,
+    1.0385266023867308
+   ]
+  },
+  "dif_REPUBLICANOS_PP_dim2": {
+   "dif": -0.6793075907881221,
+   "ic": [
+    -0.8944822752547281,
+    -0.4362142057678051
+   ]
+  },
+  "dif_PP_PL_dim1": {
+   "dif": 1.2659606889462853,
+   "ic": [
+    1.1227311360212486,
+    1.3177008889434028
+   ]
+  },
+  "dif_REPUBLICANOS_PL_dim1": {
+   "dif": 1.295279251536588,
+   "ic": [
+    1.087014017624774,
+    1.400096298923541
+   ]
+  }
+ },
+ "orgaos": {
+  "tabela": [
+   {
+    "amostra": "Só plenário",
+    "votos": 417902,
+    "votações": 1039,
+    "deputados": 644,
+    "deputados ≥ 50 votos": 618,
+    "maioria": 0.7501141854371499,
+    "orientação": 0.843289502151494,
+    "IRT 1D": 0.909973797447054,
+    "IRT 2D": 0.9193249837736484,
+    "IRT 3D": 0.923219308156446,
+    "APRE 2D": 0.677152477152477,
+    "r dim1 (eixos próprios)": 0.9985477614782874,
+    "r dim1 (Procrustes)": 0.9993744378686272,
+    "r dim2 (eixos próprios)": 0.997960784977039,
+    "r dim2 (Procrustes)": 0.9988211519683481
+   },
+   {
+    "amostra": "Só comissões",
+    "votos": 15574,
+    "votações": 431,
+    "deputados": 488,
+    "deputados ≥ 50 votos": 107,
+    "maioria": 0.7043080939947781,
+    "orientação": 0.868798955613577,
+    "IRT 1D": 0.9392950391644909,
+    "IRT 2D": 0.9262402088772846,
+    "IRT 3D": 0.9255874673629243,
+    "APRE 2D": 0.750551876379691,
+    "r dim1 (eixos próprios)": 0.9605750512537501,
+    "r dim1 (Procrustes)": 0.9608569068013708,
+    "r dim2 (eixos próprios)": 0.29023599779389136,
+    "r dim2 (Procrustes)": 0.2902592237607968
+   },
+   {
+    "amostra": "Só CCJC",
+    "votos": 12422,
+    "votações": 276,
+    "deputados": 237,
+    "deputados ≥ 50 votos": 94,
+    "maioria": 0.6853932584269663,
+    "orientação": 0.8587479935794543,
+    "IRT 1D": 0.9357945425361156,
+    "IRT 2D": 0.9213483146067416,
+    "IRT 3D": 0.9197431781701445,
+    "APRE 2D": 0.7500000000000001,
+    "r dim1 (eixos próprios)": 0.9601894729259884,
+    "r dim1 (Procrustes)": 0.9602727079125774,
+    "r dim2 (eixos próprios)": 0.3873758925851709,
+    "r dim2 (Procrustes)": 0.3883024058120989
+   }
+  ],
+  "n_comuns": 107,
+  "r_dim1_bruto": 0.9529847641776392,
+  "r_dim2_bruto": 0.2854744240953766,
+  "r_dim1": 0.9537637325906553,
+  "r_dim2": 0.28952208715513617,
+  "r_dim1_Esquerda": 0.47215963801021793,
+  "n_Esquerda": 31,
+  "r_dim1_Centro e centrão": 0.855264633818656,
+  "n_Centro e centrão": 50,
+  "r_dim1_Direita de oposição": 0.5570744346340638,
+  "n_Direita de oposição": 26,
+  "r_dim1_intrapartido": 0.7176547777163048
+ },
+ "svd": {
+  "valores_singulares": [
+   342.42915160260947,
+   166.8057788543589,
+   76.55232798586415,
+   73.35920240910893,
+   59.96101927841829,
+   57.76693945043695,
+   51.683044733362394,
+   48.96908721472907,
+   47.0500945199433,
+   45.149586567494566
+  ],
+  "var_explicada": [
+   0.38497912777488674,
+   0.09135196829868876,
+   0.01924033055708482,
+   0.017668713401936435,
+   0.011804123324339392,
+   0.010956061013279422,
+   0.00876984476570101,
+   0.007872990768281523,
+   0.0072680302297291645,
+   0.006692729619628116
+  ],
+  "var_explicada_confiaveis": [
+   0.38540161959976926,
+   0.09143760601438226,
+   0.019259850301031497,
+   0.017677371682113786,
+   0.011815902116347364,
+   0.010957416529060923,
+   0.008778182637384748,
+   0.007881224898828655,
+   0.0072727154988707346,
+   0.00666609877319692
+  ],
+  "irt2d_mesma_particao": 0.919383575907629,
+  "tabela": [
+   {
+    "método": "SVD, ausentes na média da votação",
+    "dimensões": 1,
+    "acurácia fora da amostra": 0.8728278223847097
+   },
+   {
+    "método": "SVD com imputação iterativa",
+    "dimensões": 1,
+    "acurácia fora da amostra": 0.896198255316195
+   },
+   {
+    "método": "SVD, ausentes na média da votação",
+    "dimensões": 2,
+    "acurácia fora da amostra": 0.8939769072355785,
+    "r dim1 com IRT": 0.9180511274464749,
+    "r dim2 com IRT": 0.7099112938644987
+   },
+   {
+    "método": "SVD com imputação iterativa",
+    "dimensões": 2,
+    "acurácia fora da amostra": 0.9099197075225027,
+    "r dim1 com IRT": 0.9735055248990113,
+    "r dim2 com IRT": 0.7549162676589609
+   },
+   {
+    "método": "SVD, ausentes na média da votação",
+    "dimensões": 3,
+    "acurácia fora da amostra": 0.8982576300992665
+   },
+   {
+    "método": "SVD com imputação iterativa",
+    "dimensões": 3,
+    "acurácia fora da amostra": 0.91614410995673
+   }
+  ]
+ },
+ "anos": [
+  {
+   "ano": "2023",
+   "votos": 121231,
+   "votações": 418,
+   "deputados ≥ 50 votos": 535,
+   "maioria": 0.7652000332695666,
+   "IRT 1D": 0.9010230391749148,
+   "IRT 2D": 0.9105880395907844,
+   "ganho 1D→2D": 0.009565000415869607,
+   "r dim1 (eixos próprios)": 0.9718426262329753,
+   "r dim2 (eixos próprios)": 0.8633714540203857,
+   "r dim1 (Procrustes)": 0.9745184466273416,
+   "r dim2 (Procrustes)": 0.8655776302482143
+  },
+  {
+   "ano": "2024",
+   "votos": 102967,
+   "votações": 403,
+   "deputados ≥ 50 votos": 538,
+   "maioria": 0.7523346303501945,
+   "IRT 1D": 0.9119649805447471,
+   "IRT 2D": 0.9265564202334631,
+   "ganho 1D→2D": 0.014591439688716012,
+   "r dim1 (eixos próprios)": 0.974168915115339,
+   "r dim2 (eixos próprios)": 0.9092877572621572,
+   "r dim1 (Procrustes)": 0.9762583543713297,
+   "r dim2 (Procrustes)": 0.9115904510734152
+  },
+  {
+   "ano": "2025",
+   "votos": 161135,
+   "votações": 502,
+   "deputados ≥ 50 votos": 532,
+   "maioria": 0.7269351793580868,
+   "IRT 1D": 0.9171806167400881,
+   "IRT 2D": 0.9228445563247325,
+   "ganho 1D→2D": 0.005663939584644395,
+   "r dim1 (eixos próprios)": 0.9828573392254606,
+   "r dim2 (eixos próprios)": 0.9209191427074165,
+   "r dim1 (Procrustes)": 0.9832998862940734,
+   "r dim2 (Procrustes)": 0.921272638175223
+  },
+  {
+   "ano": "2026",
+   "votos": 48143,
+   "votações": 147,
+   "deputados ≥ 50 votos": 487,
+   "maioria": 0.7577405857740586,
+   "IRT 1D": 0.9294979079497908,
+   "IRT 2D": 0.9315899581589958,
+   "ganho 1D→2D": 0.0020920502092049986,
+   "r dim1 (eixos próprios)": 0.9656795374122917,
+   "r dim2 (eixos próprios)": 0.8432943166525164,
+   "r dim1 (Procrustes)": 0.9664501241449485,
+   "r dim2 (Procrustes)": 0.8431054561536357
+  }
+ ],
+ "partidos_dim1_por_ano": [
+  {
+   "partido": "PL",
+   "2023": -0.8704269507195622,
+   "2024": -0.9163493918753156,
+   "2025": -1.0100289889325955,
+   "2026": -0.6387818111264444
+  },
+  {
+   "partido": "UNIÃO",
+   "2023": -0.21085892348147575,
+   "2024": -0.20276580456347176,
+   "2025": -0.20350367701567842,
+   "2026": -0.10150426587541013
+  },
+  {
+   "partido": "PSDB",
+   "2023": -0.15083008926705269,
+   "2024": -0.07514085356271118,
+   "2025": -0.020174419215834533,
+   "2026": -0.06612194215311919
+  },
+  {
+   "partido": "PP",
+   "2023": -0.1439468286218336,
+   "2024": -0.08576661352311257,
+   "2025": -0.12221702766661664,
+   "2026": -0.11065358919898079
+  },
+  {
+   "partido": "REPUBLICANOS",
+   "2023": -0.09855893416849773,
+   "2024": -0.03001958562988928,
+   "2025": -0.029294821267042644,
+   "2026": -0.07812917246464816
+  },
+  {
+   "partido": "PODE",
+   "2023": -0.04652054496466332,
+   "2024": -0.021425356744138334,
+   "2025": 0.11630850981437185,
+   "2026": 0.01401663369379816
+  },
+  {
+   "partido": "MDB",
+   "2023": 0.02405886066120271,
+   "2024": 0.011967028386768398,
+   "2025": -0.062264271972704566,
+   "2026": 0.008463207120311393
+  },
+  {
+   "partido": "PSD",
+   "2023": 0.05525414372136577,
+   "2024": -0.01675074831540422,
+   "2025": 0.04814295970408776,
+   "2026": 0.050075796861411566
+  },
+  {
+   "partido": "AVANTE",
+   "2023": 0.20227916261543907,
+   "2024": 0.24926209231506327,
+   "2025": 0.2640204216284443,
+   "2026": -0.10353406233244197
+  },
+  {
+   "partido": "PSB",
+   "2023": 0.46149203196188826,
+   "2024": 0.6281598422695337,
+   "2025": 0.5448101099318416,
+   "2026": 0.4193910740419667
+  },
+  {
+   "partido": "PDT",
+   "2023": 0.4668033699435486,
+   "2024": 0.41378484137748855,
+   "2025": 0.4725745634746247,
+   "2026": 0.4705964698971761
+  },
+  {
+   "partido": "PV",
+   "2023": 0.8269753270326744,
+   "2024": 0.814316826983186,
+   "2025": NaN,
+   "2026": 0.688575035408465
+  },
+  {
+   "partido": "PSOL",
+   "2023": 0.9539337584837446,
+   "2024": 1.0908039698378198,
+   "2025": 1.1397989283612995,
+   "2026": 0.8958914349193153
+  },
+  {
+   "partido": "PCdoB",
+   "2023": 0.9731644678015002,
+   "2024": 1.1177969463306305,
+   "2025": 1.018342104071255,
+   "2026": 0.7267998692279437
+  },
+  {
+   "partido": "PT",
+   "2023": 1.1085453775302703,
+   "2024": 0.9936333116256106,
+   "2025": 1.1473458455700554,
+   "2026": 0.8510468936867979
+  },
+  {
+   "partido": "SOLIDARIEDADE",
+   "2023": NaN,
+   "2024": 0.23631499804448192,
+   "2025": 0.2651226658623318,
+   "2026": 0.10784411117871827
+  }
+ ],
+ "partidos_dim2_por_ano": [
+  {
+   "partido": "PL",
+   "2023": 0.11266699833069901,
+   "2024": 0.19647590653784353,
+   "2025": 0.12814413826059193,
+   "2026": 0.16408643830865888
+  },
+  {
+   "partido": "UNIÃO",
+   "2023": 0.08539814746182267,
+   "2024": 0.07534383047322027,
+   "2025": -0.061667126542156926,
+   "2026": -0.042546610911917006
+  },
+  {
+   "partido": "PSDB",
+   "2023": 0.28217510895880754,
+   "2024": 0.09926884622678789,
+   "2025": 0.0953190625645148,
+   "2026": -0.10094992500693001
+  },
+  {
+   "partido": "PP",
+   "2023": -0.059305785874125806,
+   "2024": -0.18387153844479742,
+   "2025": -0.340543106549835,
+   "2026": -0.06436823430818221
+  },
+  {
+   "partido": "REPUBLICANOS",
+   "2023": -0.8613258613654051,
+   "2024": -0.6323699731058996,
+   "2025": -0.5834943585586797,
+   "2026": -0.578675060773893
+  },
+  {
+   "partido": "PODE",
+   "2023": 0.3451050571144023,
+   "2024": -0.11459261482158078,
+   "2025": -0.09215464881750866,
+   "2026": -0.09867755713802417
+  },
+  {
+   "partido": "MDB",
+   "2023": -0.17458878500056615,
+   "2024": -0.30129670912771633,
+   "2025": -0.06251030971381472,
+   "2026": 0.017264489816711213
+  },
+  {
+   "partido": "PSD",
+   "2023": -0.11800692449676058,
+   "2024": -0.026815884007721398,
+   "2025": 0.04026804049801245,
+   "2026": -0.06814136653313663
+  },
+  {
+   "partido": "AVANTE",
+   "2023": -0.11389806904507749,
+   "2024": -0.1642650756841317,
+   "2025": -0.2509978744654519,
+   "2026": -0.12814019465419563
+  },
+  {
+   "partido": "PSB",
+   "2023": 0.2556917600059267,
+   "2024": 0.21652048969764645,
+   "2025": 0.2370962784140414,
+   "2026": 0.013373676360646524
+  },
+  {
+   "partido": "PDT",
+   "2023": 0.19701623200756752,
+   "2024": 0.17812451718979147,
+   "2025": 0.0642120126322125,
+   "2026": -0.08981654175504657
+  },
+  {
+   "partido": "PV",
+   "2023": 0.15496272142399267,
+   "2024": 0.22699812688743232,
+   "2025": NaN,
+   "2026": 0.22453466568363273
+  },
+  {
+   "partido": "PSOL",
+   "2023": 1.1998029686719915,
+   "2024": 1.5127778916961008,
+   "2025": 1.1851173952125686,
+   "2026": 0.8955685795324421
+  },
+  {
+   "partido": "PCdoB",
+   "2023": 0.2069053759204697,
+   "2024": 0.17632433993446875,
+   "2025": 0.408136828367384,
+   "2026": 0.013366299244880617
+  },
+  {
+   "partido": "PT",
+   "2023": 0.023140691324177842,
+   "2024": 0.06515237004575035,
+   "2025": 0.11281543500058365,
+   "2026": 0.17168678796865902
+  },
+  {
+   "partido": "SOLIDARIEDADE",
+   "2023": NaN,
+   "2024": 0.14539466796600076,
+   "2025": -0.03569933246520611,
+   "2026": -0.015158711418452786
+  }
+ ]
+}

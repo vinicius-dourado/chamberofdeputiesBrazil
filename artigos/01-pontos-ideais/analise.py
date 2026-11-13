@@ -907,13 +907,28 @@ def etapa_bootstrap(P, m):
 
 
 def resumo_bootstrap(P, m, U, X, conv, ang):
-    U, X, ang_ok = U[conv], X[conv], ang[conv]
+    U, X, ang_ok = U[conv].copy(), X[conv].copy(), ang[conv]
     conf_d = P.nv_dep >= MIN_VOTOS
+    # A escala latente só é identificada pelos priors: ao duplicar votações, a reamostragem dá mais
+    # peso aos dados frente ao prior de b, as cargas crescem e os pontos encolhem. Cada réplica é
+    # recentrada e reescalada por UM fator isotrópico (sem rotação nem escala por eixo) para ter a
+    # mesma variância total que a estimativa pontual entre os deputados confiáveis.
+    alvo = m["u"][conf_d].var(0).sum()
+    mu0 = m["u"][conf_d].mean(0)
+    escalas = []
+    for b in range(len(U)):
+        mu = U[b][conf_d].mean(0)
+        f = np.sqrt(alvo / U[b][conf_d].var(0).sum())
+        escalas.append(f)
+        U[b] = (U[b] - mu) * f + mu0
+        X[b] = (X[b] - mu) * f + mu0
     conf_p = P.nv_periodo >= MIN_VOTOS
     se = U.std(0, ddof=1)
     lo, hi = np.percentile(U, 2.5, 0), np.percentile(U, 97.5, 0)
     r = {"B": int(len(conv)), "convergiram": int(conv.sum()), "reamostragem": "proposições",
          "n_clusters": int(_G["cluster"].max() + 1),
+         "fator_escala_mediano": float(np.median(escalas)), "fator_escala_p5": float(np.percentile(escalas, 5)),
+         "fator_escala_p95": float(np.percentile(escalas, 95)),
          "angulo_eixos_mediana_abs": float(np.median(np.abs(ang_ok))),
          "angulo_eixos_p95_abs": float(np.percentile(np.abs(ang_ok), 95)),
          "angulo_eixos_max_abs": float(np.max(np.abs(ang_ok))),
