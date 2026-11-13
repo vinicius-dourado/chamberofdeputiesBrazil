@@ -20,6 +20,9 @@ por observação, partida a quente e semente explícita - necessários para o bo
 análises de sensibilidade. A etapa "reproducao" confere a reimplementação contra a função
 original, na mesma partição treino/teste.
 """
+import os
+os.environ.setdefault("OMP_NUM_THREADS", "1")
+os.environ.setdefault("OPENBLAS_NUM_THREADS", "1")
 import argparse
 import json
 import pickle
@@ -46,16 +49,15 @@ ESQUERDA = {"PT", "PCdoB", "PV", "PSOL", "REDE", "PSB", "PDT"}
 DIREITA_OPOS = {"PL", "NOVO", "MISSÃO"}
 BLOCOS = ["Esquerda", "Centro e centrão", "Direita de oposição"]
 
-# Escala esquerda-direita (0-10) do survey de especialistas de Bolognesi, Ribeiro e Codato
-# (2023, Dados 66(2)), aplicado em 2018. Entrada EXTERNA (não derivada dos dados da Câmara);
-# valores transcritos da Tabela do artigo e conferidos na etapa de revisão (ver artigo.md).
-# Correspondência com as siglas atuais: PL = PR; REPUBLICANOS = PRB; UNIÃO = média de DEM e PSL;
-# CIDADANIA = PPS; PODE = Podemos; PP = Progressistas; SOLIDARIEDADE = SDD; PRD = média de PTB
-# e Patriota. MISSÃO (fundado depois) fica sem valor.
-BRC2023 = {"PSOL": 1.28, "PCdoB": 1.92, "PT": 2.97, "PDT": 3.92, "PSB": 4.05, "REDE": 4.77,
-           "CIDADANIA": 4.92, "PV": 5.29, "AVANTE": 6.32, "SOLIDARIEDADE": 6.50, "MDB": 7.01,
-           "PSD": 7.09, "PSDB": 7.11, "PODE": 7.24, "REPUBLICANOS": 7.78, "PL": 7.78,
-           "NOVO": 8.13, "PP": 8.20, "UNIÃO": (8.57 + 8.11) / 2, "PRD": (6.10 + 8.55) / 2}
+# Codificação ordinal "campo ideológico" (esquerda = -1, centro = 0, direita = +1), adotada
+# pelos autores a partir da classificação convencional da literatura brasileira (p.ex. Bolognesi,
+# Ribeiro e Codato, 2023). É deliberadamente grosseira: os escores numéricos daquele survey não
+# puderam ser conferidos e não são usados. O ponto decisivo do teste não depende de nuances: PL,
+# NOVO, PP, REPUBLICANOS e UNIÃO estão todos à direita em qualquer classificação usual.
+CAMPO = {**{p: -1 for p in ["PSOL", "PCdoB", "PT", "PV", "REDE", "PSB", "PDT"]},
+         **{p: 0 for p in ["MDB", "PSD", "PSDB", "CIDADANIA", "PODE", "SOLIDARIEDADE", "AVANTE", "PRD"]},
+         **{p: 1 for p in ["PL", "NOVO", "MISSÃO", "PP", "REPUBLICANOS", "UNIÃO"]}}
+ROT_CAMPO = {-1: "esquerda", 0: "centro", 1: "direita"}
 
 
 def bloco_de(partido):
@@ -132,6 +134,9 @@ def procrustes(x, ref, w=None):
 def carregar_votos():
     v = pd.read_parquet(DADOS / "votos.parquet")
     v["deputado_id"] = v["deputado_id"].astype(int)
+    if os.environ.get("TESTE_RAPIDO"):   # teste de fumaça: ~10% das votações
+        ids = v["idVotacao"].drop_duplicates().sample(frac=0.1, random_state=0)
+        v = v[v["idVotacao"].isin(ids)]
     return v
 
 
@@ -184,8 +189,11 @@ class Painel:
 
     def orientar(self, m):
         u = m["u"]
-        mu = u.mean(0)
-        _, _, vt = np.linalg.svd(u - mu, full_matrices=False)
+        conf = self.nv_dep >= MIN_VOTOS
+        if conf.sum() < 20:          # amostras pequenas (teste de fumaça, recortes estreitos)
+            conf = self.nv_dep >= np.median(self.nv_dep)
+        mu = u[conf].mean(0)
+        _, _, vt = np.linalg.svd(u[conf] - mu, full_matrices=False)
         R = vt.T.copy()
         gov = (self.v.assign(s=self.v["seguiu_orientacao_governo"].astype(float))
                .groupby("deputado_id")["s"].mean().reindex(self.deps).to_numpy())
@@ -202,7 +210,15 @@ class Painel:
         m["a"] = m["a"] + m["b"] @ mu
         m["b"] = m["b"] @ R
         m["gov"] = gov
+        m["R"], m["mu"] = R, mu
         return m
+
+
+def particao_hash(v, frac=10):
+    """Partição treino/teste determinística por célula (votação, deputado): a mesma célula fica no
+    teste em qualquer variação de pré-processamento, o que torna as acurácias comparáveis."""
+    h = pd.util.hash_pandas_object(v[["idVotacao", "deputado_id"]].astype(str), index=False).to_numpy()
+    return (h % frac) == 0
 
 
 def particao_original(n):
@@ -311,7 +327,7 @@ def _reproducao(_):
 
 # ----------------------------------------------------------------- validação cruzada
 N_FOLDS = 10
-DIMS = [0, 1, 2, 3, 4]
+DIMS = [1, 2, 3, 4]
 
 
 def _cv_tarefa(t):
@@ -458,6 +474,68 @@ def resumo_cv(P, pred):
                           "IRT 2D": acc(pred[2][ano == a], y[ano == a])} for a in sorted(set(ano))]
 
 
+# ------------------------------------------------- metade/metade e recortes por orientação
+def _recorte_tarefa(nome):
+    P = _G["P"]
+    if nome == "metades":
+        # u estimado só com as votações pares; alinhamento ao Governo medido só nas ímpares
+        par = (P.j % 2) == 0
+        m = P.orientar(P.ajustar(2, mask=par))
+        imp = P.v[~par]
+        g = (imp.assign(s=imp["seguiu_orientacao_governo"].astype(float)).groupby("deputado_id")["s"].mean()
+             .reindex(P.deps).to_numpy())
+        nv = np.bincount(P.base[P.i[par]], minlength=P.n_u)
+        return nome, {"u": m["u"], "gov_impares": g, "nv": nv}
+    O = _G["O"]
+    g, pl, psol = O["Governo"].to_numpy(), O["PL"].to_numpy(), O["PSOL-REDE"].to_numpy()
+    sel = {"governo_igual_PL": (g == pl), "governo_oposto_PL": (g == -pl),
+           "governo_oposto_PSOL": (g == -psol)}[nome] & ~np.isnan(g) & ~np.isnan(pl if "PL" in nome else psol)
+    mk = sel[P.j]
+    if mk.sum() < 1000:
+        return nome, None
+    P2 = Painel(P.v[mk].reset_index(drop=True))
+    m = P2.final(2)
+    return nome, {"votacoes": int(sel.sum()), "votos": int(mk.sum()), "u": m["u"], "deps": np.asarray(P2.deps),
+                  "nv": P2.nv_dep, "part": P2.part_dep, "autovalores": np.linalg.eigvalsh(
+                      np.cov(m["u"][P2.nv_dep >= min(MIN_VOTOS, np.median(P2.nv_dep))].T))[::-1]}
+
+
+def etapa_recortes(P, m):
+    from scipy.stats import pearsonr
+    saida = dict(paralelo(_recorte_tarefa, ["metades", "governo_igual_PL", "governo_oposto_PL",
+                                            "governo_oposto_PSOL"]))
+    r = {}
+    h = saida["metades"]
+    ok = (h["nv"] >= MIN_VOTOS) & ~np.isnan(h["gov_impares"])
+    r["metades_r_dim1_gov"] = float(pearsonr(h["u"][ok, 0], h["gov_impares"][ok])[0])
+    r["metades_r_dim2_gov"] = float(pearsonr(h["u"][ok, 1], h["gov_impares"][ok])[0])
+    r["metades_n"] = int(ok.sum())
+    lin = []
+    for nome, rot in [("governo_igual_PL", "Governo e PL orientam igual"),
+                      ("governo_oposto_PL", "Governo e PL orientam opostos"),
+                      ("governo_oposto_PSOL", "Governo e PSOL-REDE orientam opostos")]:
+        o = saida[nome]
+        if o is None:
+            continue
+        conf = o["nv"] >= min(MIN_VOTOS, np.median(o["nv"]))
+        d = pd.DataFrame({"p": o["part"], "d1": o["u"][:, 0], "d2": o["u"][:, 1]})[conf]
+        med = d.groupby("p")[["d1", "d2"]].mean()
+        l = {"recorte": rot, "votações": o["votacoes"], "votos": o["votos"],
+             "var. dim1 / total": float(o["autovalores"][0] / o["autovalores"].sum())}
+        for pa in ["PSOL", "PT", "PSB", "MDB", "PSD", "UNIÃO", "PP", "REPUBLICANOS", "PL", "NOVO"]:
+            l[pa] = float(med.loc[pa, "d1"]) if pa in med.index else np.nan
+        # correlação da dim1 do recorte com a dim1 e a dim2 do modelo completo
+        ref = pd.DataFrame(m["u"], index=P.deps)
+        dd = pd.Index(o["deps"])[conf]
+        l["r com dim1 completa"] = float(np.corrcoef(o["u"][conf, 0], ref.loc[dd, 0])[0, 1])
+        l["r com dim2 completa"] = float(np.corrcoef(o["u"][conf, 0], ref.loc[dd, 1])[0, 1])
+        lin.append(l)
+    t = pd.DataFrame(lin)
+    tabela(t, "t7b_recortes_orientacao", casas=2)
+    r["recortes"] = lin
+    RES["recortes"] = r
+
+
 # ------------------------------------------------------------- ajuste final e estrutura
 def _final_tarefa(k):
     return _G["P"].final(k)
@@ -506,7 +584,7 @@ def etapa_estrutura(P, m):
     vv = v[v["seguiu_orientacao_governo"].notna()]
     tp["alinh. Governo"] = vv.groupby("deputado_siglaPartido")["seguiu_orientacao_governo"].apply(
         lambda s: s.astype(float).mean())
-    tp["esq.-dir. (BRC)"] = pd.Series(BRC2023)
+    tp["campo"] = [ROT_CAMPO.get(CAMPO.get(p), "") for p in tp.index]
     tp = tp[tp["períodos"] >= 3].sort_values("dim1 (média)")
     tabela(tp.reset_index(), "t5_partidos")
     r["partidos"] = tp.reset_index().to_dict("records")
@@ -529,28 +607,59 @@ def etapa_estrutura(P, m):
     r["r_dim2_alinh_governo"] = float(pearsonr(m["u"][ok, 1], gov[ok])[0])
     okp = conf_d & ~np.isnan(par)
     r["r_dim2_alinh_partido"] = float(pearsonr(m["u"][okp, 1], par[okp])[0])
-    tb = tp.dropna(subset=["esq.-dir. (BRC)"])
-    r["n_partidos_brc"] = int(len(tb))
-    r["r_partido_dim1_brc"] = float(pearsonr(tb["dim1 (média)"], tb["esq.-dir. (BRC)"])[0])
-    r["rho_partido_dim1_brc"] = float(spearmanr(tb["dim1 (média)"], tb["esq.-dir. (BRC)"])[0])
-    r["r_partido_dim1_gov"] = float(pearsonr(tb["dim1 (média)"], tb["alinh. Governo"])[0])
-    r["rho_partido_dim1_gov"] = float(spearmanr(tb["dim1 (média)"], tb["alinh. Governo"])[0])
-    r["r_partido_dim2_brc"] = float(pearsonr(tb["dim2 (média)"], tb["esq.-dir. (BRC)"])[0])
-    # regressão no nível do partido: dim1 ~ esquerda-direita + alinhamento (padronizados)
-    Z = np.column_stack([np.ones(len(tb)), (tb["esq.-dir. (BRC)"] - tb["esq.-dir. (BRC)"].mean())
-                         / tb["esq.-dir. (BRC)"].std(), (tb["alinh. Governo"] - tb["alinh. Governo"].mean())
-                         / tb["alinh. Governo"].std()])
-    yv = ((tb["dim1 (média)"] - tb["dim1 (média)"].mean()) / tb["dim1 (média)"].std()).to_numpy()
-    for nome, cols in [("so_brc", [0, 1]), ("so_gov", [0, 2]), ("ambos", [0, 1, 2])]:
-        beta, *_ = np.linalg.lstsq(Z[:, cols], yv, rcond=None)
-        res = yv - Z[:, cols] @ beta
-        r[f"reg_partido_{nome}"] = {"beta": [float(b) for b in beta[1:]],
-                                    "r2": float(1 - res @ res / (yv @ yv))}
-    # entre os partidos à direita do centro da escala (BRC >= 6): o que explica dim1?
-    td = tb[tb["esq.-dir. (BRC)"] >= 6]
-    r["direita_n"] = int(len(td))
-    r["direita_r_dim1_brc"] = float(pearsonr(td["dim1 (média)"], td["esq.-dir. (BRC)"])[0])
-    r["direita_r_dim1_gov"] = float(pearsonr(td["dim1 (média)"], td["alinh. Governo"])[0])
+    # Teste invariante à rotação: a direção do plano que melhor prediz (MQO) o alinhamento ao
+    # Governo e a que melhor prediz o campo ideológico; ângulo de cada uma com o eixo 1.
+    campo = np.array([CAMPO.get(p, np.nan) for p in P.part_dep], float)
+    okc = conf_d & ~np.isnan(campo)
+
+    def direcao(alvo, mk):
+        Z = np.column_stack([np.ones(mk.sum()), m["u"][mk]])
+        beta, *_ = np.linalg.lstsq(Z, alvo[mk], rcond=None)
+        res = alvo[mk] - Z @ beta
+        r2 = 1 - res @ res / np.sum((alvo[mk] - alvo[mk].mean()) ** 2)
+        ang = float(np.degrees(np.arctan2(beta[2], beta[1])))
+        return ang, float(r2)
+
+    r["angulo_governo"], r["r2_plano_governo"] = direcao(gov, ok)
+    r["angulo_campo"], r["r2_plano_campo"] = direcao(campo, okc)
+    r["angulo_entre_governo_e_campo"] = float(abs(r["angulo_governo"] - r["angulo_campo"]))
+    r["r_dim1_campo"] = float(pearsonr(m["u"][okc, 0], campo[okc])[0])
+    r["r_dim2_campo"] = float(pearsonr(m["u"][okc, 1], campo[okc])[0])
+    r["r_campo_alinh_governo"] = float(pearsonr(campo[okc & ok], gov[okc & ok])[0])
+    # dentro do campo da direita: o eixo 1 acompanha o governo, não a ideologia
+    dire = okc & ok & (campo == 1)
+    r["direita_n_deputados"] = int(dire.sum())
+    r["direita_r_dim1_governo"] = float(pearsonr(m["u"][dire, 0], gov[dire])[0])
+    opos = np.isin(P.part_dep, ["PL", "NOVO", "MISSÃO"])
+    centrao_dir = np.isin(P.part_dep, ["PP", "REPUBLICANOS", "UNIÃO"])
+    esq = okc & (campo == -1)
+    r["dim1_media_direita_oposicao"] = float(m["u"][conf_d & opos, 0].mean())
+    r["dim1_media_direita_centrao"] = float(m["u"][conf_d & centrao_dir, 0].mean())
+    r["dim1_media_esquerda"] = float(m["u"][esq, 0].mean())
+    r["dim1_media_centro"] = float(m["u"][okc & (campo == 0), 0].mean())
+    r["fracao_distancia_direita_interna"] = float(
+        (r["dim1_media_direita_centrao"] - r["dim1_media_direita_oposicao"])
+        / (r["dim1_media_esquerda"] - r["dim1_media_direita_oposicao"]))
+    # R² do eixo 1 explicado pelo campo (dummies) e pelo alinhamento ao Governo
+    for nome, X in [("campo", np.column_stack([campo[okc & ok] == -1, campo[okc & ok] == 1]).astype(float)),
+                    ("governo", gov[okc & ok][:, None]),
+                    ("ambos", np.column_stack([campo[okc & ok] == -1, campo[okc & ok] == 1, gov[okc & ok]]).astype(float))]:
+        Z = np.column_stack([np.ones(len(X)), X])
+        yv = m["u"][okc & ok, 0]
+        beta, *_ = np.linalg.lstsq(Z, yv, rcond=None)
+        res = yv - Z @ beta
+        r[f"r2_dim1_{nome}"] = float(1 - res @ res / np.sum((yv - yv.mean()) ** 2))
+    # a dim2 é um "efeito ferradura" (extremos × meio)? u2 ~ u1 + u1²
+    u1, u2 = m["u"][conf_d, 0], m["u"][conf_d, 1]
+    for nome, Z in [("linear", np.column_stack([np.ones_like(u1), u1])),
+                    ("quadratico", np.column_stack([np.ones_like(u1), u1, u1 ** 2]))]:
+        beta, *_ = np.linalg.lstsq(Z, u2, rcond=None)
+        res = u2 - Z @ beta
+        r[f"r2_dim2_em_dim1_{nome}"] = float(1 - res @ res / np.sum((u2 - u2.mean()) ** 2))
+        if nome == "quadratico":
+            r["coef_quadratico"] = float(beta[2])
+    ev = np.linalg.eigvalsh(np.cov(m["u"][conf_d].T))[::-1]
+    r["autovalores_u"] = [float(e) for e in ev]
 
     # ---- votações: de que lado fica cada liderança no eixo 1 e no eixo 2
     O = orientacoes_por_votacao(P)
@@ -595,16 +704,24 @@ def etapa_estrutura(P, m):
 
 
 def classe_objeto(desc, titulo):
-    d = f"{desc or ''} {titulo or ''}".lower()
-    regras = [("retirada de pauta / adiamento", r"retirada de pauta|adiamento|retirada da ordem do dia|encerramento da discuss|quebra de interst"),
-              ("urgência", r"urg[êe]ncia"),
-              ("destaque / emenda", r"destaque|dtq|emenda|dvs"),
-              ("redação final", r"reda[çc][ãa]o final"),
-              ("texto principal / substitutivo / parecer", r"substitutivo|texto-base|texto base|parecer|projeto|proposta|medida provis")]
-    for nome, rx in regras:
-        if re.search(rx, d):
-            return nome
-    return "outros"
+    """Classe do objeto votado, pela descrição do resultado e pelo prefixo do objeto
+    (REQ = requerimento; EMP/EMC/EMS/ERD/DTQ = emendas e destaques; RDF = redação final)."""
+    d = desc.lower() if isinstance(desc, str) else ""
+    pre = titulo.split(" ")[0].upper() if isinstance(titulo, str) else ""
+    if pre == "RDF" or "redação final" in d:
+        return "redação final"
+    if pre == "REQ" or "requerimento" in d:
+        if re.search(r"urg[êe]ncia", d):
+            return "requerimento de urgência"
+        if re.search(r"retirada de pauta|adiamento|encerramento d|quebra de interst|retirada da ordem do dia", d):
+            return "requerimento procedimental (pauta, adiamento)"
+        return "outro requerimento"
+    if "ressalvad" in d:                       # "aprovado o texto..., ressalvados os destaques"
+        return "texto principal / parecer"
+    if pre in ("EMP", "EMC", "EMS", "ERD", "DTQ") or re.search(
+            r"destaque|dvs|mantido o texto|mantida a|suprimid|(?<!proposta de )emenda", d):
+        return "destaque / emenda"
+    return "texto principal / parecer"
 
 
 def etapa_dim2(P, m, O):
@@ -623,6 +740,8 @@ def etapa_dim2(P, m, O):
         t[f"% Sim {c}"] = 100 * S[c].to_numpy()
     for c in ["Governo", "Oposição"]:
         t[f"or. {c}"] = pd.Series(O[c].to_numpy()).map({1.0: "Sim", -1.0: "Não"}).to_numpy()
+    ps = P.v.groupby("idVotacao")["y"].mean().reindex(P.votacoes).to_numpy()
+    t["minoria (%)"] = 100 * np.minimum(ps, 1 - ps)
     t["classe"] = [classe_objeto(d, o) for d, o in zip(t["descricao"], t["objeto"])]
     t["dim2_dominante"] = np.abs(t["b2"]) > np.abs(t["b1"])
     t["razao"] = np.abs(t["b2"]) / np.sqrt(t["b1"] ** 2 + t["b2"] ** 2)
@@ -636,7 +755,7 @@ def etapa_dim2(P, m, O):
         go = s.dropna(subset=["or. Governo", "or. Oposição"])
         lin.append({"grupo": nome, "votações": len(s), "% no plenário": 100 * (s["órgão"] == "PLEN").mean(),
                     "% Governo = Oposição": 100 * (go["or. Governo"] == go["or. Oposição"]).mean(),
-                    "minoria média (%)": 100 * np.minimum(expit(s["a"]), 1 - expit(s["a"])).mean(),
+                    "minoria média (%)": s["minoria (%)"].mean(),
                     "|PSOL − PT| (pp)": (s["% Sim PSOL"] - s["% Sim PT"]).abs().mean(),
                     "|NOVO − PL| (pp)": (s["% Sim NOVO"] - s["% Sim PL"]).abs().mean(),
                     "|PSOL − NOVO| (pp)": (s["% Sim PSOL"] - s["% Sim NOVO"]).abs().mean(),
@@ -703,7 +822,7 @@ def _robustez_tarefa(nome):
     cfg = dict(CONFIGS[nome])
     dados = {k: cfg.pop(k) for k in ["min_minoria", "obstrucao", "abstencao"] if k in cfg}
     P = Painel(preparar(_G["bruto"], **dados)) if dados else _G["P"]
-    te = particao_original(len(P.y))
+    te = particao_hash(P.v)
     out = {"config": nome, "votos": len(P.y), "votações": P.n_j, "deputados": P.n_u}
     mai = (np.bincount(P.j[~te], P.y[~te], P.n_j) / np.maximum(np.bincount(P.j[~te], minlength=P.n_j), 1))
     out["maioria"] = acc(mai[P.j[te]], P.y[te])
@@ -727,11 +846,18 @@ def etapa_robustez(P, m):
     saida = paralelo(_robustez_tarefa, list(CONFIGS))
     ref = pd.DataFrame(m["u"], index=P.deps)
     conf = set(P.deps[P.nv_dep >= MIN_VOTOS])
+    # células de teste comuns a todas as configurações (mesma partição por hash)
+    comuns = None
+    for o in saida:
+        idx = o["_pred"].index
+        comuns = idx if comuns is None else comuns.intersection(idx)
     lin = []
     for o in saida:
         u = o.pop("_u")
         nv = o.pop("_nv")
-        o.pop("_pred")
+        pr = o.pop("_pred")
+        o["acurácia 2D (células comuns)"] = float(pr.loc[comuns].mean())
+        o["células comuns"] = int(len(comuns))
         com = [d for d in u.index if d in conf and nv[d] >= MIN_VOTOS]
         a, b = u.loc[com].to_numpy(), ref.loc[com].to_numpy()
         o["r dim1"] = float(np.corrcoef(a[:, 0], b[:, 0])[0, 1])
@@ -752,29 +878,45 @@ N_BOOT = 200
 
 
 def _boot_tarefa(b):
-    P, m0 = _G["P"], _G["m_bruto"]
-    c = np.bincount(np.random.default_rng(1000 + b).integers(0, P.n_j, P.n_j), minlength=P.n_j).astype(float)
-    m = ajustar(P.i, P.j, P.y, P.n_i, P.n_j, 2, base=P.base, w=c[P.j], th0=m0["th"], maxiter=3000, **PADRAO)
+    """Réplica de bootstrap: reamostra proposições (blocos de votações sobre a mesma matéria) com
+    reposição, reajusta do zero (partida fria) e aplica o pipeline completo de orientação (PCA +
+    sinais), sem girar a réplica para a estimativa pontual."""
+    P = _G["P"]
+    cl, ncl = _G["cluster"], _G["cluster"].max() + 1
+    c = np.bincount(np.random.default_rng(1000 + b).integers(0, ncl, ncl), minlength=ncl).astype(float)
+    m = ajustar(P.i, P.j, P.y, P.n_i, P.n_j, 2, base=P.base, w=c[cl][P.j], semente=1000 + b, **PADRAO)
+    m = P.orientar(m)
     return m["u"], m["x"], m["convergiu"]
 
 
 def etapa_bootstrap(P, m):
     saida = paralelo(_boot_tarefa, list(range(N_BOOT)))
-    conf = (P.nv_dep >= MIN_VOTOS).astype(float)
-    U, X = [], []
-    for u, x, _ in saida:
-        f = procrustes(u, m["u"], conf)
-        U.append(f(u))
-        X.append(f(x))
-    return np.array(U), np.array(X), np.array([s[2] for s in saida])
+    conf = P.nv_dep >= MIN_VOTOS
+    U = np.array([s[0] for s in saida])
+    X = np.array([s[1] for s in saida])
+    conv = np.array([s[2] for s in saida])
+    # ângulo da rotação de Procrustes que levaria cada réplica à estimativa pontual (diagnóstico
+    # da estabilidade dos eixos; as réplicas NÃO são giradas)
+    ang = []
+    for u in U:
+        a, ref = u[conf] - u[conf].mean(0), m["u"][conf] - m["u"][conf].mean(0)
+        uu, _, vt = np.linalg.svd(a.T @ ref)
+        q = uu @ vt
+        ang.append(float(np.degrees(np.arctan2(q[1, 0], q[0, 0]))))
+    return U, X, conv, np.array(ang)
 
 
-def resumo_bootstrap(P, m, U, X, conv):
+def resumo_bootstrap(P, m, U, X, conv, ang):
+    U, X, ang_ok = U[conv], X[conv], ang[conv]
     conf_d = P.nv_dep >= MIN_VOTOS
     conf_p = P.nv_periodo >= MIN_VOTOS
     se = U.std(0, ddof=1)
     lo, hi = np.percentile(U, 2.5, 0), np.percentile(U, 97.5, 0)
-    r = {"B": int(len(U)), "convergiram": int(conv.sum()),
+    r = {"B": int(len(conv)), "convergiram": int(conv.sum()), "reamostragem": "proposições",
+         "n_clusters": int(_G["cluster"].max() + 1),
+         "angulo_eixos_mediana_abs": float(np.median(np.abs(ang_ok))),
+         "angulo_eixos_p95_abs": float(np.percentile(np.abs(ang_ok), 95)),
+         "angulo_eixos_max_abs": float(np.max(np.abs(ang_ok))),
          "ep_mediano_dim1": float(np.median(se[conf_d, 0])), "ep_mediano_dim2": float(np.median(se[conf_d, 1])),
          "ep_p90_dim1": float(np.percentile(se[conf_d, 0], 90)), "ep_p90_dim2": float(np.percentile(se[conf_d, 1], 90)),
          "ep_mediano_dim1_nao_conf": float(np.median(se[~conf_d, 0])) if (~conf_d).any() else None,
@@ -866,9 +1008,10 @@ def etapa_orgaos(P, m):
         l["APRE 2D"] = 1 - (1 - l["IRT 2D"]) / (1 - l["maioria"])
         com = o["_nv"].index[(o["_nv"] >= MIN_VOTOS)].intersection(P.deps[P.nv_dep >= MIN_VOTOS])
         a, b = o["_u"].loc[com].to_numpy(), ref.loc[com].to_numpy()
-        l["r dim1 com o modelo conjunto"] = float(np.corrcoef(a[:, 0], b[:, 0])[0, 1])
         al = procrustes(a, b)(a)
-        l["r dim2 com o modelo conjunto"] = float(np.corrcoef(al[:, 1], b[:, 1])[0, 1])
+        for k in (0, 1):
+            l[f"r dim{k + 1} (eixos próprios)"] = float(np.corrcoef(a[:, k], b[:, k])[0, 1])
+            l[f"r dim{k + 1} (Procrustes)"] = float(np.corrcoef(al[:, k], b[:, k])[0, 1])
         lin.append(l)
     tabela(pd.DataFrame(lin), "t9_plenario_comissoes")
     r["tabela"] = lin
@@ -1098,15 +1241,25 @@ def figuras(P, m, pred, tvot, se, dcom, sc_svd):
     ax.set_title("a) Deputados: dimensão 1 × alinhamento ao Governo")
     legenda_blocos(ax, loc="upper left", fontsize=8.5)
     ax = axs[1]
-    tp = pd.DataFrame(RES["estrutura"]["partidos"]).dropna(subset=["esq.-dir. (BRC)"])
-    ax.scatter(tp["esq.-dir. (BRC)"], tp["dim1 (média)"], s=40, c=[COR[bloco_de(p)] for p in tp["partido"]],
-               edgecolors=FUNDO, linewidths=1)
-    for _, l in tp.iterrows():
-        ax.annotate(l["partido"], (l["esq.-dir. (BRC)"], l["dim1 (média)"]), xytext=(5, 3), textcoords="offset points",
+    tp = pd.DataFrame(RES["estrutura"]["partidos"])
+    tp = tp[tp["campo"] != ""]
+    ordem = {"esquerda": 0, "centro": 1, "direita": 2}
+    xs = tp["campo"].map(ordem).to_numpy().astype(float)
+    # espalha horizontalmente os partidos de um mesmo campo, em ordem de dim1, para não sobrepor rótulos
+    for c in range(3):
+        idx = np.where(xs == c)[0]
+        idx = idx[np.argsort(tp["dim1 (média)"].to_numpy()[idx])]
+        xs[idx] = c + np.linspace(-0.25, 0.25, len(idx)) if len(idx) > 1 else c
+    ax.scatter(xs, tp["dim1 (média)"], s=40, c=[COR[bloco_de(p)] for p in tp["partido"]], edgecolors=FUNDO,
+               linewidths=1, zorder=3)
+    for x_, (_, l) in zip(xs, tp.iterrows()):
+        ax.annotate(l["partido"], (x_, l["dim1 (média)"]), xytext=(6, -3), textcoords="offset points",
                     fontsize=7.5, color=TINTA)
-    ax.set_xlabel("Posição esquerda (0) – direita (10), especialistas (Bolognesi et al., 2023)")
+    ax.set_xticks([0, 1, 2]), ax.set_xticklabels(["Esquerda", "Centro", "Direita"]), ax.set_xlim(-0.5, 2.7)
+    ax.grid(axis="x", visible=False)
+    ax.set_xlabel("Campo ideológico (classificação convencional)")
     ax.set_ylabel("Dimensão 1 (média do partido)")
-    ax.set_title("b) Partidos: dimensão 1 × escala ideológica")
+    ax.set_title("b) Partidos: dimensão 1 × campo ideológico")
     fig.tight_layout(), fig.savefig(FIGS / "fig3_governo_ou_ideologia.png"), plt.close(fig)
 
     # --- Fig. 4: cargas das votações
@@ -1187,7 +1340,7 @@ def figuras(P, m, pred, tvot, se, dcom, sc_svd):
 
 
 # =============================================================================== main
-ETAPAS = ["dados", "reproducao", "cv", "final", "estrutura", "dim2", "robustez", "bootstrap", "orgaos", "svd",
+ETAPAS = ["dados", "reproducao", "cv", "final", "estrutura", "dim2", "recortes", "robustez", "bootstrap", "orgaos", "svd",
           "anos", "figuras"]
 
 
@@ -1196,9 +1349,16 @@ def main():
     ap.add_argument("--etapas", nargs="*", default=ETAPAS)
     ap.add_argument("--refazer", action="store_true")
     args = ap.parse_args()
+    global CACHE, FIGS, TABS, AQUI_RES, N_BOOT, MIN_VOTOS
+    AQUI_RES = AQUI
+    if os.environ.get("TESTE_RAPIDO"):
+        base = Path(os.environ["TESTE_RAPIDO"])
+        CACHE, FIGS, TABS, AQUI_RES, N_BOOT = base / "cache", base / "figuras", base / "tabelas", base, 4
+        MIN_VOTOS = 5
+        base.mkdir(parents=True, exist_ok=True)
     for d in (CACHE, FIGS, TABS):
         d.mkdir(exist_ok=True)
-    arq_res = AQUI / "resultados.json"
+    arq_res = AQUI_RES / "resultados.json"
     if arq_res.exists():
         RES.update(json.loads(arq_res.read_text(encoding="utf-8")))
     quer = lambda e: e in args.etapas
@@ -1218,16 +1378,21 @@ def main():
         resumo_cv(P, pred)
     finais = em_cache("finais", lambda: dict(zip([1, 2, 3, 4], paralelo(_final_tarefa, [1, 2, 3, 4]))), rf)
     m = finais[2]
-    _G["m_bruto"] = m     # th é o vetor antes da rotação: serve de partida a quente (o modelo é invariante)
     if quer("final"):
         ajuste_dentro_da_amostra(P, finais)
     O = etapa_estrutura(P, m)
+    _G["O"] = O
     tvot = etapa_dim2(P, m, O)
+    if quer("recortes"):
+        RES["recortes"] = em_cache("recortes", lambda: (etapa_recortes(P, m), RES["recortes"])[1], rf)
     if quer("robustez"):
         em_cache("robustez", lambda: (etapa_robustez(P, m), RES["robustez"])[1], rf)
         RES["robustez"] = pickle.loads((CACHE / "robustez.pkl").read_bytes())
-    U, X, conv = em_cache("bootstrap", lambda: etapa_bootstrap(P, m), rf)
-    se = resumo_bootstrap(P, m, U, X, conv)
+    vt = pd.read_parquet(DADOS / "votacoes.parquet").set_index("idVotacao")["proposicao_id"]
+    prop = vt.reindex(P.votacoes).fillna(pd.Series(P.votacoes, index=P.votacoes)).to_numpy()
+    _G["cluster"] = pd.factorize(prop)[0]
+    U, X, conv, ang = em_cache("bootstrap", lambda: etapa_bootstrap(P, m), rf)
+    se = resumo_bootstrap(P, m, U, X, conv, ang)
     dcom = em_cache("orgaos", lambda: (etapa_orgaos(P, m), RES["orgaos"]), rf)
     RES["orgaos"] = dcom[1]
     sc = em_cache("svd", lambda: (etapa_svd(P, m), RES["svd"]), rf)
