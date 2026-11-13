@@ -101,3 +101,95 @@ Lula 3 por subperíodo (`resultados/lula3_subperiodos.csv`):
    A versão alternativa (`resultados/lula3_sensibilidade.csv`) mantém União e PP e atribui os substitutos ao partido da pasta. Ela dá proporcionalidade de 75,1 (DP 3,9), tamanho de 10,3 e heterogeneidade de 52,9.
 2. **Linhas com confiança baixa:** no CSV de Lula 3, são os substitutos de Direitos Humanos, Pesca e SRI em 2026. Conferir no DOU.
 3. **Bolsonaro:** com a fórmula literal, um gabinete com um único partido e quase todo não partidário ainda pontua cerca de 55, porque os não partidários não entram na soma. A média do mandato mistura esses meses com meses de índice 0. Leia esse valor com cuidado.
+
+## Proporcionalidade "entregue": cadeiras × votos efetivamente entregues (`proporcionalidade_entregue.py`)
+
+```bash
+python coalizao/proporcionalidade_entregue.py
+```
+
+### Ideia
+
+A coalescência compara a fatia de ministérios de cada partido (Mᵢ) com a sua fatia de **cadeiras** na coalizão (Sᵢ). Pela lei de Gamson, isso mede a proporcionalidade em relação ao **potencial** de votos: supõe que cada deputado de um partido do gabinete é um voto do governo. Mas os partidos entregam esse potencial de forma muito desigual. Um partido com 59 deputados que apoia o governo em 60% das votações rende menos votos que um de 45 deputados que apoia em 90%.
+
+A versão "entregue" troca só o Sᵢ e mantém Mᵢ, os gabinetes e os ministros sem partido:
+
+  Sᵢᵉ = cadeirasᵢ × governismoᵢ / Σⱼ (cadeirasⱼ × governismoⱼ)  (j = partidos do gabinete)
+
+  CABINETᵉ = 1 − ½ Σᵢ |Sᵢᵉ − Mᵢ| (×100)
+
+Se Sᵢᵉ estiver mais perto de Mᵢ do que Sᵢ, o presidente distribui ministérios em proporção aos votos que **recebe**, mais do que aos votos que **poderia receber**.
+
+### Governismo (taxa de apoio ao governo)
+
+A partir de `dados/leg<N>/votos.parquet` (votos nominais com a orientação do líder do Governo):
+
+* **Universo:** só o plenário (`siglaOrgao == 'PLEN'`) e só as votações em que o Governo orientou **Sim** ou **Não**. Ficam fora "Liberado", a orientação de obstrução do próprio governo e as votações sem orientação do governo.
+* **Voto válido:** Sim, Não, Obstrução ou Abstenção. Só o voto igual à orientação conta como apoio. **Obstrução e abstenção contam como não apoio**, porque, com orientação Sim/Não, obstruir nega quórum e abster-se nega o voto. "Artigo 17" (presidente da Casa) e ausências ficam fora. `taxa_estrita_*` (só Sim/Não no denominador) fica como sensibilidade.
+* **Taxa do partido:** votos alinhados ÷ votos válidos, somados sobre todos os deputados e votações. É uma taxa agregada, e não a média dos deputados. Por isso pesa mais o deputado que vota mais.
+* **Janelas:** taxa no mês (`taxa_mes`), móvel de 3 e de 6 meses (`taxa_3m` e `taxa_6m`, sem atravessar a troca de mandato) e do mandato inteiro. O painel mensal usa a janela de 6 meses. Os meses sem votações na janela (jan–fev/2023) recebem o primeiro valor observado.
+* **Gabinetes:** taxa de todas as votações entre o início e o fim do gabinete.
+* **Variante com ausência (`*_presenca`):** entrega = votos alinhados ÷ (cadeiras em exercício × nº de votações) = taxa entre os presentes × fração de presença. Assim, quem não aparece também deixa de entregar.
+* **Variante "disputadas" (por gabinete):** só as votações em que a Oposição (ou, na falta, a Minoria) orientou diferente do governo. Ela retira as votações consensuais, em que até o PL acompanha o governo (o PL tem taxa de 31% em Lula 3).
+* **Siglas:** harmonizadas com `NORM` (UNIÃO→UNIAO, REPUBLICANOS→REP, PMDB→MDB, PR→PL, PRB→REP…), mais SOLIDARIEDADE→SD e PTN/PODEMOS→PODE.
+
+### Retorno ministerial por voto entregue
+
+Para cada partido do gabinete, retorno = (fração dos ministérios **partidários**) ÷ (fração dos votos entregues da coalizão).
+* 1 = proporcional;
+* > 1 = sobrerrepresentado, com mais ministérios por voto entregue;
+* < 1 = sub-representado.
+
+`retorno_potencial` faz o mesmo com as cadeiras. Usamos os ministérios partidários no numerador para que a média da coalizão seja 1. A coalescência, por sua vez, usa todos os cargos.
+
+### Resultados de Lula 3 (`resultados/proporcionalidade_entregue_gabinetes.csv`)
+
+| Gabinete | Período | Votações | Cadeiras | Entregue | Dif. | Entregue c/ ausência | Só disputadas |
+|---|---|---|---|---|---|---|---|
+| Lula 3-1 | jan–set/2023 | 110 | 79,7 | 82,0 | +2,3 | 82,4 | 82,2 |
+| Lula 3-2 | set–dez/2023 | 128 | 75,6 | 78,9 | +3,3 | 80,9 | 80,3 |
+| Lula 3-3 | jan–abr/2024 | 36 | 77,1 | 80,4 | +3,3 | 82,0 | 82,1 |
+| Lula 3-4 | abr–set/2024 | 109 | 75,6 | 82,1 | +6,5 | 83,9 | 85,4 |
+| Lula 3-5 | set/2024–mar/2025 | 90 | 73,8 | 78,7 | +4,9 | 81,0 | 80,6 |
+| Lula 3-6 | mar–set/2025 | 163 | 72,6 | 79,2 | +6,5 | 81,3 | 81,1 |
+| Lula 3-7 | set–out/2025 | 40 | 79,4 | 82,8 | +3,3 | 82,9 | 82,9 |
+| Lula 3-8 | out/2025–mar/2026 | 149 | 82,4 | 82,8 | +0,5 | 82,9 | 82,9 |
+| Lula 3-9 | abr–nov/2026 | 49 | 66,2 | 66,2 | 0,0 | 66,2 | 66,2 |
+
+Painel mensal (`proporcionalidade_entregue_mensal.csv` e `proporcionalidade_entregue_resumo.csv`):
+
+| Período | Cadeiras (DP) | Entregue (DP) | Dif. | Entregue c/ ausência |
+|---|---|---|---|---|
+| Lula 3, todo o mandato | 75,1 (5,1) | 78,3 (5,9) | +3,2 | 79,4 |
+| jan/2023–ago/2025 | 75,8 (2,6) | 80,2 (1,9) | +4,3 | 81,7 |
+| set/2025–mar/2026 | 81,8 (1,6) | 83,6 (0,5) | +1,8 | 83,8 |
+| abr/2026–nov/2026 | 66,2 (0,0) | 66,2 (0,0) | 0,0 | 66,2 |
+
+Partidos de Lula 3, com médias ponderadas pela duração dos gabinetes em que tiveram ministério (`proporcionalidade_entregue_partidos.csv`):
+
+| Partido | Governismo | Só disputadas | Peso potencial | Peso entregue | Dif. (p.p.) | Retorno potencial | Retorno entregue |
+|---|---|---|---|---|---|---|---|
+| União | 0,68 | 0,59 | 19,5% | 16,1% | −3,5 | 0,59 | 0,72 |
+| PSD | 0,78 | 0,70 | 17,9% | 16,2% | −1,6 | 0,74 | 0,80 |
+| MDB | 0,76 | 0,69 | 15,3% | 13,8% | −1,5 | 0,78 | 0,85 |
+| PP | 0,76 | 0,68 | 15,8% | 14,6% | −1,2 | 0,24 | 0,26 |
+| PSB | 0,92 | 0,92 | 6,0% | 6,5% | +0,5 | 1,62 | 1,46 |
+| PCdoB | 0,97 | 0,99 | 3,3% | 3,8% | +0,5 | 1,49 | 1,29 |
+| PDT | 0,90 | 0,89 | 6,4% | 6,9% | +0,5 | 0,73 | 0,69 |
+| PT | 0,98 | 0,99 | 26,6% | 30,9% | +4,3 | 1,60 | 1,36 |
+
+### O que muda na interpretação
+
+1. **A coalizão de Lula 3 é mais proporcional em votos entregues do que em cadeiras** (cerca de 3 pontos no mandato e até 6,5 pontos em alguns gabinetes). A desproporção medida pela lei de Gamson vem, em boa parte, de o PT ter mais ministérios do que as suas cadeiras justificam e de o "centrão" do gabinete (União, PSD, MDB, PP) ter menos. Como o PT entrega quase 100% e esses partidos entregam de 68% a 78%, o peso real do PT cresce e o dos aliados de centro-direita encolhe. Os dois pesos se aproximam da distribuição de ministérios. Parte do que parecia "pagamento abaixo do preço" ao centrão reflete o fato de esse apoio ser parcial.
+2. **O centrão continua sub-representado mesmo em votos entregues** (retorno de 0,7 a 0,85). O PP é o caso extremo (0,26): um ministério para cerca de 15% dos votos entregues da coalizão. O sobrepreço do PT cai de 1,60 para 1,36, mas não some.
+3. **A diferença é maior quando o apoio dos aliados cai** (Lula 3-4 e 3-6, com governismo médio da coalizão abaixo de 0,8). Ela praticamente desaparece depois da saída de União e PP (Lula 3-8), quando sobra uma base mais homogênea.
+4. **Os gabinetes com muitos ministros sem partido ficam insensíveis à mudança.** Quando ΣMᵢ dos partidos é pequeno e Sᵢ > Mᵢ para todos eles (Lula 3-9, com 23 sem partido), Σ|Sᵢ − Mᵢ| = 1 − ΣMᵢ, qualquer que seja a distribuição de S. O índice então só mede quantos cargos foram para partidos, e não para quais. É uma propriedade da operacionalização de Pereira & Bertholini, e não dos dados.
+
+### Limitações
+
+* **Endogeneidade:** o governismo é, em parte, consequência dos ministérios. A versão "entregue" mede quanto do apoio recebido é recompensado, e não quanto o presidente "deveria" pagar ex ante.
+* **Votações consensuais:** elas inflam a taxa de todos os partidos, até da oposição. A variante "disputadas" corrige isso e dá resultados muito parecidos, com União, MDB, PSD e PP de 7 a 10 pontos mais baixos.
+* **Agenda:** o governo escolhe o que orienta. Partidos com pauta própria podem ter taxas diferentes sem que isso signifique menos apoio nas votações decisivas. Não há ponderação pela importância da votação (MPs, PECs, LDO).
+* **Unidade partidária:** a taxa é do partido inteiro. O aliado que "entrega" pode ser só a ala que tem o ministro. Aqui não se mede a entrega por ministro.
+* **Cobertura temporal:** as votações nominais de 2023 começam em 14/03/2023. O 2º semestre de 2026 (eleições) tem poucas votações (49 no Lula 3-9).
+* **Presença:** a variante usa as cadeiras em exercício no dia 15 de cada mês como denominador, o que é uma aproximação. Com mudanças de partido no meio do mês, a presença pode passar de 1 e é truncada.

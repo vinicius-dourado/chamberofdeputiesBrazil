@@ -105,7 +105,8 @@ def salvar(df, nome, saida: Path, compressao="snappy"):
 
 # --------------------------------------------------------------- orientação x partido
 def norm(txt):
-    return unicodedata.normalize("NFKD", str(txt)).encode("ascii", "ignore").decode().upper().strip()
+    s = unicodedata.normalize("NFKD", str(txt)).encode("ascii", "ignore").decode().upper().strip()
+    return {"GOV.": "GOVERNO"}.get(s, s)  # 2019-2022: a bancada do Governo vem como "GOV."
 
 
 # nomes de bancada abreviados/truncados -> sigla normalizada

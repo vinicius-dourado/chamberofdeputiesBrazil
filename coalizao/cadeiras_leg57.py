@@ -10,8 +10,10 @@ import pandas as pd
 RAIZ = Path(__file__).resolve().parent.parent
 
 
-def cadeiras_mensais(inicio="2023-01-01", fim="2026-12-15"):
-    h = pd.read_parquet(RAIZ / "dados/leg57/deputados_historico.parquet")
+def cadeiras_mensais(inicio="2023-01-01", fim="2026-12-15", legislatura=57, posse="2023-02-15"):
+    """legislatura/posse permitem reutilizar a função com dados/leg55 e dados/leg56
+    (posse = dia 15 do mês de posse; antes dele vale a composição desse dia)."""
+    h = pd.read_parquet(RAIZ / f"dados/leg{legislatura}/deputados_historico.parquet")
     h["dataHora"] = pd.to_datetime(h["dataHora"])
     h = h.sort_values(["id", "dataHora"])
     # eventos sem situação (marcadores de início de legislatura) herdam a anterior
@@ -19,8 +21,8 @@ def cadeiras_mensais(inicio="2023-01-01", fim="2026-12-15"):
     datas = pd.date_range(inicio, fim, freq="MS") + pd.Timedelta(days=14)
     linhas = []
     for t in datas:
-        # antes da posse (1º/02/2023) usa a composição de 15/02/2023
-        ref = max(t, pd.Timestamp("2023-02-15"))
+        # antes da posse (1º/02) usa a composição do dia 15 do mês de posse
+        ref = max(t, pd.Timestamp(posse))
         ult = h[h.dataHora <= ref].groupby("id").tail(1)
         ex = ult[ult.situacao == "Exercício"]
         cont = ex.siglaPartido.value_counts()
