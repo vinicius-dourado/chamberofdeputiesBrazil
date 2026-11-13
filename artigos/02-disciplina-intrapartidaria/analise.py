@@ -1088,7 +1088,7 @@ def estudo_evento(base, dep):
         cols, nomes = [], []
         for grupo, T in [("ind", ind), ("fus", fus)]:
             t0 = x["deputado_id"].map(T)
-            meses = ((x["dt"] - t0).dt.days / 30.44).floor()
+            meses = np.floor((x["dt"] - t0).dt.days / 30.44)
             for lo, hi, rot in janelas:
                 if rot == ref:
                     continue
