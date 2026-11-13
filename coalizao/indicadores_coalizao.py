@@ -18,13 +18,16 @@ Fontes
 Medidas (mês a mês, dia 15)
 ---------------------------
 * coalescencia (PROPORCIONALIDADE DA TABELA 1): índice de coalescência de Amorim Neto
-  (2006, p. 426), CABINET = 1 - 1/2 * sum_i |S_i - M_i|, x100. M_i = % dos ministérios
-  com o partido i; S_i = % de cadeiras do partido i no total de cadeiras dos partidos do
-  gabinete. Os ministros não partidários entram como um grupo com S = 0. Isso reproduz o
-  modo como Amorim Neto aplica o índice: na Tabela 1 dele, a coalescência média de todos
-  os 13 países é <= a % de ministros partidários (Brasil 0,50 vs 53,1%; Equador 0,27
-  vs 34,7%), um limite que só vale com o termo dos não partidários.
-  coalescencia_sem_np: leitura literal, somando só os partidos (sensibilidade).
+  (2006, p. 426), CABINET = 1 - 1/2 * sum_i |S_i - M_i|, x100, somando sobre os partidos
+  do gabinete. M_i = % de todos os cargos com status de ministério que o partido i ocupa
+  (os não partidários entram só no denominador); S_i = % de cadeiras do partido i no total
+  de cadeiras dos partidos do gabinete. É a operacionalização de Pereira & Bertholini
+  (2017, cap. "Coalition Management in Multiparty Presidential Regimes", tab. 1 e nota 2),
+  que revisa a Tabela 1 da RAP (2017). Com ela, 2003-2016 fica a <= 1 ponto da tabela
+  revisada (Lula 1: 64,9 vs 65,5; Lula 2: 69,3 vs 69,1; Rousseff 1: 69,9 vs 68,9;
+  Rousseff 2: 75,6 vs 75,6).
+  coalescencia_np_grupo: variante com os não partidários como um grupo com S = 0
+  (cada ponto de ministros não partidários reduz o índice em 1 ponto) - sensibilidade.
 * prop_kd_v1 / prop_kd_v2: cosseno de Koppel & Diskin (2009), medida de Almeida (np em
   grupo / individualmente). Reproduz exatamente Prop_v1 e Prop_v2 da planilha.
 * tamanho: nº de partidos com ao menos um ministério.
@@ -63,6 +66,19 @@ MANDATOS = [  # (rótulo, início, fim exclusivo)
     ("Lula 3", "2023-01-01", "2027-01-01"),
 ]
 
+# Tabela 1 revisada: Pereira & Bertholini (2017), "Coalition Management in Multiparty
+# Presidential Regimes" (fonte: Bertholini 2017); Temer = mai-dez/2016.
+TABELA1_BERTHOLINI_2017 = pd.DataFrame(
+    [("Cardoso 1", 71.4, 2.28, 4.6, 0.65, 31.0, 5.51),
+     ("Cardoso 2", 73.8, 2.47, 4.0, 0.68, 30.5, 5.24),
+     ("Lula 1", 65.5, 2.37, 7.7, 0.72, 48.1, 3.46),
+     ("Lula 2", 69.1, 2.32, 9.1, 0.94, 42.2, 0.88),
+     ("Rousseff 1", 68.9, 1.44, 7.8, 0.63, 45.4, 1.07),
+     ("Rousseff 2", 75.6, 3.21, 7.9, 0.25, 37.7, 0.74),
+     ("Temer", 80.4, 0.21, 10.0, 0.0, 27.1, 0.0)],
+    columns=["mandato", "prop_media", "prop_dp", "tam_media", "tam_dp", "het_media", "het_dp"])
+
+# Tabela 1 original da RAP (2017); a proporcionalidade não é reproduzível (ver diagnósticos).
 TABELA1_ARTIGO = pd.DataFrame(
     [("Cardoso 1", 59.6, 2.8, 4.1, 0.3, 21.5, 1.5),
      ("Cardoso 2", 61.7, 1.8, 4.3, 0.8, 19.6, 1.4),
@@ -73,22 +89,15 @@ TABELA1_ARTIGO = pd.DataFrame(
 
 
 # ----------------------------------------------------------------------------- medidas
-def coalescencia(comp):
-    """comp: lista de (partido, ministros, cadeiras); 'np' com cadeiras = 0."""
+def coalescencia(comp, np_em_grupo=False):
+    """Coalescência de Amorim Neto. comp: lista de (partido, ministros, cadeiras), com o
+    grupo de não partidários como ('np', n, 0). Por padrão soma só os partidos (os np
+    pesam apenas no total de cargos); np_em_grupo=True inclui o termo |0 - M_np|."""
     M = sum(m for _, m, _ in comp)
     S = sum(s for _, _, s in comp)
     if S == 0:
         return 0.0  # gabinete sem partidos
-    return 100 * (1 - 0.5 * sum(abs(s / S - m / M) for _, m, s in comp))
-
-
-
-def _coal_literal(comp):
-    M = sum(m for _, m, _ in comp)
-    S = sum(s for _, _, s in comp)
-    if S == 0:
-        return 0.0
-    return 100 * (1 - 0.5 * sum(abs(s / S - m / M) for p, m, s in comp if p != "np"))
+    return 100 * (1 - 0.5 * sum(abs(s / S - m / M) for p, m, s in comp if np_em_grupo or p != "np"))
 
 
 def koppel_diskin(comp, np_em_grupo=True):
@@ -204,7 +213,7 @@ def painel_mensal():
                 "ministros_np": sum(m for p, m, _ in comp if p == "np"),
                 "tamanho": len(partidos),
                 "coalescencia": coalescencia(comp),
-                "coalescencia_sem_np": _coal_literal(comp),
+                "coalescencia_np_grupo": coalescencia(comp, np_em_grupo=True),
                 "prop_kd_v1": koppel_diskin(comp, True),
                 "prop_kd_v2": koppel_diskin(comp, False),
                 "heterogeneidade": het,
@@ -251,9 +260,11 @@ if __name__ == "__main__":
     tab = tabela_por_mandato(painel)
     tab.to_csv(SAIDA / "tabela1_estendida.csv", sep=";", index=False)
     extra = painel[painel.versao == "base"].groupby("mandato")[
-        ["coalescencia_sem_np", "prop_kd_v1", "prop_kd_v2"]].agg(["mean", "std"]).round(1)
+        ["coalescencia_np_grupo", "prop_kd_v1", "prop_kd_v2"]].agg(["mean", "std"]).round(1)
     extra.columns = [f"{a}_{'media' if b == 'mean' else 'dp'}" for a, b in extra.columns]
     extra.reindex([m for m, _, _ in MANDATOS]).to_csv(SAIDA / "proporcionalidade_medidas_alternativas.csv", sep=";")
+    comp17 = tab.merge(TABELA1_BERTHOLINI_2017, on="mandato", how="left", suffixes=("", "_b2017"))
+    comp17.to_csv(SAIDA / "comparacao_bertholini_2017.csv", sep=";", index=False)
     alt = tabela_por_mandato(painel, "alt")
     alt[alt.mandato == "Lula 3"].to_csv(SAIDA / "lula3_sensibilidade.csv", sep=";", index=False)
     l3 = painel[(painel.mandato == "Lula 3") & (painel.versao == "base")]
