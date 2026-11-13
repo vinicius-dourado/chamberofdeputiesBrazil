@@ -697,8 +697,8 @@ def orientar(A, f, mask=None):
         u_dep = np.stack([np.bincount(A["base"], f["x"][:, k], len(A["deps"])) for k in range(ndim)], 1) \
             / np.maximum(np.bincount(A["base"], minlength=len(A["deps"])), 1)[:, None]
     (u, x), vt = ED.rotacionar(u_dep, f["x"])
-    gov = (df[mask].assign(s=(df["vd"] == df["gd"]).where(df["gd"].notna()))
-           .groupby("deputado_id")["s"].mean().reindex(A["deps"]).to_numpy())
+    gov = (df[mask].assign(s=(df["vd"] == df["gd"]).astype(float).where(df["gd"].notna()))
+           .groupby("deputado_id")["s"].mean().reindex(A["deps"]).to_numpy(float))
     ok = ~np.isnan(gov)
     if np.corrcoef(u[ok, 0], gov[ok])[0, 1] < 0:
         u[:, 0] *= -1; x[:, 0] *= -1
@@ -1344,7 +1344,7 @@ def interpretar_intra(A, vt, dep, glob, temas_vt):
     Xi = Xi[Xi["n_votos"] >= 100]
     num("intra1_corr_rel_global", np.corrcoef(Xi["dim1"], Xi["rel"])[0, 1])
     df = A["df"]
-    gov = df.assign(s=(df["vd"] == df["gd"]).where(df["gd"].notna())).groupby("periodo")["s"].mean()
+    gov = df.assign(s=(df["vd"] == df["gd"]).astype(float).where(df["gd"].notna())).groupby("periodo")["s"].mean()
     Xi["gov"] = gov.reindex(Xi.index)
     Xi["gov_rel"] = Xi["gov"] - Xi.groupby("partido")["gov"].transform("mean")
     num("intra1_corr_gov_rel", np.corrcoef(Xi["dim1"], Xi["gov_rel"])[0, 1])
