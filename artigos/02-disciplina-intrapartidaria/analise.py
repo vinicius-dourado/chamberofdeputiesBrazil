@@ -1051,21 +1051,20 @@ def regressao_desvio(base, dep, per, dist):
                              [cov[k] for k in [0, 1, 2, 3, 4, 6, 7]] + list(ufd.columns))
         w, gl, pv = wald(tab2["coef"].to_numpy(), V2, list(range(7, X2.shape[1])))
         num(f"reg_{nome}_uf_wald", w, 2); num(f"reg_{nome}_uf_gl", gl); num(f"reg_{nome}_uf_p", pv)
-        # decomposição da variância entre deputados (desvio ajustado pela célula)
-        cm = z.groupby(fe)["desvio"].transform("mean").to_numpy()
-        zz = pd.DataFrame({"dep": z["deputado_id"], "obs": z["desvio"], "esp": cm, "var": cm * (1 - cm),
-                           "partido": z["partido"]})
-        g = zz.groupby("dep").agg(obs=("obs", "sum"), esp=("esp", "sum"), var=("var", "sum"),
-                                  n=("obs", "size"), partido=("partido", lambda s: s.value_counts().index[0]))
+        # decomposição da variância das taxas brutas de desvio entre deputados (>= 50 votos):
+        # variância total = sinal + ruído binomial; fração do sinal entre partidos (partido modal)
+        zz = pd.DataFrame({"dep": z["deputado_id"], "obs": z["desvio"], "partido": z["partido"]})
+        g = zz.groupby("dep").agg(obs=("obs", "mean"), n=("obs", "size"),
+                                  partido=("partido", lambda s: s.value_counts().index[0]))
         g = g[g["n"] >= 50]
-        g["exc"] = (g["obs"] - g["esp"]) / g["n"]
-        g["var_amostral"] = g["var"] / g["n"] ** 2
-        total = g["exc"].var()
-        verdadeira = total - g["var_amostral"].mean()
-        entre_part = g.groupby("partido")["exc"].transform("mean").var()
-        num(f"var_{nome}_total", total, 6); num(f"var_{nome}_sinal", verdadeira, 6)
-        num(f"var_{nome}_share_sinal", verdadeira / total)
-        num(f"var_{nome}_share_partido_no_sinal", entre_part / verdadeira)
+        total = g["obs"].var()
+        ruido = (g["obs"] * (1 - g["obs"]) / g["n"]).mean()
+        sinal = total - ruido
+        entre = g.groupby("partido")["obs"].transform("mean").var()
+        num(f"var_{nome}_total", total, 6); num(f"var_{nome}_sinal", sinal, 6)
+        num(f"var_{nome}_share_sinal", sinal / total)
+        num(f"var_{nome}_share_partido_no_sinal", entre / sinal)
+        num(f"var_{nome}_share_intra_no_sinal", 1 - entre / sinal)
         out[nome] = (tab, g, z)
     return out
 
@@ -1187,6 +1186,20 @@ def dispersao_pivos(A, base_p, dep, per):
     evc = ev[ev["n_votos"] >= 100]
     for pt_ in ["PDT", "PT", "PSOL", "PL", "MDB", "PODE"]:
         num(f"disp_repo_{pt_}", evc.loc[evc["partido"] == pt_, "dim1"].std(), 3)
+    # reprodução exata dos números prévios do projeto: emb_votos (Plenário + comissões), deputados
+    # com >= 50 votos, agrupados pelo partido ATUAL (deputados.siglaPartido, pós-janela de 2026)
+    evp = ev[ev["confiavel"]]
+    for pt_ in ["PDT", "PT", "PSOL", "PL", "MDB", "PODE"]:
+        num(f"disp_prev_{pt_}", evp.loc[evp["siglaPartido"] == pt_, "dim1"].std(), 2)
+    # posição, entre os mais próximos da mediana (>= 100 votos), dos pivôs citados antes no projeto
+    Uc0 = U[U["n_votos"] >= 100].copy()
+    Uc0["d"] = (Uc0["dim1"] - Uc0["dim1"].median()).abs()
+    Uc0 = Uc0.sort_values("d").reset_index(drop=True)
+    for nm_ in ["Luiz Carlos Hauly", "João Leão", "Luiz Gastão", "José Rocha", "Marx Beltrão"]:
+        k = Uc0.index[Uc0["nome"] == nm_]
+        num(f"pivo_prev_rank_{nm_}", int(k[0]) + 1 if len(k) else None)
+    for nm_ in ["Bosco Costa", "Henrique Júnior", "Daniel José"]:
+        num(f"diss_prev_nvotos_{nm_}", int(X.loc[X["nome"] == nm_, "n_votos"].sum()))
     # bootstrap
     Bn = 20 if ARGS and ARGS.rapido else 100
     Ub, Xb = bootstrap_global(A, f, B=Bn)
@@ -1581,7 +1594,8 @@ def fig_serie(sem):
                               ("U", COR["s2"], "s", "U (maioria dos colegas)")]:
         a1.plot(x, sem[col] * 100, marker=mk, ms=6, lw=2, color=cor, label=rot)
     a1.set_ylabel("% dos votos")
-    a1.legend(fontsize=8, loc="upper left", ncol=3)
+    a1.set_ylim(84, 99.5)
+    a1.legend(fontsize=7.5, loc="lower left", ncol=3)
     a1.set_title("Disciplina e unidade por semestre; a alta de 2025 em D é um artefato de cobertura")
     a2.bar(x, sem["cobD"] * 100, color=COR["cinza"], width=0.6)
     for xx, c in zip(x, sem["cobD"]):
@@ -1674,9 +1688,11 @@ def fig_pontos(X, ps):
         ax.plot(s, k + rng.uniform(-0.18, 0.18, len(s)), "o", ms=3.2, alpha=0.55, color=COR["s1"], mec="none")
         ax.plot([s.median()], [k], "|", ms=14, mew=2.4, color=COR["texto"])
     allx = x["dim1"]
-    for qq, ls, rot in [(0.5, "-", "mediana"), (0.4, ":", "40%"), (0.6, ":", "60%")]:
-        ax.axvline(allx.quantile(qq), color=COR["s2"], ls=ls, lw=1.3)
-        ax.text(allx.quantile(qq), len(ordem) - 0.3, rot, color=COR["s2"], fontsize=8, ha="center")
+    ax.axvline(allx.quantile(0.5), color=COR["s2"], ls="-", lw=1.4, label="mediana dos períodos")
+    ax.axvline(allx.quantile(0.4), color=COR["s2"], ls=":", lw=1.3, label="quantis de 40% e 60% (pivôs de 3/5)")
+    ax.axvline(allx.quantile(0.6), color=COR["s2"], ls=":", lw=1.3)
+    ax.plot([], [], "|", ms=10, mew=2.4, color=COR["texto"], label="mediana do partido")
+    ax.legend(fontsize=7.5, loc="lower right")
     ax.set_yticks(range(len(ordem)), ordem)
     ax.set_xlabel("dim1 global: oposição (−) × governo (+)")
     ax.set_title("Pontos ideais por partido (períodos deputado×partido com ≥ 100 votos)")
@@ -1699,7 +1715,8 @@ def fig_governo(t, cf):
     ax.set_yticks(y, tt.index)
     ax.set_xlim(0, 108)
     ax.set_xlabel("% dos votos quando a orientação do partido e a do Governo são opostas")
-    ax.legend(fontsize=7.5, loc="lower left")
+    ax.legend(fontsize=7.5, loc="upper center", bbox_to_anchor=(0.45, -0.13), ncol=2)
+    ax.text(101, len(tt) - 0.4, "votos", fontsize=7.5, color=COR["texto2"])
     ax.set_title("Partidos da base: partido ou Governo?")
     fig.tight_layout()
     fig.savefig(FIG / "fig7_partido_governo.png", bbox_inches="tight")
@@ -1770,6 +1787,13 @@ def main():
               "Tabela 9 – Robustez da disciplina (D) a decisões de medida, Plenário",
               nota="ρ: correlação de Spearman entre o ranking dos partidos na variante e na medida principal.")
     antes_depois_troca(base["d"])
+    # números prévios do projeto (avaliacao.json de embeddings_deputados.py; Plenário + comissões)
+    av = json.loads((DADOS / "embeddings" / "avaliacao.json").read_text())
+    num("prev_irt_intra_acuracia", av["votos"]["irt_intrapartido_acuracia"])
+    num("prev_irt_global_acuracia", av["votos"]["irt_acuracia"])
+    num("prev_base_orientacao_acuracia", av["votos"]["base_orientacao_partido_acuracia"])
+    num("prev_intra_knn5_partido", av["representacoes"]["votos_intra"]["knn5_acerta_partido"])
+    num("prev_intra_acaso_partido", av["representacoes"]["votos_intra"]["acerto_partido_ao_acaso"])
     if sec("irt"):
         A = prep_irt(p)
         num("irt_n_votos", len(A["y"])); num("irt_n_votacoes", A["n_j"]); num("irt_n_periodos", A["n_i"])
