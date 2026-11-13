@@ -1,0 +1,69 @@
+pasta;ministro;inicio;fim;partido;partido_alt;confianca;obs
+Casa Civil;Rui Costa;2023-01-01;2026-04-01;PT;PT;alta;
+Casa Civil;Miriam Belchior;2026-04-01;;PT;np;media;secretária-executiva promovida, filiada histórica ao PT
+Fazenda;Fernando Haddad;2023-01-01;2026-04-01;PT;PT;alta;desincompatibilização
+Fazenda;Dario Durigan;2026-04-01;;np;PT;media;secretário-executivo promovido
+Planejamento e Orçamento;Simone Tebet;2023-01-01;2026-04-01;MDB;MDB;alta;cota MDB (Almeida), saiu para disputar o Senado
+Planejamento e Orçamento;Bruno Moretti;2026-04-01;;np;np;media;técnico (Casa Civil)
+Gestão e Inovação;Esther Dweck;2023-01-01;;np;np;alta;
+Justiça e Segurança Pública;Flávio Dino;2023-01-01;2024-02-01;PSB;PSB;alta;foi para o STF
+Justiça e Segurança Pública;Ricardo Lewandowski;2024-02-01;2026-01-09;np;np;alta;
+Justiça e Segurança Pública;Manoel Carlos de Almeida Neto (interino);2026-01-09;2026-01-14;np;np;alta;
+Justiça e Segurança Pública;Wellington César Lima e Silva;2026-01-14;;np;np;media;
+Defesa;José Múcio Monteiro;2023-01-01;;np;np;alta;
+Relações Exteriores;Mauro Vieira;2023-01-01;;np;np;alta;
+Transportes;Renan Filho;2023-01-01;2026-04-01;MDB;MDB;alta;
+Transportes;George Santoro;2026-04-01;;np;MDB;media;secretário-executivo promovido
+Agricultura e Pecuária;Carlos Fávaro;2023-01-01;2026-04-01;PSD;PSD;alta;
+Agricultura e Pecuária;André de Paula;2026-04-01;;PSD;PSD;alta;transferido da Pesca
+Pesca e Aquicultura;André de Paula;2023-01-01;2026-04-01;PSD;PSD;alta;
+Pesca e Aquicultura;Édipo Araújo;2026-04-01;;np;PSD;baixa;nome e vínculo a confirmar
+Educação;Camilo Santana;2023-01-01;2026-04-01;PT;PT;alta;
+Educação;Leonardo Barchini;2026-04-01;;np;PT;media;secretário-executivo promovido
+Trabalho e Emprego;Luiz Marinho;2023-01-01;;PT;PT;alta;
+Saúde;Nísia Trindade;2023-01-01;2025-03-10;np;np;alta;
+Saúde;Alexandre Padilha;2025-03-10;;PT;PT;alta;
+Desenvolvimento, Indústria, Comércio e Serviços;Geraldo Alckmin;2023-01-01;2026-04-01;PSB;PSB;alta;
+Desenvolvimento, Indústria, Comércio e Serviços;Márcio Elias Rosa;2026-04-01;;np;PSB;media;secretário-executivo promovido
+Minas e Energia;Alexandre Silveira;2023-01-01;;PSD;PSD;alta;
+Integração e Desenvolvimento Regional;Waldez Góes;2023-01-01;;UNIAO;UNIAO;media;cota União (Almeida), partido = np a partir da saída do União (02/09/2025) na versão base
+Comunicações;Juscelino Filho;2023-01-01;2025-04-08;UNIAO;UNIAO;alta;demitido após denúncia da PGR
+Comunicações;Frederico de Siqueira Filho;2025-04-24;;UNIAO;UNIAO;media;cota União
+Previdência Social;Carlos Lupi;2023-01-01;2025-05-02;PDT;PDT;alta;
+Previdência Social;Wolney Queiroz;2025-05-02;;PDT;PDT;media;data aproximada
+Meio Ambiente e Mudança do Clima;Marina Silva;2023-01-01;2026-04-01;REDE;REDE;alta;
+Meio Ambiente e Mudança do Clima;João Paulo Capobianco;2026-04-01;;np;REDE;media;secretário-executivo promovido
+Ciência, Tecnologia e Inovação;Luciana Santos;2023-01-01;;PCdoB;PCdoB;media;permanência após abr/2026 não confirmada
+Cultura;Margareth Menezes;2023-01-01;;np;np;alta;
+Desenvolvimento Agrário;Paulo Teixeira;2023-01-01;2026-04-01;PT;PT;alta;
+Desenvolvimento Agrário;Fernanda Machiaveli;2026-04-01;;np;PT;media;
+Desenvolvimento e Assistência Social;Wellington Dias;2023-01-01;;PT;PT;alta;
+Esporte;Ana Moser;2023-01-01;2023-09-13;np;np;alta;
+Esporte;André Fufuca;2023-09-13;2026-04-01;PP;PP;alta;PP = np a partir da saída do PP (02/09/2025) na versão base
+Esporte;Paulo Henrique Perna;2026-04-01;;np;np;media;
+Cidades;Jader Filho;2023-01-01;2026-04-01;MDB;MDB;alta;
+Cidades;Antônio Vladimir Moura Lima;2026-04-01;;np;MDB;media;servidor de carreira
+Turismo;Daniela Carneiro;2023-01-01;2023-07-14;UNIAO;UNIAO;alta;
+Turismo;Celso Sabino;2023-07-14;2025-12-17;UNIAO;UNIAO;alta;expulso do União em dez/2025
+Turismo;Gustavo Feliciano;2025-12-23;;UNIAO;UNIAO;media;indicado pelo União
+Direitos Humanos e Cidadania;Silvio Almeida;2023-01-01;2024-09-06;np;np;alta;
+Direitos Humanos e Cidadania;Esther Dweck (interina);2024-09-06;2024-09-27;np;np;alta;
+Direitos Humanos e Cidadania;Macaé Evaristo;2024-09-27;2026-04-01;PT;PT;alta;
+Direitos Humanos e Cidadania;(substituto a confirmar);2026-04-01;;np;np;baixa;nome não localizado
+Secretaria-Geral;Márcio Macêdo;2023-01-01;2025-10-21;PT;PT;alta;
+Secretaria-Geral;Guilherme Boulos;2025-10-21;;PSOL;PSOL;alta;nomeação DOU 21/10/2025, posse 29/10/2025
+Relações Institucionais;Alexandre Padilha;2023-01-01;2025-03-10;PT;PT;alta;
+Relações Institucionais;Gleisi Hoffmann;2025-03-10;2026-04-01;PT;PT;alta;
+Relações Institucionais;Marcelo Costa (interino);2026-04-01;;np;PT;baixa;titular não confirmado
+Mulheres;Cida Gonçalves;2023-01-01;2025-05-05;PT;PT;media;data aproximada
+Mulheres;Márcia Lopes;2025-05-05;;PT;PT;media;data aproximada
+Igualdade Racial;Anielle Franco;2023-01-01;2024-04-02;np;np;media;
+Igualdade Racial;Anielle Franco;2024-04-02;2026-04-01;PT;PT;media;passa a cota PT (inferido do gabinete Lula 3-4 de Almeida)
+Igualdade Racial;Rachel Barros de Oliveira;2026-04-01;;np;np;media;
+Povos Indígenas;Sônia Guajajara;2023-01-01;2026-04-01;PSOL;PSOL;alta;
+Povos Indígenas;Eloy Terena;2026-04-01;;np;np;media;
+Portos e Aeroportos;Márcio França;2023-01-01;2023-09-13;PSB;PSB;alta;
+Portos e Aeroportos;Silvio Costa Filho;2023-09-13;2026-04-01;np;REP;media;Almeida trata como não partidário (Republicanos fora da base formal)
+Portos e Aeroportos;Tomé Franca;2026-04-01;;np;np;media;
+Empreendedorismo, Microempresa e Empresa de Pequeno Porte;Márcio França;2023-09-13;2026-04-01;PSB;PSB;alta;
+Empreendedorismo, Microempresa e Empresa de Pequeno Porte;Tadeu Alencar;2026-04-01;;PSB;PSB;media;ex-deputado do PSB
