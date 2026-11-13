@@ -1277,7 +1277,7 @@ adm = TP_FRAC[:, TIDX["Administração Pública"]] > 0
 guarda("qualidade.pct_admpub", 100 * adm.mean())
 guarda("qualidade.pct_admpub_ric", 100 * adm[TIPO_PROP == "RIC"].mean())
 guarda("qualidade.pct_admpub_pl", 100 * adm[TIPO_PROP == "PL"].mean())
-guarda("qualidade.pct_admpub_unico", 100 * (adm & (TP_FRAC > 0).sum(1) == 1).sum() / adm.sum())
+guarda("qualidade.pct_admpub_unico", 100 * (adm & ((TP_FRAC > 0).sum(1) == 1)).sum() / adm.sum())
 # aprovação: quanto da agenda apresentada vira norma
 norma = P["ultimoStatus_descricaoSituacao"].eq("Transformado em Norma Jurídica")
 guarda("dados.pct_projetos_norma", 100 * norma[P["siglaTipo"].isin(PROJETOS)].mean())

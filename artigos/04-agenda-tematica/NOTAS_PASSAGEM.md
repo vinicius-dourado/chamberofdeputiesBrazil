@@ -34,3 +34,13 @@ Estado em 13/11/2026, quando a sessão foi interrompida a pedido (troca para uma
 - Partido do deputado = filiação mais longa na legislatura (a janela de abril de 2026 gerou muitas trocas).
 - Lado governo/oposição = terços de dim1 (individual). Há risco de circularidade parcial com partido, o que está discutido no desenho.
 - Os temas de RIC/INC estão confundidos com o instrumento (ex.: Agricultura e Administração Pública muito mais frequentes em RIC). Por isso todas as análises centrais estão separadas por instrumento.
+
+## Sessão de 13/11/2026 (continuação; plugin ars indisponível nesta sessão)
+- Corrigido bug de precedência em `qualidade.pct_admpub_unico` (`adm & (... == 1)`).
+- `dados_aux/temas_pauta_plenario.csv` agora em cache (temas da API para proposições votadas no Plenário).
+- `--rapido` roda as etapas 1–4 e falha na etapa 5: a variável global `C` (covariáveis) sombreia a função `C()`
+  do patsy nas fórmulas do statsmodels. Correção pendente: renomear o DataFrame `C` (ex.: `COVA`) em todo o script.
+- Referências já conferidas: Petrocik 1996 (AJPS 40(3):825–850); Legendre & Gallagher 2001 (Oecologia 129:271–280);
+  Perianes-Rodríguez, Waltman & van Eck 2016 (J. Informetrics 10(4):1178–1195); Alemán et al. 2009 (LSQ 34(1):87–116);
+  Fowler 2006 (Political Analysis 14(4):456–487); Grimmer & Stewart 2013 (Political Analysis 21(3):267–297).
+  Faltam: Baumgartner & Jones 1993; Figueiredo & Limongi 1999; Amorim Neto & Santos 2003.
