@@ -13,7 +13,7 @@ python coalizao/indicadores_coalizao.py
 |---|---|---|
 | 1995–2022 | Almeida (Ipea, NT 53/2021), `dados_brutos/almeida_ipea_gabinetes.xlsx` | idem (na data de início de cada gabinete) |
 | 2023–nov/2026 | `dados_brutos/lula3_gabinete_2023_2026.csv`: codificação ministro a ministro com os critérios de Almeida (ministro partidário se o partido apoia o governo e o indicou ou o reconhece) | mensal, deputados em exercício (`cadeiras_leg57.py`, a partir de `dados/leg57`) |
-| Ideologia | `dados_brutos/ideologia_partidos.csv` (**pendente**: Power & Zucco/BLS, colunas `partido;ano;ideologia`) | — |
+| Ideologia | `dados_brutos/ideologia_partidos.csv`: Power & Zucco (2012), tabela 4, ondas de 1990 a 2009. **Falta a série de 1990 a 2021 do Atlas do Estado Brasileiro (Ipea)** | — |
 
 O gabinete exclui GSI, CGU, AGU, Secom e Banco Central (critério de Almeida). A codificação própria de Lula 3 reproduz os gabinetes Lula 3-2 e 3-4 de Almeida (Koppel–Diskin v1 com diferença de ±0,3 ponto). Veja `resultados/validacao_lula3_almeida.csv`.
 
@@ -22,7 +22,7 @@ O gabinete exclui GSI, CGU, AGU, Secom e Banco Central (critério de Almeida). A
 * **Proporcionalidade (`coalescencia`)**: índice de coalescência de Amorim Neto, a medida do artigo. Os ministros não partidários entram como um grupo sem cadeiras.
 * **`prop_kd_v1` / `prop_kd_v2`**: cosseno de Koppel & Diskin, a medida de Almeida. Reproduz exatamente Prop_v1 e Prop_v2 da planilha.
 * **Tamanho**: número de partidos com pelo menos um ministério.
-* **Heterogeneidade**: coeficiente de variação (×100) da ideologia dos partidos do gabinete. É calculada quando o arquivo de ideologia existir.
+* **Heterogeneidade**: coeficiente de variação (×100, desvio-padrão amostral) da ideologia dos partidos do gabinete, usando a onda do BLS mais recente anterior ao mês. Com as ondas de 1990 a 2009, reproduz a Tabela 1 de perto: Lula 1 dá 50,3 (artigo: 48,2), Lula 2 dá 42,1 (42,2), Rousseff 1 dá 45,4 (45,8) e FHC fica cerca de 2 pontos acima. Partidos sem estimativa são omitidos (coluna `partidos_sem_ideologia`). **A partir de 2013, o valor só será confiável depois de incluir as ondas de 2013, 2017 e 2021.**
 
 ## Resultados (`resultados/tabela1_estendida.csv`)
 

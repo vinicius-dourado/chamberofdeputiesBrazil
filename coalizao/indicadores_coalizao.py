@@ -103,20 +103,28 @@ def carregar_ideologia():
 
 
 def heterogeneidade(partidos, ano, ide):
-    """CV (x100) da ideologia dos partidos; usa a onda mais recente <= ano
-    (ou a mais próxima, se o partido não foi medido naquela onda)."""
-    if ide is None or len(partidos) < 2:
-        return np.nan
-    vals = []
+    """CV (x100, desvio-padrão amostral) da ideologia dos partidos do gabinete.
+
+    Usa, para cada partido, a onda do BLS mais recente <= ano (ou a mais próxima, se o
+    partido só foi medido depois). Partidos nunca medidos são omitidos; a função devolve
+    também quantos foram omitidos. Com essa regra, 1995-2013 fica próximo da Tabela 1
+    do artigo (Lula 1: 50,3 vs 48,2; Lula 2: 42,1 vs 42,2; Rousseff 1: 45,4 vs 45,8).
+    """
+    if ide is None:
+        return np.nan, np.nan
+    vals, faltam = [], 0
     for p in partidos:
         x = ide[ide.partido == p]
         if x.empty:
-            return np.nan
+            faltam += 1
+            continue
         antes = x[x.ano <= ano]
         linha = antes.loc[antes.ano.idxmax()] if not antes.empty else x.loc[(x.ano - ano).abs().idxmin()]
         vals.append(linha.ideologia)
+    if len(vals) < 2:
+        return np.nan, faltam
     vals = np.array(vals, float)
-    return 100 * vals.std(ddof=1) / vals.mean()
+    return 100 * vals.std(ddof=1) / vals.mean(), faltam
 
 
 # ----------------------------------------------------------------------- composições
@@ -158,6 +166,7 @@ def painel_mensal():
             versoes["alt"] = (comp_lula3(t, gab, cad, "partido_alt", saida_uniao_pp=False)[0], "Lula 3 (alternativa)")
         for v, (comp, nome) in versoes.items():
             partidos = [p for p, _, _ in comp if p != "np"]
+            het, sem_ide = heterogeneidade(partidos, t.year, ide)
             linhas.append({
                 "data": t.date(), "mandato": mand, "versao": v, "gabinete": nome,
                 "n_ministerios": sum(m for _, m, _ in comp),
@@ -166,7 +175,8 @@ def painel_mensal():
                 "coalescencia": coalescencia(comp),
                 "prop_kd_v1": koppel_diskin(comp, True),
                 "prop_kd_v2": koppel_diskin(comp, False),
-                "heterogeneidade": heterogeneidade(partidos, t.year, ide),
+                "heterogeneidade": het,
+                "partidos_sem_ideologia": sem_ide,
                 "cadeiras_coalizao": sum(s for _, _, s in comp),
                 "composicao": " ".join(f"{p}({m},{s})" for p, m, s in comp),
             })
