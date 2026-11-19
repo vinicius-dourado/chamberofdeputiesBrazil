@@ -28,7 +28,7 @@ Fora do escopo (pork barrel): `Emendas`, `Pork`, `MédiaExecução`, `TotalEmend
 | Burocracia | `burocracia` (e `afastou_para_executivo`) | ocupação anterior em órgão público (`/ocupacoes`), profissão "servidor público" ou ocupação TSE 2022 "servidor público" | Câmara + TSE |
 | Empresa | `empresa` | profissão "empresário" (Câmara) ou ocupação TSE 2022 "empresário" | Câmara + TSE |
 | Partpos | `partpos` (e `lideranca_governo`, `lideranca_oposicao`) | maior cargo de liderança de partido/bloco: 3 líder ou presidente, 2 1º vice-líder, 1 vice-líder ou representante | Câmara `/legislaturas/57/lideres` |
-| Esquerda / Centro / Direita | `esquerda`, `centro`, `direita`, `ideologia` | partido na eleição de 2026 → `dados/manual/ideologia_partidos.csv` (**classificação provisória**) | manual |
+| Esquerda / Centro / Direita | `esquerda`, `centro`, `direita`, `ideologia`, `ideologia_7`, `ideologia_bolognesi` | nota média dos especialistas (0 = extrema esquerda, 10 = extrema direita), onda 2022 de Bolognesi, Codato, Ribeiro & Silva (2025, Harvard Dataverse doi:10.7910/DVN/MFIXKW), para o partido na eleição de 2026. Faixas de Bolognesi, Ribeiro & Codato (2023): <1,5 extrema-esquerda; <3 esquerda; <4,5 centro-esquerda; <5,5 centro; <7 centro-direita; <8,5 direita; ≥8,5 extrema-direita. Dummies: esquerda = três primeiras faixas; centro = centro + centro-direita; direita = direita + extrema-direita. PRD = média de PTB e Patriota; Missão e sem partido ficam NA | `dados/manual/bolognesi_2018_2022_df_experts.csv` |
 | EntrarCoalizão / SairCoalizão | `entrar_coalizao`, `sair_coalizao`, `trocas_partido`, `partido_base_governo`, `gabinete_eleicao` | troca de partido na legislatura (fusões não contam) para partido da coalizão / da coalizão para fora dela. **Coalizão = partidos com ministério no gabinete vigente na data da troca**, segundo `dados/manual/proporcionalidade_ministerios_cadeiras_ipea.xlsx` (Ipea, Acir Almeida; ministros em `partido_gabinete_ministerio.csv`). Detalhe das trocas: `reeleicao_trocas_partido.parquet` | manual (Ipea) + Câmara |
 | (extra) fidelidade | `fidelidade_partidaria`; `reeleicao_alinhamento_partidos.parquet` (alinhamento de cada partido ao Governo) | % de votos iguais à orientação da bancada do partido; alinhamento médio ao Governo. Só descritivo, não define coalizão | Câmara (votos) |
 | Índice | `indice` | % de votos iguais à orientação do Governo (Plenário, orientação Sim/Não) | Câmara (votos) |
@@ -39,6 +39,17 @@ Fora do escopo (pork barrel): `Emendas`, `Pork`, `MédiaExecução`, `TotalEmend
 `dias_exercicio`, `saida_definitiva` (+ data: renúncia, cassação, morte), `eleito_prefeito_2024`,
 `sq_2022`/`sq_2026` (chave do TSE), `votos_2022`/`votos_2026`, `municipio_base_*`.
 
+Recortes de amostra (recomendação: usar os 648, como o artigo, controlando por `condicao_2022` e `dias_exercicio`):
+
+| Recorte | Coluna | N | Concorreram | Reeleitos |
+|---|---|---|---|---|
+| todos que exerceram mandato | – | 648 | 508 | 311 |
+| em exercício na data da eleição | `em_exercicio_eleicao == 1` | 513 | 438 | 300 |
+| titulares empossados em fev/2023 | `titular_posse_fev2023 == 1` | 512 | 409 | 294 |
+
+`condicao_2022` usa o resultado de 2022 **após** a retotalização das sobras eleitorais (jul/2025): os 7 que perderam a vaga
+aparecem como "suplente" e os 7 que entraram como "eleito". `titular_posse_fev2023` usa a posse efetiva.
+
 Para replicar a amostra do artigo (nota 17), excluir quem foi eleito prefeito em 2024, quem morreu ou foi cassado e,
 se for o caso, o DF (um só "município").
 
@@ -46,6 +57,6 @@ se for o caso, o DF (um só "município").
 
 * **AP 2026**: o TSE ainda não publicou a totalização proporcional do AP. Eleito/suplente vêm da página de resultados do TSE (`dados/manual/tse_situacao_ap_depfed_2026.csv`).
 * `mandatosExternos` é declarado ao cadastro da Câmara e pode estar incompleto (329 dos 648 deputados têm registros).
-* Ideologia é provisória.
+* Ideologia: nenhum partido da Câmara cai na faixa "centro" (4,5–5,5) na onda de 2022; por isso `centro` agrupa centro e centro-direita (Solidariedade, Cidadania, Avante, MDB, PSDB, PSD).
 * Coalizão: a planilha do Ipea vai até o gabinete Lula 3-4 (abr/2024, dados até jun/2024); mudanças de 2025–2026 não estão nela e o Lula 3-4 vale até a eleição. Republicanos não aparece em nenhum gabinete do Lula 3 na planilha (o ministro de Portos é do REP, mas a pasta está classificada como "ind"); PV (federado ao PT, sem ministério) fica fora.
 * As escalas ordinais de Mesa, comissões e liderança seguem a lógica do artigo, mas os pesos são escolhas nossas.

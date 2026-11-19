@@ -68,7 +68,7 @@ Arquivos do Portal de Dados Abertos do TSE (`odsele`), por ano/UF:
 
 | Tabela | Uso | Sugestão de fonte |
 |---|---|---|
-| Ideologia dos partidos (**Esquerda / Centro / Direita**) | dummies de ideologia | Bolognesi, Ribeiro & Codato (2023), survey de especialistas |
+| Ideologia dos partidos (**Esquerda / Centro / Direita**) | dummies de ideologia | **definido**: Bolognesi et al., onda 2022 (`dados/manual/bolognesi_2018_2022_df_experts.csv`) |
 | Partidos da base do governo por período | EntrarCoalizão / SairCoalizão | **definido**: gabinetes do Ipea (`dados/manual/proporcionalidade_ministerios_cadeiras_ipea.xlsx` e `partido_gabinete_ministerio.csv`) |
 | Partidos/federações por coligação de governador | Governador | sai do TSE (§4); só conferir federações |
 

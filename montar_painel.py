@@ -43,6 +43,38 @@ def siglas_coligacao(txt, partido):
     return {norm(t) for t in toks if t.strip() and not t.strip().upper().startswith("FEDERA")} | {norm(partido)}
 
 
+# Bolognesi, Codato, Ribeiro & Silva (2025), Harvard Dataverse doi:10.7910/DVN/MFIXKW, onda de 2022 (0-10)
+BOLOGNESI_SIGLAS = {"PCDOB": "p_cdo_b", "CIDADANIA": "cdd", "SOLIDARIEDADE": "sdd", "PP": "progre",
+                    "REPUBLICANOS": "rep", "PODE": "podemos", "UNIAO": "uniao", "PATRIOTA": "patri"}
+# faixas de Bolognesi, Ribeiro & Codato (2023)
+FAIXAS_7 = [(1.5, "extrema-esquerda"), (3.0, "esquerda"), (4.5, "centro-esquerda"), (5.5, "centro"),
+            (7.0, "centro-direita"), (8.5, "direita"), (10.01, "extrema-direita")]
+# agrupamento para as 3 dummies do artigo
+TRES = {"extrema-esquerda": "esquerda", "esquerda": "esquerda", "centro-esquerda": "esquerda",
+        "centro": "centro", "centro-direita": "centro", "direita": "direita", "extrema-direita": "direita"}
+
+
+def ideologia_bolognesi():
+    """Média dos especialistas por partido (onda 2022), indexada pela sigla normalizada do partido."""
+    d = pd.read_csv(M / "bolognesi_2018_2022_df_experts.csv", sep=";")
+    cols = [c for c in d.columns if c.startswith("ideol_22_")]
+    m = d[cols].apply(pd.to_numeric, errors="coerce").mean()
+    m.index = m.index.str.replace("ideol_22_", "")
+    out = {}
+    for chave, val in m.items():
+        out[norm(chave)] = val
+    for sigla, chave in BOLOGNESI_SIGLAS.items():
+        out[sigla] = m[chave]
+    out["PRD"] = d[["ideol_22_ptb", "ideol_22_patri"]].apply(pd.to_numeric, errors="coerce").stack().mean()  # fusão PTB+Patriota
+    return pd.Series(out)
+
+
+def faixa_7(x):
+    if pd.isna(x):
+        return None
+    return next(nome for lim, nome in FAIXAS_7 if x < lim)
+
+
 SIGLA_IPEA = {"UNIAO": "UNIAO", "REP": "REPUBLICANOS", "PCDOB": "PCDOB", "REDE": "REDE", "PODEMOS": "PODE"}
 
 
@@ -321,15 +353,25 @@ def main():
     afast = hist[hist["descricaoStatus"].str.contains("Ministro de Estado|Secretário", na=False)]
     p["afastou_para_executivo"] = p["id"].isin(afast["id"]).astype(int)
 
+    # ------------------------------------------------------------- recortes de amostra
+    ultimo = hist.sort_values("dataHora").groupby("id").last()["situacao"]
+    p["em_exercicio_eleicao"] = (p["id"].map(ultimo) == "Exercício").astype(int)
+    posse = hist[hist["descricaoStatus"].str.contains("Posse de Eleito Titular", na=False)
+                 & (hist["dataHora"].str[:10] < "2023-03-01")]
+    p["titular_posse_fev2023"] = p["id"].isin(posse["id"]).astype(int)
+
     # ------------------------------------------------------------- partido e ideologia
     fil_el = fil.groupby("id").last()["siglaPartido"]
     p["partido_camara_eleicao"] = p["id"].map(fil_el)
     p["partido_eleicao"] = partido_eleicao.fillna(p["partido_camara_eleicao"])
-    ide = pd.read_csv(M / "ideologia_partidos.csv", sep=";", comment="#")
-    ide = {norm(s): i for s, i in zip(ide["sigla"], ide["ideologia"])}
-    p["ideologia"] = p["partido_eleicao"].map(lambda s: ide.get(norm(s)))
+    ide = ideologia_bolognesi()
+    ide.to_frame("ideologia_bolognesi").rename_axis("sigla_norm").reset_index().to_parquet(
+        D / "reeleicao_ideologia_partidos.parquet", index=False)
+    p["ideologia_bolognesi"] = p["partido_eleicao"].map(lambda s: ide.get(norm(s), np.nan))
+    p["ideologia_7"] = p["ideologia_bolognesi"].map(faixa_7)
+    p["ideologia"] = p["ideologia_7"].map(TRES)
     for k in ("esquerda", "centro", "direita"):
-        p[k] = (p["ideologia"] == k).astype(int)
+        p[k] = np.where(p["ideologia"].isna(), np.nan, (p["ideologia"] == k).astype(float))
     p["partido_base_governo"] = p["partido_eleicao"].map(lambda s: em_base(s, ELEICAO)).astype(int)
     p["gabinete_eleicao"] = gabinete_em(gab, ELEICAO)["gabinete"]
 
@@ -339,6 +381,8 @@ def main():
     print(f"painel: {len(p)} deputados x {p.shape[1]} colunas")
     print(p["cargo_disputado_2026"].value_counts().to_string())
     print("reeleitos:", int(p["reeleito"].sum()), "de", int(p["concorreu_reeleicao"].sum()))
+    print("em exercício na eleição:", p["em_exercicio_eleicao"].sum(),
+          "| titulares empossados em fev/2023:", p["titular_posse_fev2023"].sum())
 
 
 if __name__ == "__main__":
