@@ -29,7 +29,8 @@ Fora do escopo (pork barrel): `Emendas`, `Pork`, `MédiaExecução`, `TotalEmend
 | Empresa | `empresa` | profissão "empresário" (Câmara) ou ocupação TSE 2022 "empresário" | Câmara + TSE |
 | Partpos | `partpos` (e `lideranca_governo`, `lideranca_oposicao`) | maior cargo de liderança de partido/bloco: 3 líder ou presidente, 2 1º vice-líder, 1 vice-líder ou representante | Câmara `/legislaturas/57/lideres` |
 | Esquerda / Centro / Direita | `esquerda`, `centro`, `direita`, `ideologia` | partido na eleição de 2026 → `dados/manual/ideologia_partidos.csv` (**classificação provisória**) | manual |
-| EntrarCoalizão / SairCoalizão | `entrar_coalizao`, `sair_coalizao`, `trocas_partido` | troca de partido na legislatura (fusões não contam) para partido da base / da base para a oposição. Base = partido cujos deputados seguem a orientação do Governo em ≥ 50% das votações nominais do Plenário (`reeleicao_alinhamento_partidos.parquet`: NOVO, PL e MISSÃO ficam na oposição) | Câmara (votos) |
+| EntrarCoalizão / SairCoalizão | `entrar_coalizao`, `sair_coalizao`, `trocas_partido`, `partido_base_governo`, `gabinete_eleicao` | troca de partido na legislatura (fusões não contam) para partido da coalizão / da coalizão para fora dela. **Coalizão = partidos com ministério no gabinete vigente na data da troca**, segundo `dados/manual/proporcionalidade_ministerios_cadeiras_ipea.xlsx` (Ipea, Acir Almeida; ministros em `partido_gabinete_ministerio.csv`). Detalhe das trocas: `reeleicao_trocas_partido.parquet` | manual (Ipea) + Câmara |
+| (extra) fidelidade | `fidelidade_partidaria`; `reeleicao_alinhamento_partidos.parquet` (alinhamento de cada partido ao Governo) | % de votos iguais à orientação da bancada do partido; alinhamento médio ao Governo. Só descritivo, não define coalizão | Câmara (votos) |
 | Índice | `indice` | % de votos iguais à orientação do Governo (Plenário, orientação Sim/Não) | Câmara (votos) |
 
 ## Controles e filtros
@@ -45,5 +46,6 @@ se for o caso, o DF (um só "município").
 
 * **AP 2026**: o TSE ainda não publicou a totalização proporcional do AP. Eleito/suplente vêm da página de resultados do TSE (`dados/manual/tse_situacao_ap_depfed_2026.csv`).
 * `mandatosExternos` é declarado ao cadastro da Câmara e pode estar incompleto (329 dos 648 deputados têm registros).
-* Ideologia é provisória; a regra de coalizão é empírica (alinhamento ≥ 50%) e pode ser trocada por uma lista de partidos com ministérios.
+* Ideologia é provisória.
+* Coalizão: a planilha do Ipea vai até o gabinete Lula 3-4 (abr/2024, dados até jun/2024); mudanças de 2025–2026 não estão nela e o Lula 3-4 vale até a eleição. Republicanos não aparece em nenhum gabinete do Lula 3 na planilha (o ministro de Portos é do REP, mas a pasta está classificada como "ind"); PV (federado ao PT, sem ministério) fica fora.
 * As escalas ordinais de Mesa, comissões e liderança seguem a lógica do artigo, mas os pesos são escolhas nossas.

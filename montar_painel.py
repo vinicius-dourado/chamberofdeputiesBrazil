@@ -43,6 +43,32 @@ def siglas_coligacao(txt, partido):
     return {norm(t) for t in toks if t.strip() and not t.strip().upper().startswith("FEDERA")} | {norm(partido)}
 
 
+SIGLA_IPEA = {"UNIAO": "UNIAO", "REP": "REPUBLICANOS", "PCDOB": "PCDOB", "REDE": "REDE", "PODEMOS": "PODE"}
+
+
+def gabinetes():
+    """Gabinetes e partidos com ministério (Ipea; planilha 'dados' de dados/manual)."""
+    g = pd.read_excel(M / "proporcionalidade_ministerios_cadeiras_ipea.xlsx", sheet_name="dados")
+    g = g.dropna(subset=["Gabinete"])
+    g["inicio"] = pd.to_datetime(g["Início"]).dt.strftime("%Y-%m-%d")
+    g["partidos"] = g["Partido (ministros, cadeiras na CD)"].map(
+        lambda t: {SIGLA_IPEA.get(norm(x.split("(")[0]), norm(x.split("(")[0]))
+                   for x in str(t).split(";") if x and not x.startswith("np")})
+    return g.sort_values("inicio")[["Gabinete", "inicio", "partidos"]].rename(columns={"Gabinete": "gabinete"})
+
+
+def gabinete_em(gab, data):
+    return gab[gab["inicio"] <= data].iloc[-1]
+
+
+def base_em(gab, partido, data):
+    """Partido tinha ministério no gabinete vigente na data? (sucessores herdam de antecessores)"""
+    if not isinstance(partido, str):
+        return False
+    alvo = {norm(partido)} | {norm(x) for x in ANTECESSORES.get(norm(partido), ())}
+    return bool(alvo & gabinete_em(gab, data)["partidos"])
+
+
 def intervalos_exercicio(hist):
     """[inicio, fim) em que cada deputado estava em Exercício, a partir do histórico de status."""
     h = hist.sort_values(["id", "dataHora"]).copy()
@@ -173,13 +199,22 @@ def main():
     p["indice"] = p["id"].map(idx["mean"])
     p["indice_n_votacoes"] = p["id"].map(idx["size"]).fillna(0).astype(int)
 
-    # alinhamento dos partidos com o governo -> base x oposição (para trocas de partido)
+    # alinhamento dos partidos com o governo (fidelidade à coalizão; NÃO define a coalizão)
     alin = o.groupby("deputado_siglaPartido")["seg"].agg(["mean", "size"]).rename(
-        columns={"mean": "alinhamento_governo", "size": "n_votos"})
-    alin["base_governo"] = alin["alinhamento_governo"] >= 0.5
-    alin.reset_index().rename(columns={"deputado_siglaPartido": "siglaPartido"}).to_parquet(
-        D / "reeleicao_alinhamento_partidos.parquet", index=False)
-    base = {norm(s): b for s, b in alin["base_governo"].items()}
+        columns={"mean": "alinhamento_governo", "size": "n_votos"}).reset_index()
+    alin = alin.rename(columns={"deputado_siglaPartido": "siglaPartido"})
+
+    # fidelidade partidária: % de votos iguais à orientação da bancada do partido
+    fp = pd.read_parquet(D / "votos.parquet", columns=["idVotacao", "deputado_id", "seguiu_orientacao_partido"])
+    fp = fp[fp["idVotacao"].isin(vot["idVotacao"]) & fp["seguiu_orientacao_partido"].notna()]
+    fp["deputado_id"] = fp["deputado_id"].astype(int)
+    p["fidelidade_partidaria"] = p["id"].map(fp.groupby("deputado_id")["seguiu_orientacao_partido"].mean())
+
+    # coalizão = partidos com ministério no gabinete vigente (Ipea, Acir Almeida; dados/manual)
+    gab = gabinetes()
+    em_base = lambda partido, data: base_em(gab, partido, data)  # noqa: E731
+    alin["base_governo_eleicao"] = alin["siglaPartido"].map(lambda s: em_base(s, ELEICAO))
+    alin.to_parquet(D / "reeleicao_alinhamento_partidos.parquet", index=False)
 
     # ------------------------------------------------ trocas de partido (Entrar/SairCoalizão)
     fil = pd.read_parquet(D / "deputados_partidos.parquet")
@@ -189,8 +224,10 @@ def main():
     tr = fil[fil["anterior"].notna() & (fil["anterior"] != fil["siglaPartido"])].copy()
     tr = tr[~tr.apply(lambda r: (norm(r["anterior"]), norm(r["siglaPartido"])) in
                       {(norm(a), norm(b)) for a, b in FUSOES}, axis=1)]
-    tr["orig_base"] = tr["anterior"].map(lambda s: base.get(norm(s)))
-    tr["dest_base"] = tr["siglaPartido"].map(lambda s: base.get(norm(s)))
+    tr["orig_base"] = [em_base(a, d[:10]) for a, d in zip(tr["anterior"], tr["dataInicio"])]
+    tr["dest_base"] = [em_base(b, d[:10]) for b, d in zip(tr["siglaPartido"], tr["dataInicio"])]
+    tr[["id", "nome", "anterior", "siglaPartido", "dataInicio", "orig_base", "dest_base"]].to_parquet(
+        D / "reeleicao_trocas_partido.parquet", index=False)
     p["trocas_partido"] = p["id"].map(tr.groupby("id").size()).fillna(0).astype(int)
     p["entrar_coalizao"] = p["id"].isin(tr.loc[tr["dest_base"] == True, "id"]).astype(int)  # noqa: E712
     p["sair_coalizao"] = p["id"].isin(tr.loc[(tr["orig_base"] == True) & (tr["dest_base"] == False), "id"]).astype(int)  # noqa: E712
@@ -293,7 +330,8 @@ def main():
     p["ideologia"] = p["partido_eleicao"].map(lambda s: ide.get(norm(s)))
     for k in ("esquerda", "centro", "direita"):
         p[k] = (p["ideologia"] == k).astype(int)
-    p["partido_base_governo"] = p["partido_eleicao"].map(lambda s: base.get(norm(s)))
+    p["partido_base_governo"] = p["partido_eleicao"].map(lambda s: em_base(s, ELEICAO)).astype(int)
+    p["gabinete_eleicao"] = gabinete_em(gab, ELEICAO)["gabinete"]
 
     p = p.drop(columns=["cpf", "dataNascimento"])
     p.to_parquet(D / "reeleicao_painel.parquet", index=False)
