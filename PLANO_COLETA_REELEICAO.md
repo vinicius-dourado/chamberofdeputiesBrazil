@@ -83,16 +83,19 @@ Arquivos do Portal de Dados Abertos do TSE (`odsele`), por ano/UF:
 
 ## 7. Andamento
 
+Escopo do TSE: só as eleições de 2022 e 2026 (decisão do usuário). Por isso Histleg/Histexec vêm de
+`/deputados/{id}/mandatosExternos` da Câmara, e não do histórico de candidaturas do TSE.
+
 | Etapa | Situação |
 |---|---|
-| `baixar_tse.py` (2026) | **feito**: `dados/tse/candidatos_2026` (cadastro com CPF, todos os cargos), `candidatos_depfed_2026` (7.262 candidatos, 513 eleitos), `votos_depfed_mun_2026` (votos por candidato × município), `contas_depfed_2026` (despesas contratadas/pagas, receitas por fonte; 505/505 eleitos fora o AP com contas) |
-| AP 2026 | os arquivos `odsele` não têm deputado federal/estadual do AP no munzona e trazem `#NULO` na situação. Votos vêm de `votacao_secao_2026_AP`; situação vem de `dados/manual/tse_situacao_ap_depfed_2026.csv` (página de resultados do TSE). Refazer quando o TSE publicar |
-| 2022 | falta rodar `python baixar_tse.py --anos 2022` |
-| Câmara (§3) | falta |
+| `baixar_tse.py --anos 2022 2026` | feito: cadastro de candidatos (com CPF), votos de dep. federal por município, eleitorado apto por município, prestação de contas |
+| `baixar_cargos.py --legislatura 57` | feito: CPF, profissões, ocupações, mandatos externos, Mesa, lideranças, comissões, senioridade |
+| `montar_painel.py` | feito: `dados/leg57/reeleicao_painel.parquet` (648 × 79). Dicionário em `DICIONARIO_REELEICAO.md` |
+| AP 2026 | votos de `votacao_secao_2026_AP`; situação de `dados/manual/tse_situacao_ap_depfed_2026.csv`. Refazer quando o TSE publicar |
+| Líder (lista de influentes) | não coletado (fonte externa; endógena no artigo) |
+| Relatorias | só as registradas como cargo de órgão (relator de comissão especial/CPI); relatorias de proposição não |
 
-Achados: o CPF vem **aberto** em `consulta_cand` (só a prestação de contas mascara), então a ligação Câmara ↔ TSE pode ser por CPF.
-Despesas pagas não trazem cargo nem candidato, e são ligadas pelo `SQ_PRESTADOR_CONTAS` dos outros arquivos de contas.
-`CNPJ_campanha_{ano}.zip` (CNPJ de campanha × nome) não foi necessário.
+Ligação Câmara ↔ TSE por CPF: 648/648 deputados encontrados em 2022.
 
 ## 8. Riscos e pendências
 

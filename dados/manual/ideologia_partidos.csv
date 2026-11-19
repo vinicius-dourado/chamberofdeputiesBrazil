@@ -1,0 +1,39 @@
+# Classificação PROVISÓRIA esquerda/centro/direita dos partidos (dummies Esquerda/Centro/Direita de Pereira & Rennó 2001).
+# Feita pelo assistente a partir da classificação usual na literatura; revisar com uma fonte publicada
+# (ex.: Bolognesi, Ribeiro & Codato 2023, survey de especialistas) antes de usar em análise.
+sigla;ideologia
+PT;esquerda
+PCDOB;esquerda
+PC DO B;esquerda
+PSOL;esquerda
+REDE;esquerda
+PV;esquerda
+PSB;esquerda
+PDT;esquerda
+MDB;centro
+PSD;centro
+PSDB;centro
+CIDADANIA;centro
+SOLIDARIEDADE;centro
+AVANTE;centro
+PODE;direita
+PL;direita
+PP;direita
+UNIÃO;direita
+REPUBLICANOS;direita
+NOVO;direita
+PRD;direita
+PATRIOTA;direita
+PTB;direita
+PSC;direita
+PROS;centro
+DC;direita
+PRTB;direita
+AGIR;direita
+MOBILIZA;direita
+PMB;direita
+MISSÃO;direita
+PCO;esquerda
+PSTU;esquerda
+UP;esquerda
+PCB;esquerda

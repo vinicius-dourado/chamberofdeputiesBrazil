@@ -6,6 +6,7 @@ Saídas em dados/tse/:
   votos_depfed_mun_{ano}.parquet  - votos válidos por candidato a dep. federal x município (zonas somadas)
   candidatos_depfed_{ano}.parquet - 1 linha por candidato a dep. federal: partido, federação, situação, total de votos
   candidatos_{ano}.parquet        - cadastro de candidatos de todos os cargos (com CPF e situação final)
+  aptos_mun_{ano}.parquet         - eleitorado apto por município
   contas_depfed_{ano}.parquet     - despesas contratadas/pagas e receitas (total e por fonte) por candidato a dep. federal
 
 Uso:
@@ -98,7 +99,6 @@ def processar(ano: int, zip_path: Path, saida: Path, brutos: Path, cadastro: pd.
     cand = pd.DataFrame(cands.values())
     cand = cand.merge(df.groupby("SQ_CANDIDATO")["votos"].sum().rename("votos_total").reset_index(),
                       on="SQ_CANDIDATO", how="left")
-    cand.to_parquet(saida / f"candidatos_depfed_{ano}.parquet", index=False)
 
     cand["fonte_situacao"] = "tse_odsele"
     manual = Path("dados/manual") / f"tse_situacao_ap_depfed_{ano}.csv"
@@ -114,6 +114,7 @@ def processar(ano: int, zip_path: Path, saida: Path, brutos: Path, cadastro: pd.
         cand.loc[resto, "fonte_situacao"] = "inferido (fora da lista manual)"
         print(f"  AP: situação de {achou.sum()} candidatos pela lista manual, {resto.sum()} inferidos")
 
+    cand.to_parquet(saida / f"candidatos_depfed_{ano}.parquet", index=False)
     eleitos = cand["DS_SIT_TOT_TURNO"].str.startswith("ELEITO").sum()
     print(f"{ano}: {len(cand):,} candidatos a dep. federal, {eleitos} eleitos, "
           f"{len(df):,} pares candidato x município")
@@ -156,6 +157,28 @@ def votos_secao(ano: int, uf: str, brutos: Path):
                 k = (row["SQ_CANDIDATO"], row["CD_MUNICIPIO"], row["NM_MUNICIPIO"])
                 votos[k] = votos.get(k, 0) + int(row["QT_VOTOS"] or 0)
     return votos
+
+
+URL_DETALHE = "https://cdn.tse.jus.br/estatistica/sead/odsele/detalhe_votacao_munzona/detalhe_votacao_munzona_{ano}.zip"
+def processar_aptos(ano: int, brutos: Path, saida: Path):
+    """Eleitorado apto por município (1º turno), de detalhe_votacao_munzona."""
+    zp = baixar(URL_DETALHE, ano, brutos)
+    with zipfile.ZipFile(zp) as z:
+        csvs = [n for n in z.namelist() if n.endswith(".csv")]
+        nomes = [n for n in csvs if "_BRASIL" in n] or csvs
+        partes = [pd.read_csv(z.open(n), sep=";", encoding="latin-1", dtype=str,
+                              usecols=["NR_TURNO", "SG_UF", "CD_MUNICIPIO", "NR_ZONA", "CD_CARGO", "QT_APTOS"])
+                  for n in nomes]
+    d = pd.concat(partes)
+    d = d[(d["NR_TURNO"] == "1") & (d["SG_UF"].isin(UFS))]
+    d["QT_APTOS"] = d["QT_APTOS"].astype(int)
+    # aptos por zona são iguais entre cargos: pega o máximo por zona e soma as zonas do município
+    d["CD_MUNICIPIO"] = d["CD_MUNICIPIO"].astype(int).astype(str)
+    z = d.groupby(["SG_UF", "CD_MUNICIPIO", "NR_ZONA"])["QT_APTOS"].max().reset_index()
+    m = z.groupby(["SG_UF", "CD_MUNICIPIO"])["QT_APTOS"].sum().reset_index()
+    m["CD_MUNICIPIO"] = m["CD_MUNICIPIO"].astype(int).astype(str)  # mesmo formato de votos_depfed_mun (sem zeros)
+    m.to_parquet(saida / f"aptos_mun_{ano}.parquet", index=False)
+    print(f"{ano}: eleitorado apto de {len(m):,} municípios ({m['QT_APTOS'].sum():,} eleitores)")
 
 
 URL_CONTAS = ("https://cdn.tse.jus.br/estatistica/sead/odsele/prestacao_contas/"
@@ -225,7 +248,7 @@ def processar_contas(ano: int, zip_path: Path, saida: Path):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--anos", type=int, nargs="+", default=[2026])
+    ap.add_argument("--anos", type=int, nargs="+", default=[2022, 2026])
     ap.add_argument("--saida", default="dados")
     ap.add_argument("--sem-votos", action="store_true", help="não processa a votação")
     ap.add_argument("--sem-contas", action="store_true", help="não processa a prestação de contas")
@@ -238,6 +261,7 @@ def main():
         cadastro = processar_candidatos(ano, baixar(URL_CAND, ano, brutos), saida)
         if not args.sem_votos:
             processar(ano, baixar(URL, ano, brutos), saida, brutos, cadastro)
+        processar_aptos(ano, brutos, saida)
         if not args.sem_contas:
             processar_contas(ano, baixar(URL_CONTAS, ano, brutos), saida)
 

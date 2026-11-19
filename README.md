@@ -68,7 +68,7 @@ o cadastro de candidatos, a votação por município/zona e a prestação de con
 (zips brutos em `dados/brutos/tse/`, fora do git).
 
 ```bash
-python baixar_tse.py --anos 2022 2026     # ~1,5 min por ano depois do download (~900 MB por ano)
+python baixar_tse.py                      # 2022 e 2026; ~2 min por ano depois do download (~1 GB por ano)
 ```
 
 | Tabela | Conteúdo | Chave |
@@ -76,8 +76,19 @@ python baixar_tse.py --anos 2022 2026     # ~1,5 min por ano depois do download 
 | `candidatos_{ano}` | cadastro de candidatos de todos os cargos: CPF, título, nascimento, ocupação, partido/federação/coligação, situação final | `SQ_CANDIDATO` |
 | `candidatos_depfed_{ano}` | candidatos a dep. federal com votos: situação final, total de votos, `fonte_votos`, `fonte_situacao` | `SQ_CANDIDATO` |
 | `votos_depfed_mun_{ano}` | votos válidos de cada candidato a dep. federal por município (zonas somadas) | `SQ_CANDIDATO`, `CD_MUNICIPIO` |
+| `aptos_mun_{ano}` | eleitorado apto por município | `CD_MUNICIPIO` |
 | `contas_depfed_{ano}` | despesas contratadas, despesas pagas, receitas (total e por fonte: fundo especial, fundo partidário, outros) | `SQ_CANDIDATO` |
 
 Amapá 2026: o TSE ainda não publicou a votação proporcional do AP nos arquivos por município, e a situação dos
 candidatos vem como `#NULO`. O script usa `votacao_secao_2026_AP` para os votos e
 `dados/manual/tse_situacao_ap_depfed_2026.csv` (tirado da página de resultados do TSE) para eleito/suplente.
+
+## Painel de reeleição (Pereira & Rennó 2001, sem pork barrel)
+
+```bash
+python baixar_cargos.py --legislatura 57   # Mesa, lideranças, comissões, senioridade, CPF, profissões (~5 min)
+python baixar_tse.py                       # TSE 2022 e 2026
+python montar_painel.py                    # -> dados/leg57/reeleicao_painel.parquet
+```
+
+Variáveis e definições: [`DICIONARIO_REELEICAO.md`](DICIONARIO_REELEICAO.md). Plano: [`PLANO_COLETA_REELEICAO.md`](PLANO_COLETA_REELEICAO.md).
