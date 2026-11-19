@@ -89,6 +89,10 @@ candidatos vem como `#NULO`. O script usa `votacao_secao_2026_AP` para os votos 
 python baixar_cargos.py --legislatura 57   # Mesa, lideranças, comissões, senioridade, CPF, profissões (~5 min)
 python baixar_tse.py                       # TSE 2022 e 2026
 python montar_painel.py                    # -> dados/leg57/reeleicao_painel.parquet
+python replicar_artigo.py                  # modelos -> resultados/replicacao/*.csv, resultados.json (~6 min)
+python gerar_relatorio.py                  # -> resultados/replicacao/relatorio.html
 ```
+
+Requer `scipy` e `statsmodels` para a replicação.
 
 Variáveis e definições: [`DICIONARIO_REELEICAO.md`](DICIONARIO_REELEICAO.md). Plano: [`PLANO_COLETA_REELEICAO.md`](PLANO_COLETA_REELEICAO.md).
