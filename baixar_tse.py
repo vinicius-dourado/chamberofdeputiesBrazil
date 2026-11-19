@@ -100,6 +100,7 @@ def processar(ano: int, zip_path: Path, saida: Path, brutos: Path, cadastro: pd.
     cand = cand.merge(df.groupby("SQ_CANDIDATO")["votos"].sum().rename("votos_total").reset_index(),
                       on="SQ_CANDIDATO", how="left")
 
+    cand["DS_SIT_TOT_TURNO"] = cand["DS_SIT_TOT_TURNO"].replace({"MÉDIA": "ELEITO POR MÉDIA"})
     cand["fonte_situacao"] = "tse_odsele"
     manual = Path("dados/manual") / f"tse_situacao_ap_depfed_{ano}.csv"
     if manual.exists():
@@ -136,6 +137,7 @@ def processar_candidatos(ano: int, zip_path: Path, saida: Path) -> pd.DataFrame:
         nome = next(n for n in z.namelist() if n.endswith("_BRASIL.csv"))
         df = pd.read_csv(z.open(nome), sep=";", encoding="latin-1", dtype=str)
     df = df[[c for c in COLS_CAND if c in df.columns]]
+    df["DS_SIT_TOT_TURNO"] = df["DS_SIT_TOT_TURNO"].replace({"MÉDIA": "ELEITO POR MÉDIA"})  # rótulo antigo (1998)
     df.to_parquet(saida / f"candidatos_{ano}.parquet", index=False)
     print(f"{ano}: {len(df):,} registros de candidatura; "
           f"dep. federal: {df['DS_SIT_TOT_TURNO'][df['CD_CARGO'] == CARGO_DEP_FEDERAL].value_counts().to_dict()}")
@@ -261,7 +263,10 @@ def main():
         cadastro = processar_candidatos(ano, baixar(URL_CAND, ano, brutos), saida)
         if not args.sem_votos:
             processar(ano, baixar(URL, ano, brutos), saida, brutos, cadastro)
-        processar_aptos(ano, brutos, saida)
+        try:
+            processar_aptos(ano, brutos, saida)
+        except requests.HTTPError as e:
+            print(f"{ano}: sem detalhe_votacao_munzona ({e})")
         if not args.sem_contas:
             processar_contas(ano, baixar(URL_CONTAS, ano, brutos), saida)
 

@@ -96,3 +96,15 @@ python gerar_relatorio.py                  # -> resultados/replicacao/relatorio.
 Requer `scipy` e `statsmodels` para a replicação.
 
 Variáveis e definições: [`DICIONARIO_REELEICAO.md`](DICIONARIO_REELEICAO.md). Plano: [`PLANO_COLETA_REELEICAO.md`](PLANO_COLETA_REELEICAO.md).
+
+### Validação com 1998 – `validar_1998.py`
+
+Aplica o mesmo código à 50ª legislatura e à eleição de 1998 (o caso do artigo), com um modelo reduzido às variáveis
+que existem nos dois períodos, para separar falha de dados de mudança de cenário. Resultado na seção
+"Validação com os dados de 1998" de `relatorio.html`.
+
+```bash
+python baixar_tse.py --anos 1994 1998 --sem-contas
+python validar_1998.py        # coleta a 50ª legislatura na Câmara (~5 min na primeira vez)
+python gerar_relatorio.py
+```

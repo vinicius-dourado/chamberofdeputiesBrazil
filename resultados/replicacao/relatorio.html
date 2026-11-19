@@ -124,13 +124,37 @@ a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
     <li><strong>Posição hierárquica conta; produção legislativa não.</strong> Liderança partidária (Partpos) e cargos em
     comissões permanentes aumentam a chance de concorrer e de ganhar; projetos aprovados não fazem diferença.</li>
     <li><strong>Lealdade ao governo pesa na decisão de concorrer, não no resultado</strong>, como em 1998.</li>
-    <li><strong>A seleção não é aleatória em 2026.</strong> Ao contrário do artigo, a correlação entre as equações vai
-    ao limite (ρ → 1) e a independência é rejeitada. Concentração, Partpos e Permanente mantêm o sinal e a significância
-    no probit simples; Índice e Mesa não.</li>
-    <li><strong>Diferenças:</strong> senioridade reduz a chance de reeleição; mudar de partido para a oposição
-    (SairCoalizão) não tem efeito; a ausência medida em número de faltas tem sinal positivo, efeito mecânico do tempo
+    <li><strong>A correlação entre as equações vai ao limite (ρ → 1)</strong>, e a independência é rejeitada, ao
+    contrário do artigo. O mesmo acontece com os dados de 1998 (seção de validação), então isso reflete a estimação e
+    as variáveis disponíveis, e não uma mudança de 2026. Concentração, Partpos e Permanente mantêm sinal e
+    significância no probit simples; Índice e Mesa não.</li>
+    <li><strong>Diferenças que a validação com 1998 atribui ao cenário:</strong> senioridade reduz a chance de
+    reeleição; mudar de partido para a oposição (SairCoalizão) não tem efeito; ter governado município ou estado
+    (Histexec) não afeta mais o resultado. <strong>Outra diferença:</strong> a ausência medida em número de faltas tem sinal positivo, efeito mecânico do tempo
     de mandato (em % das votações não há diferença).</li>
   </ul>
+</section>
+
+<section aria-labelledby="s-val">
+  <h2 id="s-val">Validação com os dados de 1998</h2>
+  <p>Para separar falha de dados de mudança de cenário, o mesmo código foi aplicado à 50ª legislatura (1995-1999) e à
+  eleição de 1998, o caso do artigo. A Câmara não tem votações nominais, Mesa, comissões nem lideranças antes de 2003,
+  então o teste usa um modelo reduzido (Concentração 94/22, MesmaBase, Governador, Projetos, Senior, Histleg, Histexec,
+  Entrar/SairCoalizão, ideologia; Burocracia e Empresa só na seleção), estimado igual para 1998 e 2026.</p>
+  <div class="numeros">
+    <div class="numero"><b>638</b><span>deputados da 50ª legislatura</span></div>
+    <div class="numero"><b>512</b><span>na análise de 1998</span></div>
+    <div class="numero"><b>409</b><span>tentaram a reeleição (artigo: 446)</span></div>
+    <div class="numero"><b>265</b><span>se reelegeram (artigo: 288)</span></div>
+  </div>
+  <p class="nota">Taxa de sucesso: 64,8% nos nossos dados, 64,6% no artigo.
+  Como no artigo, o TSE não tem votação por município do DF em 1998.</p>
+  <div class="rolagem"><table class="larga"><thead><tr><th scope="col">Variável</th><th scope="col">Artigo (1998)</th>
+  <th scope="col">Nosso código, 1998</th><th scope="col">Nosso código, 2026</th><th scope="col">Diagnóstico</th></tr></thead>
+  <tbody><tr><th scope="row">Seleção (ρ)</th><td>Independência (ρ = 0 não rejeitado)</td><td class="n">ρ = 1,00; LR p = 0,023</td><td class="n">ρ = 1,00; LR p = 0,062</td><td><span class="chip diverge">Método ou medida</span><span class="ep">Com os dados de 1998 o nosso código também leva ρ ao limite e rejeita a independência. A diferença vem da estimação ou da especificação (ρ mal identificado, variáveis que faltam), não de mudança de cenário. O estimador foi testado em dados simulados e recupera o ρ verdadeiro.</span></td></tr><tr><th scope="row">Burocracia</th><td>Só na seleção, não significativa</td><td class="n">sel. -0,23**</td><td class="n">sel. -0,17 n.s.</td><td><span class="chip diverge">Método ou medida</span><span class="ep">Negativa na seleção também em 1998. Nossa medida (ocupação declarada ao TSE e profissão no cadastro da Câmara) não é a do artigo (cargo na burocracia antes do mandato).</span></td></tr><tr><th scope="row">SairCoalizão</th><td>Negativa no resultado, sem efeito na seleção</td><td class="n">sel. 0,05 n.s.; res. -0,93*</td><td class="n">sel. -0,01 n.s.; res. -0,06 n.s.</td><td><span class="chip confirma">Cenário mudou</span><span class="ep">Em 1998 o nosso código reproduz o artigo. Em 2026 o efeito some. Ressalva: a planilha do Ipea termina em abr/2024, e a troca de partido de 2026 é avaliada contra o gabinete Lula 3-4.</span></td></tr><tr><th scope="row">Senior</th><td>Não significativa</td><td class="n">sel. -0,05 n.s.; res. -0,06 n.s.</td><td class="n">sel. -0,09**; res. -0,06*</td><td><span class="chip confirma">Cenário mudou</span><span class="ep">Em 1998 não é significativa, como no artigo; em 2026 é negativa. Mesma medida nos dois períodos.</span></td></tr><tr><th scope="row">Histexec</th><td>Negativa na seleção e no resultado</td><td class="n">sel. -0,23**; res. -0,20**</td><td class="n">sel. -0,22**; res. -0,02 n.s.</td><td><span class="chip confirma">Cenário mudou</span><span class="ep">Em 1998 o nosso código reproduz o artigo nas duas equações; em 2026 o efeito no resultado desaparece.</span></td></tr><tr><th scope="row">Concentração</th><td>Dispersar votos favorece a reeleição</td><td class="n">sel. 0,41 n.s.; res. -0,63**</td><td class="n">sel. -0,63**; res. -1,59***</td><td><span class="chip confirma">Sem divergência</span><span class="ep">Negativa no resultado nos dois períodos, como no artigo.</span></td></tr><tr><th scope="row">MesmaBase</th><td>Não significativa</td><td class="n">res. 0,11 n.s.</td><td class="n">res. -0,09 n.s.</td><td><span class="chip confirma">Sem divergência</span><span class="ep">Não significativa nos dois períodos.</span></td></tr><tr><th scope="row">Ausência</th><td>Negativa no resultado</td><td class="n">–</td><td class="n">–</td><td><span class="chip parcial">Não testável</span><span class="ep">Sem votos nominais de 1995-1998 na API da Câmara. Em 2026 o sinal positivo do número de faltas é efeito do tempo de mandato; em % das votações não há diferença.</span></td></tr><tr><th scope="row">Gastos por eleitor</th><td>Perdedores gastam mais por eleitor</td><td class="n">–</td><td class="n">–</td><td><span class="chip parcial">Não testável</span><span class="ep">Não há prestação de contas de 1998 nos dados abertos do TSE.</span></td></tr></tbody></table></div>
+  <p class="nota">Coeficientes do probit com seleção reduzido (sel. = concorrer; res. = reeleger-se). As tabelas
+  numéricas do artigo não foram consultadas (estão em imagem); a comparação usa o texto. Projetos aprovados de 1995-1998
+  usam a situação atual das proposições, por isso não servem de teste.</p>
 </section>
 
 <section aria-labelledby="s-t6">

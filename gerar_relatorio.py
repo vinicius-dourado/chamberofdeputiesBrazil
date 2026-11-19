@@ -120,6 +120,83 @@ def nosso(chave):
 ROTULO_VEREDITO = {"confirma": "Confirma", "parcial": "Em parte", "diverge": "Diverge"}
 
 
+VAL = Path("resultados/validacao_1998/resultados.json")
+# diagnóstico de cada divergência, com base no modelo reduzido estimado para 1998 e 2026
+DIAG = [
+    ("Seleção (ρ)", "rho", "Independência (ρ = 0 não rejeitado)", "metodo",
+     "Com os dados de 1998 o nosso código também leva ρ ao limite e rejeita a independência. A diferença vem da "
+     "estimação ou da especificação (ρ mal identificado, variáveis que faltam), não de mudança de cenário. "
+     "O estimador foi testado em dados simulados e recupera o ρ verdadeiro."),
+    ("Burocracia", "burocracia", "Só na seleção, não significativa", "metodo",
+     "Negativa na seleção também em 1998. Nossa medida (ocupação declarada ao TSE e profissão no cadastro da "
+     "Câmara) não é a do artigo (cargo na burocracia antes do mandato)."),
+    ("SairCoalizão", "sair_coalizao", "Negativa no resultado, sem efeito na seleção", "cenario",
+     "Em 1998 o nosso código reproduz o artigo. Em 2026 o efeito some. Ressalva: a planilha do Ipea termina em "
+     "abr/2024, e a troca de partido de 2026 é avaliada contra o gabinete Lula 3-4."),
+    ("Senior", "senior", "Não significativa", "cenario",
+     "Em 1998 não é significativa, como no artigo; em 2026 é negativa. Mesma medida nos dois períodos."),
+    ("Histexec", "histexec", "Negativa na seleção e no resultado", "cenario",
+     "Em 1998 o nosso código reproduz o artigo nas duas equações; em 2026 o efeito no resultado desaparece."),
+    ("Concentração", "concentracao_ant", "Dispersar votos favorece a reeleição", "ok",
+     "Negativa no resultado nos dois períodos, como no artigo."),
+    ("MesmaBase", "mesma_base", "Não significativa", "ok", "Não significativa nos dois períodos."),
+    ("Ausência", None, "Negativa no resultado", "nt",
+     "Sem votos nominais de 1995-1998 na API da Câmara. Em 2026 o sinal positivo do número de faltas é efeito do "
+     "tempo de mandato; em % das votações não há diferença."),
+    ("Gastos por eleitor", None, "Perdedores gastam mais por eleitor", "nt",
+     "Não há prestação de contas de 1998 nos dados abertos do TSE."),
+]
+ROT_DIAG = {"metodo": ("diverge", "Método ou medida"), "cenario": ("confirma", "Cenário mudou"),
+            "ok": ("confirma", "Sem divergência"), "nt": ("parcial", "Não testável")}
+
+
+def secao_validacao():
+    if not VAL.exists():
+        return ""
+    v = json.loads(VAL.read_text())
+
+    def coefs(ano, var):
+        m = v["modelos"][ano]
+        if var == "rho":
+            return f"ρ = {num(m['rho'], 2)}; LR p = {num(m['p_lr_rho0'], 3)}"
+        out = []
+        for eq, nome in (("seleção", "sel."), ("resultado", "res.")):
+            c = next((c for c in m["coefs"] if c["equacao"] == eq and c["variavel"] == var), None)
+            if c:
+                out.append(f"{nome} {num(c['coef'], 2)}{estrelas(c['p']) or ' n.s.'}")
+        return "; ".join(out)
+    linhas = []
+    for nome, var, artigo, tipo, texto in DIAG:
+        cls, rotulo = ROT_DIAG[tipo]
+        c98 = coefs("1998", var) if var else "–"
+        c26 = coefs("2026", var) if var else "–"
+        linhas.append(f'<tr><th scope="row">{esc(nome)}</th><td>{esc(artigo)}</td><td class="n">{esc(c98)}</td>'
+                      f'<td class="n">{esc(c26)}</td><td><span class="chip {cls}">{rotulo}</span>'
+                      f'<span class="ep">{esc(texto)}</span></td></tr>')
+    a = v["amostra_1998"]
+    return f"""<section aria-labelledby="s-val">
+  <h2 id="s-val">Validação com os dados de 1998</h2>
+  <p>Para separar falha de dados de mudança de cenário, o mesmo código foi aplicado à 50ª legislatura (1995-1999) e à
+  eleição de 1998, o caso do artigo. A Câmara não tem votações nominais, Mesa, comissões nem lideranças antes de 2003,
+  então o teste usa um modelo reduzido (Concentração 94/22, MesmaBase, Governador, Projetos, Senior, Histleg, Histexec,
+  Entrar/SairCoalizão, ideologia; Burocracia e Empresa só na seleção), estimado igual para 1998 e 2026.</p>
+  <div class="numeros">
+    <div class="numero"><b>{a['painel']}</b><span>deputados da 50ª legislatura</span></div>
+    <div class="numero"><b>{a['analise']}</b><span>na análise de 1998</span></div>
+    <div class="numero"><b>{a['concorreram']}</b><span>tentaram a reeleição (artigo: 446)</span></div>
+    <div class="numero"><b>{a['reeleitos']}</b><span>se reelegeram (artigo: 288)</span></div>
+  </div>
+  <p class="nota">Taxa de sucesso: {num(100 * a['reeleitos'] / a['concorreram'], 1)}% nos nossos dados, 64,6% no artigo.
+  Como no artigo, o TSE não tem votação por município do DF em 1998.</p>
+  <div class="rolagem"><table class="larga"><thead><tr><th scope="col">Variável</th><th scope="col">Artigo (1998)</th>
+  <th scope="col">Nosso código, 1998</th><th scope="col">Nosso código, 2026</th><th scope="col">Diagnóstico</th></tr></thead>
+  <tbody>{"".join(linhas)}</tbody></table></div>
+  <p class="nota">Coeficientes do probit com seleção reduzido (sel. = concorrer; res. = reeleger-se). As tabelas
+  numéricas do artigo não foram consultadas (estão em imagem); a comparação usa o texto. Projetos aprovados de 1995-1998
+  usam a situação atual das proposições, por isso não servem de teste.</p>
+</section>"""
+
+
 def secao_comparacao():
     linhas = []
     for nome, artigo, chave in ARTIGO:
@@ -367,14 +444,18 @@ a:focus-visible {{ outline: 2px solid var(--accent); outline-offset: 2px; }}
     <li><strong>Posição hierárquica conta; produção legislativa não.</strong> Liderança partidária (Partpos) e cargos em
     comissões permanentes aumentam a chance de concorrer e de ganhar; projetos aprovados não fazem diferença.</li>
     <li><strong>Lealdade ao governo pesa na decisão de concorrer, não no resultado</strong>, como em 1998.</li>
-    <li><strong>A seleção não é aleatória em 2026.</strong> Ao contrário do artigo, a correlação entre as equações vai
-    ao limite (ρ → 1) e a independência é rejeitada. Concentração, Partpos e Permanente mantêm o sinal e a significância
-    no probit simples; Índice e Mesa não.</li>
-    <li><strong>Diferenças:</strong> senioridade reduz a chance de reeleição; mudar de partido para a oposição
-    (SairCoalizão) não tem efeito; a ausência medida em número de faltas tem sinal positivo, efeito mecânico do tempo
+    <li><strong>A correlação entre as equações vai ao limite (ρ → 1)</strong>, e a independência é rejeitada, ao
+    contrário do artigo. O mesmo acontece com os dados de 1998 (seção de validação), então isso reflete a estimação e
+    as variáveis disponíveis, e não uma mudança de 2026. Concentração, Partpos e Permanente mantêm sinal e
+    significância no probit simples; Índice e Mesa não.</li>
+    <li><strong>Diferenças que a validação com 1998 atribui ao cenário:</strong> senioridade reduz a chance de
+    reeleição; mudar de partido para a oposição (SairCoalizão) não tem efeito; ter governado município ou estado
+    (Histexec) não afeta mais o resultado. <strong>Outra diferença:</strong> a ausência medida em número de faltas tem sinal positivo, efeito mecânico do tempo
     de mandato (em % das votações não há diferença).</li>
   </ul>
 </section>
+
+{secao_validacao()}
 
 <section aria-labelledby="s-t6">
   <h2 id="s-t6">Tabela 6 · Probit com seleção de Heckman</h2>
