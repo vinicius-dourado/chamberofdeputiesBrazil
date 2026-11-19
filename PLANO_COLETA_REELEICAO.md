@@ -81,11 +81,23 @@ Arquivos do Portal de Dados Abertos do TSE (`odsele`), por ano/UF:
 5. `montar_painel.py`: calcula todas as variáveis → `reeleicao_painel.parquet`.
 6. Conferências: % de deputados ligados ao TSE; nº de reeleitos contra o total oficial; distribuições de Concentração e Competição.
 
-## 7. Riscos e pendências
+## 7. Andamento
+
+| Etapa | Situação |
+|---|---|
+| `baixar_tse.py` (2026) | **feito**: `dados/tse/candidatos_2026` (cadastro com CPF, todos os cargos), `candidatos_depfed_2026` (7.262 candidatos, 513 eleitos), `votos_depfed_mun_2026` (votos por candidato × município), `contas_depfed_2026` (despesas contratadas/pagas, receitas por fonte; 505/505 eleitos fora o AP com contas) |
+| AP 2026 | os arquivos `odsele` não têm deputado federal/estadual do AP no munzona e trazem `#NULO` na situação. Votos vêm de `votacao_secao_2026_AP`; situação vem de `dados/manual/tse_situacao_ap_depfed_2026.csv` (página de resultados do TSE). Refazer quando o TSE publicar |
+| 2022 | falta rodar `python baixar_tse.py --anos 2022` |
+| Câmara (§3) | falta |
+
+Achados: o CPF vem **aberto** em `consulta_cand` (só a prestação de contas mascara), então a ligação Câmara ↔ TSE pode ser por CPF.
+Despesas pagas não trazem cargo nem candidato, e são ligadas pelo `SQ_PRESTADOR_CONTAS` dos outros arquivos de contas.
+`CNPJ_campanha_{ano}.zip` (CNPJ de campanha × nome) não foi necessário.
+
+## 8. Riscos e pendências
 
 * **Dados de 2026**: votação por município já deve estar publicada. A prestação de contas final (gastos) pode
   ainda estar incompleta. Se faltar algo, a 56ª/2022 vira o caso principal.
-* CPF mascarado em arquivos recentes do TSE → a ligação fica por nome + data de nascimento.
 * Relatorias dependem de parsing de texto de tramitação.
 * A 57ª legislatura só termina em 31/01/2027. Ausência, Índice e Projetos devem ser cortados na data da eleição (04/10/2026).
 * Volume: `votacao_candidato_munzona` e `consulta_cand` do Brasil inteiro passam de 1 GB descompactados. Ficam em `dados/brutos/` (já ignorado pelo `.gitignore`) e só os recortes vão para o git.

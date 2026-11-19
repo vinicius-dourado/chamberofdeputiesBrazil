@@ -2,3 +2,4 @@
 dados/brutos/
 dados/**/*.csv
 __pycache__/
+!dados/manual/*.csv

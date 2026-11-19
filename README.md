@@ -60,3 +60,24 @@ python baixar_discursos.py --atualizar     # ignora o cache e baixa tudo de novo
 | Tabela | Conteúdo | Chaves |
 |---|---|---|
 | `discursos` | um discurso por linha: deputado, partido/UF na data, data/hora, tipo (Pela ordem, Breves comunicações, Como líder...), fase da sessão, `keywords`, `sumario`, `transcricao`, `urlTexto` | `id_discurso`, `deputado_id` |
+
+## TSE – `baixar_tse.py`
+
+Baixa do [Portal de Dados Abertos do TSE](https://dadosabertos.tse.jus.br) (`cdn.tse.jus.br/estatistica/sead/odsele/`)
+o cadastro de candidatos, a votação por município/zona e a prestação de contas, e grava recortes em `dados/tse/`
+(zips brutos em `dados/brutos/tse/`, fora do git).
+
+```bash
+python baixar_tse.py --anos 2022 2026     # ~1,5 min por ano depois do download (~900 MB por ano)
+```
+
+| Tabela | Conteúdo | Chave |
+|---|---|---|
+| `candidatos_{ano}` | cadastro de candidatos de todos os cargos: CPF, título, nascimento, ocupação, partido/federação/coligação, situação final | `SQ_CANDIDATO` |
+| `candidatos_depfed_{ano}` | candidatos a dep. federal com votos: situação final, total de votos, `fonte_votos`, `fonte_situacao` | `SQ_CANDIDATO` |
+| `votos_depfed_mun_{ano}` | votos válidos de cada candidato a dep. federal por município (zonas somadas) | `SQ_CANDIDATO`, `CD_MUNICIPIO` |
+| `contas_depfed_{ano}` | despesas contratadas, despesas pagas, receitas (total e por fonte: fundo especial, fundo partidário, outros) | `SQ_CANDIDATO` |
+
+Amapá 2026: o TSE ainda não publicou a votação proporcional do AP nos arquivos por município, e a situação dos
+candidatos vem como `#NULO`. O script usa `votacao_secao_2026_AP` para os votos e
+`dados/manual/tse_situacao_ap_depfed_2026.csv` (tirado da página de resultados do TSE) para eleito/suplente.
