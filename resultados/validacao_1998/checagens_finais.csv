@@ -1,0 +1,17 @@
+variavel,estatistica,artigo,nosso_1998,leitura_artigo,leitura_nossa,igual
+concentracao_ant,Tabela 2/3: teste de médias (Z),-3.79,-3.0461677036131545,-,-,True
+concentracao_ant,Tabela 6: seleção,0.0074706,0.8362509997381868,+,+,True
+concentracao_atual,Tabela 2/3: teste de médias (Z),-4.04,-3.4447784046539947,-,-,True
+competicao_atual,Tabela 2/3: teste de médias (Z),3.0,2.6309537630823527,+,+,True
+mesma_base,Tabela 2/3: teste de médias (Z),-0.71,-0.2293795257651548,n.s.,n.s.,True
+mesma_base,Tabela 6: resultado,-0.0881871,0.01108129545358352,n.s.,n.s.,True
+senior,Tabela 6: seleção,0.0178761,-0.039934333411697054,n.s.,n.s.,True
+senior,Tabela 6: resultado,-0.0004461,-0.059510503721946086,n.s.,n.s.,True
+histleg,Tabela 2/3: teste de médias (Z),-1.49,-0.7118161446826928,n.s.,n.s.,True
+histleg,Tabela 6: seleção,0.0436295,-0.010584636682144672,n.s.,n.s.,True
+histexec,Tabela 2/3: teste de médias (Z),-2.2,-1.8580897612091605,-,-,True
+histexec,Tabela 6: seleção,-0.1730562,-0.24990371421667593,-,-,True
+histexec,Tabela 6: resultado,-0.2855194,-0.24069609135927156,-,-,True
+sair_coalizao,Tabela 2/3: teste de médias (Z),-2.18,-1.6791148345930769,-,-,True
+sair_coalizao,Tabela 6: seleção,-0.366649,-0.2043227475458398,n.s.,n.s.,True
+sair_coalizao,Tabela 6: resultado,-0.9476684,-0.9075425727348234,-,-,True

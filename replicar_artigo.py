@@ -1,14 +1,13 @@
-"""Replica Pereira & Rennó (2001), "O que é que o reeleito tem?", com a 57ª legislatura e a eleição de 2026,
-sem as variáveis de emendas/pork barrel (Emendas, Pork, MédiaExecução, TotalEmendas).
+"""Replica Pereira & Rennó (2001), "O que é que o reeleito tem?", para a eleição de 2026 (57ª legislatura),
+usando SÓ as variáveis aprovadas na validação com 1998 (python validar_1998.py).
 
-Entrada: dados/leg57/reeleicao_painel.parquet (python montar_painel.py)
-Saída:   resultados/replicacao/*.csv e resultados.json (lidos por gerar_relatorio.py)
+Regra: uma variável entra aqui só se, com os dados de 1994/1998, o nosso cálculo chega ao mesmo resultado do artigo
+(mesmo sinal e mesma significância a 10%) em todas as estatísticas que o artigo publica para ela. Ficam de fora as
+variáveis sem dados de 1998 (Ausência, Índice, Mesa, Permanente, Especial, Partpos, Líder, Gastos), as reprovadas e
+as de emendas (Emendas, Pork, MédiaExecução), fora do escopo.
 
-Tabelas do artigo reproduzidas:
-  Tabela 1    regressões auxiliares: Concentração e Competição explicadas pela atuação do deputado (endogeneidade)
-  Tabelas 2-3 diferença de médias (teste Z) entre reeleitos e não reeleitos: variáveis locais e nacionais
-  Tabelas 4-5 gastos de campanha: média, mediana, desvio-padrão, variância (absoluto e por eleitor)
-  Tabela 6    probit com seleção de Heckman: decisão de concorrer -> sucesso eleitoral (+ probit simples, nota 24)
+Entradas: dados/leg57/reeleicao_painel.parquet; resultados/validacao_1998/variaveis_validadas.json
+Saídas:   resultados/replicacao/*.csv e resultados.json (lidos por gerar_relatorio.py)
 
 Uso: python replicar_artigo.py
 """
@@ -37,15 +36,21 @@ ROTULOS = {
 }
 
 # --------------------------------------------------------------------- especificações
-# Especificação da Tabela 6 do artigo (sem Emendas, Pork e MédiaExecução). Direita é a referência da ideologia.
-# Restrições de exclusão (só na seleção): Concentração94, Histleg, Burocracia, Empresa. MesmaBase só no resultado.
-NACIONAIS = ["projetos", "ausencia_pct", "indice", "mesa", "permanente", "especial", "partpos", "senior",
-             "histexec", "entrar_coalizao", "sair_coalizao", "esquerda", "centro"]
-SELECAO = ["concentracao_2022", "histleg", "governador"] + NACIONAIS + ["burocracia", "empresa"]
-RESULTADO = ["mesma_base", "governador"] + NACIONAIS
-CONTROLES = ["eleito_2022", "anos_exercicio"]
-AUX = ["concentracao_2022", "governador", "projetos", "ausencia_pct", "indice", "mesa", "permanente", "especial",
-       "partpos", "senior"]
+VALIDACAO = Path("resultados/validacao_1998/variaveis_validadas.json")
+# nome na validação (1998) -> coluna do painel de 2026
+PARA_2026 = {"concentracao_ant": "concentracao_2022", "concentracao_atual": "concentracao_2026",
+             "competicao_atual": "competicao_2026", "mesma_base": "mesma_base", "senior": "senior",
+             "histleg": "histleg", "histexec": "histexec", "sair_coalizao": "sair_coalizao",
+             "governador": "governador", "projetos": "projetos", "burocracia": "burocracia", "empresa": "empresa",
+             "entrar_coalizao": "entrar_coalizao", "esquerda": "esquerda", "centro": "centro"}
+
+
+def especificacao():
+    v = json.loads(VALIDACAO.read_text())
+    sel = [PARA_2026[x] for x in v["selecao"]]
+    out = [PARA_2026[x] for x in v["resultado"]]
+    descr = [PARA_2026[x] for x in v["aprovadas"] if x != "ideologia"]
+    return v, sel, out, descr
 
 
 def carregar():
@@ -56,8 +61,6 @@ def carregar():
         "saída definitiva antes da eleição (renúncia, cassação, morte)": p["saida_definitiva"].notna(),
         "eleito prefeito em 2024": p["eleito_prefeito_2024"] == 1,
         "Distrito Federal (um só município)": p["siglaUf"] == "DF",
-        "partido sem classificação ideológica": p["ideologia"].isna(),
-        "sem votações nominais em exercício": p["indice"].isna(),
     }
     fora = pd.Series(False, index=p.index)
     contagem = {}
@@ -147,17 +150,16 @@ def probit_simples(df, vars_, dep="reeleito"):
 
 
 # -------------------------------------------------------------------------- tabelas
-def tabela1(a):
-    """OLS (EP robustos HC1) entre os que concorreram à reeleição."""
+def tabela1(a, descr):
+    """Tabela 1 do artigo: Concentração atual explicada pela anterior (+ variáveis aprovadas). MQO, EP robustos.
+    A equação de Competição do artigo fica de fora: nenhum dos regressores dela foi aprovado."""
     d = a[a["concorreu_reeleicao"] == 1]
-    out = []
-    for dep in ("concentracao_2026", "competicao_2026"):
-        dd = d.dropna(subset=AUX + [dep])
-        m = sm.OLS(dd[dep], sm.add_constant(dd[AUX].astype(float))).fit(cov_type="HC1")
-        for v in m.params.index:
-            out.append({"dependente": dep, "variavel": v, "coef": m.params[v], "ep": m.bse[v], "p": m.pvalues[v],
-                        "n": int(m.nobs), "r2": m.rsquared})
-    return pd.DataFrame(out)
+    xs = ["concentracao_2022"] + [v for v in ("senior", "histleg", "histexec", "sair_coalizao") if v in descr]
+    dd = d.dropna(subset=xs + ["concentracao_2026"])
+    m = sm.OLS(dd["concentracao_2026"], sm.add_constant(dd[xs].astype(float))).fit(cov_type="HC1")
+    return pd.DataFrame([{"dependente": "concentracao_2026", "variavel": v, "coef": m.params[v], "ep": m.bse[v],
+                          "p": m.pvalues[v], "n": int(m.nobs), "r2": m.rsquared, "r2_ajustado": m.rsquared_adj}
+                         for v in m.params.index])
 
 
 def teste_medias(a, variaveis):
@@ -175,68 +177,38 @@ def teste_medias(a, variaveis):
     return pd.DataFrame(out)
 
 
-def tabela_gastos(a):
-    d = a[a["concorreu_reeleicao"] == 1]
-    out = []
-    for v in ("gastos_2026", "gastos_por_eleitor_2026"):
-        for nome, g in (("reeleitos", d[d["reeleito"] == 1]), ("não reeleitos", d[d["reeleito"] == 0])):
-            x = g[v]
-            dec = x[x > 0]
-            out.append({"variavel": v, "grupo": nome, "n": len(x), "pct_declarou": len(dec) / len(x),
-                        "media": dec.mean(), "mediana": dec.median(), "dp": dec.std(), "variancia": dec.var(),
-                        "cv": dec.std() / dec.mean()})
-    return pd.DataFrame(out)
-
-
 def main():
     SAIDA.mkdir(parents=True, exist_ok=True)
+    for f in SAIDA.glob("*.csv"):
+        f.unlink()
+    val, sel, out, descr = especificacao()
     p, a, excl = carregar()
     print(f"painel {len(p)} -> amostra {len(a)}; concorreram {int(a['concorreu_reeleicao'].sum())}, "
           f"reeleitos {int(a['reeleito'].sum())}")
+    print(f"variáveis aprovadas na validação: {descr}")
 
-    t1 = tabela1(a)
-    t2 = teste_medias(a, ["concentracao_2022", "concentracao_2026", "competicao_2022", "competicao_2026",
-                          "mesma_base", "gastos_2026", "governador"])
-    t3 = teste_medias(a, ["projetos", "ausencia", "ausencia_pct", "indice", "mesa", "permanente", "especial",
-                          "partpos", "senior", "histleg", "histexec", "burocracia", "empresa", "entrar_coalizao",
-                          "sair_coalizao", "esquerda", "centro", "direita"])
-    t45 = tabela_gastos(a)
+    t1 = tabela1(a, descr)
+    t23 = teste_medias(a, descr)
+    print("Heckman probit (variáveis aprovadas)...")
+    m = heckprobit(a, sel, out)
+    probit = probit_simples(a, out)
 
-    modelos = {}
-    print("Heckman probit: especificação do artigo...")
-    modelos["artigo"] = heckprobit(a, SELECAO, RESULTADO)
-    print("Heckman probit: com controles de mandato...")
-    sel_c = SELECAO + CONTROLES
-    out_c = RESULTADO + CONTROLES
-    modelos["controles"] = heckprobit(a, sel_c, out_c)
-    print("Heckman probit: titulares empossados em fev/2023...")
-    modelos["titulares"] = heckprobit(a[a["titular_posse_fev2023"] == 1], SELECAO, RESULTADO)
-    probit = probit_simples(a, RESULTADO)
-
-    t1.to_csv(SAIDA / "tabela1_auxiliares.csv", index=False)
-    t2.to_csv(SAIDA / "tabela2_medias_locais.csv", index=False)
-    t3.to_csv(SAIDA / "tabela3_medias_nacionais.csv", index=False)
-    t45.to_csv(SAIDA / "tabelas4_5_gastos.csv", index=False)
-    for k, m in modelos.items():
-        m["tabela"].to_csv(SAIDA / f"tabela6_heckprobit_{k}.csv", index=False)
+    t1.to_csv(SAIDA / "tabela1_concentracao.csv", index=False)
+    t23.to_csv(SAIDA / "tabelas2_3_medias.csv", index=False)
+    m["tabela"].to_csv(SAIDA / "tabela6_heckprobit.csv", index=False)
     probit["tabela"].to_csv(SAIDA / "nota24_probit_simples.csv", index=False)
-
     resumo = {
         "amostra": {"painel": len(p), "analise": len(a), "exclusoes": excl,
                     "concorreram": int(a["concorreu_reeleicao"].sum()), "reeleitos": int(a["reeleito"].sum()),
                     "cargo_disputado": a["cargo_disputado_2026"].value_counts().to_dict()},
-        "rotulos": ROTULOS,
-        "tabela1": t1.to_dict("records"), "tabela2": t2.to_dict("records"), "tabela3": t3.to_dict("records"),
-        "tabelas4_5": t45.to_dict("records"),
-        "tabela6": {k: {**{x: y for x, y in m.items() if x != "tabela"}, "coefs": m["tabela"].to_dict("records")}
-                    for k, m in modelos.items()},
+        "especificacao": {"selecao": sel, "resultado": out, "descritivas": descr},
+        "rotulos": ROTULOS, "tabela1": t1.to_dict("records"), "tabelas2_3": t23.to_dict("records"),
+        "tabela6": {**{k: v for k, v in m.items() if k != "tabela"}, "coefs": m["tabela"].to_dict("records")},
         "probit_simples": {"n": probit["n"], "pseudo_r2": probit["pseudo_r2"],
                            "coefs": probit["tabela"].to_dict("records")},
     }
     (SAIDA / "resultados.json").write_text(json.dumps(resumo, ensure_ascii=False, indent=1, default=float))
-    for k, m in modelos.items():
-        print(f"  {k}: n={m['n']} sel={m['n_selecionados']} rho={m['rho']:.3f} "
-              f"LR(rho=0)={m['lr_rho0']:.2f} p={m['p_lr_rho0']:.3f} convergiu={m['convergiu']}")
+    print(f"  n={m['n']} sel={m['n_selecionados']} rho={m['rho']:.3f} LR={m['lr_rho0']:.2f} p={m['p_lr_rho0']:.3f}")
     print(f"resultados em {SAIDA}/")
 
 

@@ -43,27 +43,44 @@ FAIXAS = [(1.5, "esquerda"), (3.0, "esquerda"), (4.5, "esquerda"), (5.5, "centro
           (8.5, "direita"), (10.01, "direita")]
 
 # Modelo reduzido: só variáveis que existem em 1998 e em 2026
-# mesma estrutura da Tabela 6 do artigo (Direita como referência; Concentração94 e Histleg só na seleção)
-SEL = ["concentracao_ant", "histleg", "histexec", "senior", "empresa", "burocracia", "governador", "projetos",
-       "entrar_coalizao", "sair_coalizao", "esquerda", "centro"]
-OUT = ["mesma_base", "governador", "senior", "histexec", "projetos", "entrar_coalizao", "sair_coalizao",
-       "esquerda", "centro"]
-
-# O que o artigo diz sobre cada variável testável (texto de Pereira & Rennó 2001)
-ARTIGO = {
-    "concentracao_ant": "dispersar votos favorece a reeleição (Concentração98, endógena; Concentração94 exógena)",
-    "mesma_base": "não significativa, sinal negativo",
-    "governador": "sem efeito direto na reeleição",
-    "projetos": "não significativa",
-    "senior": "não significativa",
-    "histleg": "não destacada (não significativa)",
-    "histexec": "negativa na seleção e no resultado",
-    "burocracia": "só na seleção, não significativa",
-    "empresa": "só na seleção, não significativa",
-    "sair_coalizao": "negativa no resultado, sem efeito na seleção",
-    "entrar_coalizao": "troca de partido de fora para dentro da coalizão; esperada positiva (não destacada)",
-    "rho": "equações independentes (ρ = 0 não rejeitado)",
+# ------------------------------------------------------------- regra de validação das variáveis
+# Uma variável segue para a análise de 2026 só se, com os dados de 1994/1998, o nosso cálculo chega ao mesmo resultado
+# do artigo em TODAS as estatísticas que o artigo publica para ela: mesmo sinal e mesma significância a 10%.
+# Variáveis sem dados de 1998 ficam de fora. A Tabela 6 é reestimada sem as reprovadas até nenhuma falhar.
+SEM_DADOS_1998 = {
+    "ausencia": "sem votações nominais de 1995-1998 na API da Câmara",
+    "indice": "sem votações nominais nem orientação do governo de 1995-1998",
+    "mesa": "sem Mesa da 50ª legislatura na API da Câmara",
+    "permanente": "sem comissões da 50ª legislatura na API da Câmara",
+    "especial": "sem comissões da 50ª legislatura na API da Câmara",
+    "partpos": "sem lideranças da 50ª legislatura na API da Câmara",
+    "lider": "listas de influentes não coletadas",
+    "gastos": "sem prestação de contas de 1998 nos dados abertos do TSE",
 }
+# variável nossa -> (nome na Tabela 2/3 do artigo, nome na Tabela 6 do artigo)
+CANDIDATAS = {
+    "concentracao_ant": ("concentracao_94", "concentracao"),
+    "concentracao_atual": ("concentracao_98", None),
+    "competicao_atual": ("competicao", None),
+    "mesma_base": ("mesma_base", "mesma_base"),
+    "governador": ("governador_94", "governador"),
+    "projetos": ("projetos", "projetos"),
+    "senior": (None, "senior"),
+    "histleg": ("histleg", "histleg"),
+    "histexec": ("histexec", "histexec"),
+    "burocracia": ("burocracia", "burocracia"),
+    "empresa": ("empresa", "empresa"),
+    "entrar_coalizao": ("entrar_coalizao", "entrar_coalizao"),
+    "sair_coalizao": ("sair_coalizao", "sair_coalizao"),
+    "ideologia": (None, ("esquerda", "centro")),   # dummies validadas juntas
+}
+# só descritivas (endógenas no artigo): não entram na Tabela 6
+SO_DESCRITIVAS = {"concentracao_atual", "competicao_atual"}
+ROTULOS_VAL = {"concentracao_ant": "Concentração da eleição anterior", "concentracao_atual": "Concentração da eleição atual",
+               "competicao_atual": "Competição", "mesma_base": "MesmaBase", "governador": "Governador",
+               "projetos": "Projetos", "senior": "Senior", "histleg": "Histleg", "histexec": "Histexec",
+               "burocracia": "Burocracia", "empresa": "Empresa", "entrar_coalizao": "EntrarCoalizão",
+               "sair_coalizao": "SairCoalizão", "ideologia": "Esquerda / Centro"}
 
 
 # ------------------------------------------------------------------ coleta Câmara (50ª legislatura)
@@ -280,8 +297,7 @@ def montar():
 def amostra_1998(p):
     excl = {"Distrito Federal (sem votação por município em 1998)": p["uf"] == "DF",
             "eleito prefeito, vice ou vereador em 1996": p["eleito_municipal_1996"] == 1,
-            "sem candidatura a dep. federal em 1994 ligada no TSE": p["sq_1994"].isna(),
-            "partido sem nota ideológica": p["ideologia"].isna()}
+            "sem candidatura a dep. federal em 1994 ligada no TSE": p["sq_1994"].isna()}
     fora = pd.Series(False, index=p.index)
     cont = {}
     for k, m in excl.items():
@@ -290,11 +306,86 @@ def amostra_1998(p):
     return p[~fora].copy(), cont
 
 
-def amostra_2026():
-    from replicar_artigo import carregar
-    _, a, _ = carregar()
-    a = a.rename(columns={"concentracao_2022": "concentracao_ant"})
-    return a
+def ler_artigo():
+    import csv
+    def ler(nome):
+        return list(csv.DictReader([l for l in (M / nome).read_text().splitlines() if not l.startswith("#")],
+                                   delimiter=";"))
+    medias = {r["variavel"]: r for r in ler("artigo_1998_tabelas.csv")}
+    t6 = {(r["equacao"], r["variavel"]): r for r in ler("artigo_1998_tabela6.csv")}
+    return medias, t6
+
+
+def leitura(coef, p):
+    """Mesmo resultado = mesmo sinal e mesma significância a 10%."""
+    return ("+" if coef > 0 else "-") if p < 0.10 else "n.s."
+
+
+def p_de_z(z):
+    from scipy import stats
+    return float(2 * stats.norm.sf(abs(z)))
+
+
+def especificacao(vars_):
+    """Equações do modelo com as variáveis aprovadas, na posição em que a Tabela 6 do artigo as coloca."""
+    _, t6 = ler_artigo()
+    sel, out = [], []
+    for v in vars_:
+        if v in SO_DESCRITIVAS:
+            continue
+        nomes = CANDIDATAS[v][1]
+        nomes = nomes if isinstance(nomes, tuple) else (nomes,)
+        cols = list(nomes) if v == "ideologia" else [v]
+        if any(("seleção", n) in t6 for n in nomes):
+            sel += cols
+        if any(("resultado", n) in t6 for n in nomes):
+            out += cols
+    return sel, out
+
+
+def checar(a98, vars_):
+    """Compara o nosso 1998 com o artigo para cada variável; devolve o modelo e a tabela de checagens."""
+    medias_art, t6 = ler_artigo()
+    sel, out = especificacao(vars_)
+    m = heckprobit(a98, sel, out)
+    coefs = {(c["equacao"], c["variavel"]): c for c in m["tabela"].to_dict("records")}
+    md = teste_medias(a98, [v for v in vars_ if v != "ideologia"] + (["esquerda", "centro"] if "ideologia" in vars_ else []))
+    md = md.set_index("variavel")
+    linhas = []
+    for v in vars_:
+        nome_med, nome_t6 = CANDIDATAS[v]
+        if nome_med and v in md.index:
+            ra = medias_art[nome_med]
+            za, zn = float(ra["z"]), float(md.loc[v, "z"])
+            linhas.append({"variavel": v, "estatistica": "Tabela 2/3: teste de médias (Z)",
+                           "artigo": za, "nosso_1998": zn,
+                           "leitura_artigo": leitura(za, p_de_z(za)), "leitura_nossa": leitura(zn, p_de_z(zn))})
+        if nome_t6:
+            pares = list(zip(nome_t6, ["esquerda", "centro"])) if isinstance(nome_t6, tuple) else [(nome_t6, v)]
+            for na, nn in pares:
+                for eq in ("seleção", "resultado"):
+                    ra = t6.get((eq, na))
+                    if ra is None:
+                        continue
+                    c = coefs.get((eq, nn))
+                    linhas.append({"variavel": v, "estatistica": f"Tabela 6: {eq}" + (f" ({nn})" if v == "ideologia" else ""),
+                                   "artigo": float(ra["coef"]), "nosso_1998": c["coef"] if c else None,
+                                   "leitura_artigo": leitura(float(ra["coef"]), float(ra["p"])),
+                                   "leitura_nossa": leitura(c["coef"], c["p"]) if c else "ausente"})
+    ch = pd.DataFrame(linhas)
+    ch["igual"] = ch["leitura_artigo"] == ch["leitura_nossa"]
+    return m, ch, sel, out
+
+
+def tabela1_1998(a98, vars_):
+    """Tabela 1 do artigo: Concentração98 explicada por Concentração94 (+ variáveis aprovadas)."""
+    import statsmodels.api as sm
+    d = a98[a98["concorreu_reeleicao"] == 1]
+    xs = ["concentracao_ant"] + [v for v in ("senior", "histleg", "histexec", "sair_coalizao") if v in vars_]
+    d = d.dropna(subset=xs + ["concentracao_atual"])
+    r = sm.OLS(d["concentracao_atual"], sm.add_constant(d[xs].astype(float))).fit(cov_type="HC1")
+    return {"coef": float(r.params["concentracao_ant"]), "p": float(r.pvalues["concentracao_ant"]),
+            "r2_ajustado": float(r.rsquared_adj), "n": int(r.nobs), "regressores": xs}
 
 
 def main():
@@ -302,33 +393,43 @@ def main():
     coletar_camara()
     p = montar()
     a98, excl = amostra_1998(p)
-    a26 = amostra_2026()
     print(f"1998: painel {len(p)} -> amostra {len(a98)}; concorreram {int(a98['concorreu_reeleicao'].sum())}, "
           f"reeleitos {int(a98['reeleito'].sum())}")
-    res = {"amostra_1998": {"painel": len(p), "analise": len(a98), "exclusoes": excl,
-                            "com_candidatura_1998": int((p["cargo_disputado_1998"] != "NÃO CONCORREU").sum()),
-                            "concorreram": int(a98["concorreu_reeleicao"].sum()),
-                            "reeleitos": int(a98["reeleito"].sum()),
-                            "cargo_disputado": a98["cargo_disputado_1998"].value_counts().to_dict()},
-           "artigo": ARTIGO, "modelos": {}}
-    for nome, a in (("1998", a98), ("2026", a26)):
-        print(f"Heckman probit reduzido {nome}...")
-        m = heckprobit(a, SEL, OUT)
-        pr = probit_simples(a, OUT)
-        m["tabela"].to_csv(SAIDA / f"heckprobit_reduzido_{nome}.csv", index=False)
-        pr["tabela"].to_csv(SAIDA / f"probit_reduzido_{nome}.csv", index=False)
-        res["modelos"][nome] = {**{k: v for k, v in m.items() if k != "tabela"},
-                                "coefs": m["tabela"].to_dict("records"),
-                                "probit": {"n": pr["n"], "coefs": pr["tabela"].to_dict("records")}}
-        print(f"  n={m['n']} sel={m['n_selecionados']} rho={m['rho']:.3f} LR={m['lr_rho0']:.2f} "
-              f"p={m['p_lr_rho0']:.3f}")
-    medias = teste_medias(a98, ["concentracao_ant", "concentracao_atual", "competicao_atual", "mesma_base",
-                                "governador", "projetos", "senior", "histleg", "histexec", "burocracia", "empresa",
-                                "entrar_coalizao", "sair_coalizao", "esquerda", "centro", "direita"])
-    medias.to_csv(SAIDA / "medias_1998.csv", index=False)
-    res["medias_1998"] = medias.to_dict("records")
-    (SAIDA / "resultados.json").write_text(json.dumps(res, ensure_ascii=False, indent=1, default=float))
-    print(f"resultados em {SAIDA}/")
+
+    vars_ = list(CANDIDATAS)
+    rodadas, reprovadas = [], {}
+    while True:
+        m, ch, sel, out = checar(a98, vars_)
+        falhas = sorted(set(ch.loc[~ch["igual"], "variavel"]))
+        rodadas.append({"variaveis": list(vars_), "reprovadas": falhas, "rho": m["rho"], "p_lr": m["p_lr_rho0"]})
+        print(f"  rodada {len(rodadas)}: {len(vars_)} variáveis, reprovadas {falhas}")
+        if not falhas:
+            break
+        for v in falhas:
+            reprovadas[v] = ch[(ch["variavel"] == v) & ~ch["igual"]].to_dict("records")
+        vars_ = [v for v in vars_ if v not in falhas]
+    t1 = tabela1_1998(a98, vars_)
+    t1_ok = leitura(t1["coef"], t1["p"]) == "+"            # artigo: 0,77*** positivo
+    if not t1_ok and "concentracao_ant" in vars_:
+        vars_.remove("concentracao_ant")
+    ch.to_csv(SAIDA / "checagens_finais.csv", index=False)
+    m["tabela"].to_csv(SAIDA / "heckprobit_validado_1998.csv", index=False)
+    pr = probit_simples(a98, out)
+    pr["tabela"].to_csv(SAIDA / "probit_validado_1998.csv", index=False)
+    res = {
+        "regra": "mesmo sinal e mesma significância a 10% em todas as estatísticas do artigo",
+        "amostra_1998": {"painel": len(p), "analise": len(a98), "exclusoes": excl,
+                         "concorreram": int(a98["concorreu_reeleicao"].sum()), "reeleitos": int(a98["reeleito"].sum())},
+        "sem_dados_1998": SEM_DADOS_1998, "rotulos": ROTULOS_VAL,
+        "aprovadas": vars_, "selecao": sel, "resultado": out,
+        "reprovadas": reprovadas, "rodadas": rodadas, "checagens_finais": ch.to_dict("records"),
+        "tabela1_1998": {**t1, "artigo_coef": 0.77, "artigo_r2_ajustado": 0.78, "confere": t1_ok},
+        "modelo_1998": {**{k: v for k, v in m.items() if k != "tabela"}, "coefs": m["tabela"].to_dict("records")},
+        "rho_artigo": {"rho": 0.581, "p_lr": 0.2855},
+    }
+    (SAIDA / "variaveis_validadas.json").write_text(json.dumps(res, ensure_ascii=False, indent=1, default=float))
+    print(f"aprovadas: {vars_}; rho 1998 = {m['rho']:.3f} (LR p = {m['p_lr_rho0']:.3f}); "
+          f"Tabela 1: coef {t1['coef']:.3f}, R2aj {t1['r2_ajustado']:.3f}")
 
 
 if __name__ == "__main__":

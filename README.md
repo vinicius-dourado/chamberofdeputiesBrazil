@@ -99,12 +99,15 @@ Variáveis e definições: [`DICIONARIO_REELEICAO.md`](DICIONARIO_REELEICAO.md).
 
 ### Validação com 1998 – `validar_1998.py`
 
-Aplica o mesmo código à 50ª legislatura e à eleição de 1998 (o caso do artigo), com um modelo reduzido às variáveis
-que existem nos dois períodos, para separar falha de dados de mudança de cenário. Resultado na seção
-"Validação com os dados de 1998" de `relatorio.html`.
+Etapa obrigatória antes da replicação. Aplica o mesmo código à 50ª legislatura e à eleição de 1998 (o caso do artigo)
+e compara com as Tabelas 1, 2, 3 e 6 do artigo (`dados/manual/artigo_1998_*.csv`). Uma variável só segue para 2026
+se o nosso cálculo chega ao mesmo resultado do artigo (mesmo sinal e mesma significância a 10%) em todas as
+estatísticas publicadas; variáveis sem dados de 1998 ficam de fora. A lista aprovada vai para
+`resultados/validacao_1998/variaveis_validadas.json`, que `replicar_artigo.py` lê.
 
 ```bash
 python baixar_tse.py --anos 1994 1998 --sem-contas
-python validar_1998.py        # coleta a 50ª legislatura na Câmara (~5 min na primeira vez)
+python validar_1998.py
+python replicar_artigo.py
 python gerar_relatorio.py
 ```

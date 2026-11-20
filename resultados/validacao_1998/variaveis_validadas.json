@@ -1,0 +1,505 @@
+{
+ "regra": "mesmo sinal e mesma significância a 10% em todas as estatísticas do artigo",
+ "amostra_1998": {
+  "painel": 638,
+  "analise": 528,
+  "exclusoes": {
+   "Distrito Federal (sem votação por município em 1998)": 10,
+   "eleito prefeito, vice ou vereador em 1996": 42,
+   "sem candidatura a dep. federal em 1994 ligada no TSE": 58
+  },
+  "concorreram": 413,
+  "reeleitos": 268
+ },
+ "sem_dados_1998": {
+  "ausencia": "sem votações nominais de 1995-1998 na API da Câmara",
+  "indice": "sem votações nominais nem orientação do governo de 1995-1998",
+  "mesa": "sem Mesa da 50ª legislatura na API da Câmara",
+  "permanente": "sem comissões da 50ª legislatura na API da Câmara",
+  "especial": "sem comissões da 50ª legislatura na API da Câmara",
+  "partpos": "sem lideranças da 50ª legislatura na API da Câmara",
+  "lider": "listas de influentes não coletadas",
+  "gastos": "sem prestação de contas de 1998 nos dados abertos do TSE"
+ },
+ "rotulos": {
+  "concentracao_ant": "Concentração da eleição anterior",
+  "concentracao_atual": "Concentração da eleição atual",
+  "competicao_atual": "Competição",
+  "mesma_base": "MesmaBase",
+  "governador": "Governador",
+  "projetos": "Projetos",
+  "senior": "Senior",
+  "histleg": "Histleg",
+  "histexec": "Histexec",
+  "burocracia": "Burocracia",
+  "empresa": "Empresa",
+  "entrar_coalizao": "EntrarCoalizão",
+  "sair_coalizao": "SairCoalizão",
+  "ideologia": "Esquerda / Centro"
+ },
+ "aprovadas": [
+  "concentracao_ant",
+  "concentracao_atual",
+  "competicao_atual",
+  "mesma_base",
+  "senior",
+  "histleg",
+  "histexec",
+  "sair_coalizao"
+ ],
+ "selecao": [
+  "concentracao_ant",
+  "senior",
+  "histleg",
+  "histexec",
+  "sair_coalizao"
+ ],
+ "resultado": [
+  "mesma_base",
+  "senior",
+  "histexec",
+  "sair_coalizao"
+ ],
+ "reprovadas": {
+  "burocracia": [
+   {
+    "variavel": "burocracia",
+    "estatistica": "Tabela 2/3: teste de médias (Z)",
+    "artigo": -0.87,
+    "nosso_1998": 2.0743320330335036,
+    "leitura_artigo": "n.s.",
+    "leitura_nossa": "+",
+    "igual": false
+   }
+  ],
+  "empresa": [
+   {
+    "variavel": "empresa",
+    "estatistica": "Tabela 2/3: teste de médias (Z)",
+    "artigo": -0.32,
+    "nosso_1998": -1.8993767647246251,
+    "leitura_artigo": "n.s.",
+    "leitura_nossa": "-",
+    "igual": false
+   },
+   {
+    "variavel": "empresa",
+    "estatistica": "Tabela 6: seleção",
+    "artigo": 0.1602187,
+    "nosso_1998": 0.34556494963456474,
+    "leitura_artigo": "n.s.",
+    "leitura_nossa": "+",
+    "igual": false
+   }
+  ],
+  "entrar_coalizao": [
+   {
+    "variavel": "entrar_coalizao",
+    "estatistica": "Tabela 2/3: teste de médias (Z)",
+    "artigo": -1.18,
+    "nosso_1998": -1.8042476275543855,
+    "leitura_artigo": "n.s.",
+    "leitura_nossa": "-",
+    "igual": false
+   }
+  ],
+  "governador": [
+   {
+    "variavel": "governador",
+    "estatistica": "Tabela 6: seleção",
+    "artigo": -0.0214259,
+    "nosso_1998": -0.2975256832460569,
+    "leitura_artigo": "n.s.",
+    "leitura_nossa": "-",
+    "igual": false
+   }
+  ],
+  "ideologia": [
+   {
+    "variavel": "ideologia",
+    "estatistica": "Tabela 6: resultado (esquerda)",
+    "artigo": 0.0699558,
+    "nosso_1998": -0.2976726418311845,
+    "leitura_artigo": "n.s.",
+    "leitura_nossa": "-",
+    "igual": false
+   }
+  ],
+  "projetos": [
+   {
+    "variavel": "projetos",
+    "estatistica": "Tabela 2/3: teste de médias (Z)",
+    "artigo": 1.49,
+    "nosso_1998": 4.111399111562448,
+    "leitura_artigo": "n.s.",
+    "leitura_nossa": "+",
+    "igual": false
+   },
+   {
+    "variavel": "projetos",
+    "estatistica": "Tabela 6: seleção",
+    "artigo": 0.0568634,
+    "nosso_1998": 0.42132507951782905,
+    "leitura_artigo": "n.s.",
+    "leitura_nossa": "+",
+    "igual": false
+   },
+   {
+    "variavel": "projetos",
+    "estatistica": "Tabela 6: resultado",
+    "artigo": 0.1214789,
+    "nosso_1998": 0.5527797222717243,
+    "leitura_artigo": "n.s.",
+    "leitura_nossa": "+",
+    "igual": false
+   }
+  ]
+ },
+ "rodadas": [
+  {
+   "variaveis": [
+    "concentracao_ant",
+    "concentracao_atual",
+    "competicao_atual",
+    "mesma_base",
+    "governador",
+    "projetos",
+    "senior",
+    "histleg",
+    "histexec",
+    "burocracia",
+    "empresa",
+    "entrar_coalizao",
+    "sair_coalizao",
+    "ideologia"
+   ],
+   "reprovadas": [
+    "burocracia",
+    "empresa",
+    "entrar_coalizao",
+    "governador",
+    "ideologia",
+    "projetos"
+   ],
+   "rho": 0.9999844101185127,
+   "p_lr": 0.042233170590491094
+  },
+  {
+   "variaveis": [
+    "concentracao_ant",
+    "concentracao_atual",
+    "competicao_atual",
+    "mesma_base",
+    "senior",
+    "histleg",
+    "histexec",
+    "sair_coalizao"
+   ],
+   "reprovadas": [],
+   "rho": 0.9978341013558475,
+   "p_lr": 0.005301374142651652
+  }
+ ],
+ "checagens_finais": [
+  {
+   "variavel": "concentracao_ant",
+   "estatistica": "Tabela 2/3: teste de médias (Z)",
+   "artigo": -3.79,
+   "nosso_1998": -3.0461677036131545,
+   "leitura_artigo": "-",
+   "leitura_nossa": "-",
+   "igual": true
+  },
+  {
+   "variavel": "concentracao_ant",
+   "estatistica": "Tabela 6: seleção",
+   "artigo": 0.0074706,
+   "nosso_1998": 0.8362509997381868,
+   "leitura_artigo": "+",
+   "leitura_nossa": "+",
+   "igual": true
+  },
+  {
+   "variavel": "concentracao_atual",
+   "estatistica": "Tabela 2/3: teste de médias (Z)",
+   "artigo": -4.04,
+   "nosso_1998": -3.4447784046539947,
+   "leitura_artigo": "-",
+   "leitura_nossa": "-",
+   "igual": true
+  },
+  {
+   "variavel": "competicao_atual",
+   "estatistica": "Tabela 2/3: teste de médias (Z)",
+   "artigo": 3.0,
+   "nosso_1998": 2.6309537630823527,
+   "leitura_artigo": "+",
+   "leitura_nossa": "+",
+   "igual": true
+  },
+  {
+   "variavel": "mesma_base",
+   "estatistica": "Tabela 2/3: teste de médias (Z)",
+   "artigo": -0.71,
+   "nosso_1998": -0.2293795257651548,
+   "leitura_artigo": "n.s.",
+   "leitura_nossa": "n.s.",
+   "igual": true
+  },
+  {
+   "variavel": "mesma_base",
+   "estatistica": "Tabela 6: resultado",
+   "artigo": -0.0881871,
+   "nosso_1998": 0.01108129545358352,
+   "leitura_artigo": "n.s.",
+   "leitura_nossa": "n.s.",
+   "igual": true
+  },
+  {
+   "variavel": "senior",
+   "estatistica": "Tabela 6: seleção",
+   "artigo": 0.0178761,
+   "nosso_1998": -0.039934333411697054,
+   "leitura_artigo": "n.s.",
+   "leitura_nossa": "n.s.",
+   "igual": true
+  },
+  {
+   "variavel": "senior",
+   "estatistica": "Tabela 6: resultado",
+   "artigo": -0.0004461,
+   "nosso_1998": -0.059510503721946086,
+   "leitura_artigo": "n.s.",
+   "leitura_nossa": "n.s.",
+   "igual": true
+  },
+  {
+   "variavel": "histleg",
+   "estatistica": "Tabela 2/3: teste de médias (Z)",
+   "artigo": -1.49,
+   "nosso_1998": -0.7118161446826928,
+   "leitura_artigo": "n.s.",
+   "leitura_nossa": "n.s.",
+   "igual": true
+  },
+  {
+   "variavel": "histleg",
+   "estatistica": "Tabela 6: seleção",
+   "artigo": 0.0436295,
+   "nosso_1998": -0.010584636682144672,
+   "leitura_artigo": "n.s.",
+   "leitura_nossa": "n.s.",
+   "igual": true
+  },
+  {
+   "variavel": "histexec",
+   "estatistica": "Tabela 2/3: teste de médias (Z)",
+   "artigo": -2.2,
+   "nosso_1998": -1.8580897612091605,
+   "leitura_artigo": "-",
+   "leitura_nossa": "-",
+   "igual": true
+  },
+  {
+   "variavel": "histexec",
+   "estatistica": "Tabela 6: seleção",
+   "artigo": -0.1730562,
+   "nosso_1998": -0.24990371421667593,
+   "leitura_artigo": "-",
+   "leitura_nossa": "-",
+   "igual": true
+  },
+  {
+   "variavel": "histexec",
+   "estatistica": "Tabela 6: resultado",
+   "artigo": -0.2855194,
+   "nosso_1998": -0.24069609135927156,
+   "leitura_artigo": "-",
+   "leitura_nossa": "-",
+   "igual": true
+  },
+  {
+   "variavel": "sair_coalizao",
+   "estatistica": "Tabela 2/3: teste de médias (Z)",
+   "artigo": -2.18,
+   "nosso_1998": -1.6791148345930769,
+   "leitura_artigo": "-",
+   "leitura_nossa": "-",
+   "igual": true
+  },
+  {
+   "variavel": "sair_coalizao",
+   "estatistica": "Tabela 6: seleção",
+   "artigo": -0.366649,
+   "nosso_1998": -0.2043227475458398,
+   "leitura_artigo": "n.s.",
+   "leitura_nossa": "n.s.",
+   "igual": true
+  },
+  {
+   "variavel": "sair_coalizao",
+   "estatistica": "Tabela 6: resultado",
+   "artigo": -0.9476684,
+   "nosso_1998": -0.9075425727348234,
+   "leitura_artigo": "-",
+   "leitura_nossa": "-",
+   "igual": true
+  }
+ ],
+ "tabela1_1998": {
+  "coef": 0.84208498247942,
+  "p": 0.0,
+  "r2_ajustado": 0.8162046299943571,
+  "n": 407,
+  "regressores": [
+   "concentracao_ant",
+   "senior",
+   "histleg",
+   "histexec",
+   "sair_coalizao"
+  ],
+  "artigo_coef": 0.77,
+  "artigo_r2_ajustado": 0.78,
+  "confere": true
+ },
+ "modelo_1998": {
+  "perfil_rho": [
+   {
+    "rho": -0.9,
+    "loglik": -526.7501658233193
+   },
+   {
+    "rho": -0.5,
+    "loglik": -526.1843578686808
+   },
+   {
+    "rho": 0.0,
+    "loglik": -525.1356716568744
+   },
+   {
+    "rho": 0.5,
+    "loglik": -523.5584700276885
+   },
+   {
+    "rho": 0.9,
+    "loglik": -521.5648285502584
+   },
+   {
+    "rho": 0.99,
+    "loglik": -521.2489319718568
+   },
+   {
+    "rho": 0.999,
+    "loglik": -521.2488453122126
+   }
+  ],
+  "rho": 0.9978341013558475,
+  "atanh_rho": 3.4134917849714204,
+  "atanh_rho_ep": 3.393764846296066e-08,
+  "rho_ic95": [
+   0.9978341010680178,
+   0.997834101643677
+  ],
+  "lr_rho0": 7.773652689300889,
+  "p_lr_rho0": 0.005301374142651652,
+  "loglik": -521.2488453122128,
+  "n": 521,
+  "n_selecionados": 407,
+  "n_reeleitos": 268,
+  "convergiu": true,
+  "coefs": [
+   {
+    "equacao": "seleção",
+    "variavel": "const",
+    "coef": 0.6002573636893376,
+    "ep": 0.12824091159837742,
+    "z": 4.680701004132073,
+    "p": 2.858956463799877e-06
+   },
+   {
+    "equacao": "seleção",
+    "variavel": "concentracao_ant",
+    "coef": 0.8362509997381868,
+    "ep": 0.24674844981458102,
+    "z": 3.389083094003578,
+    "p": 0.0007012675640450019
+   },
+   {
+    "equacao": "seleção",
+    "variavel": "senior",
+    "coef": -0.039934333411697054,
+    "ep": 0.04473961101662001,
+    "z": -0.892594560039025,
+    "p": 0.3720743334364345
+   },
+   {
+    "equacao": "seleção",
+    "variavel": "histleg",
+    "coef": -0.010584636682144672,
+    "ep": 0.03729886714819227,
+    "z": -0.28377903918879926,
+    "p": 0.7765797187542798
+   },
+   {
+    "equacao": "seleção",
+    "variavel": "histexec",
+    "coef": -0.24990371421667593,
+    "ep": 0.0922171626497693,
+    "z": -2.7099479862092797,
+    "p": 0.006729376021456676
+   },
+   {
+    "equacao": "seleção",
+    "variavel": "sair_coalizao",
+    "coef": -0.2043227475458398,
+    "ep": 0.42299623734264086,
+    "z": -0.483036796803305,
+    "p": 0.6290696093003856
+   },
+   {
+    "equacao": "resultado",
+    "variavel": "const",
+    "coef": 0.17670816922786367,
+    "ep": 0.10335956232658178,
+    "z": 1.7096450995944112,
+    "p": 0.0873315205326194
+   },
+   {
+    "equacao": "resultado",
+    "variavel": "mesma_base",
+    "coef": 0.01108129545358352,
+    "ep": 0.09993767578968174,
+    "z": 0.11088206090467864,
+    "p": 0.9117098711959962
+   },
+   {
+    "equacao": "resultado",
+    "variavel": "senior",
+    "coef": -0.059510503721946086,
+    "ep": 0.04148614052836931,
+    "z": -1.4344671006754952,
+    "p": 0.15143901105544483
+   },
+   {
+    "equacao": "resultado",
+    "variavel": "histexec",
+    "coef": -0.24069609135927156,
+    "ep": 0.09191208465950658,
+    "z": -2.618764357820232,
+    "p": 0.008824888425105435
+   },
+   {
+    "equacao": "resultado",
+    "variavel": "sair_coalizao",
+    "coef": -0.9075425727348234,
+    "ep": 0.4509804152784693,
+    "z": -2.0123769059337935,
+    "p": 0.04418022102962898
+   }
+  ]
+ },
+ "rho_artigo": {
+  "rho": 0.581,
+  "p_lr": 0.2855
+ }
+}
