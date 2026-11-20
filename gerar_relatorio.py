@@ -12,30 +12,6 @@ R = json.loads(Path("resultados/replicacao/resultados.json").read_text())
 SAIDA = Path("resultados/replicacao/relatorio.html")
 ROT = R["rotulos"]
 
-# Resultado do artigo (1998) segundo o texto de Pereira & Rennó (2001), para comparação.
-# (variável, o que o artigo encontrou, chave para buscar o nosso resultado)
-ARTIGO = [
-    ("Concentração", "Quem dispersa votos tem mais chance de se reeleger (endógena; fora do modelo principal)",
-     "concentracao_2022"),
-    ("Competição", "Quem enfrenta menos competição no reduto tem mais chance (endógena)", "competicao_2026"),
-    ("MesmaBase", "Não significativa, sinal negativo", "mesma_base"),
-    ("Gastos", "Reeleitos gastam mais na média, mas a variância dos perdedores é muito maior; "
-               "per capita, os perdedores gastam mais. Fora do modelo", "gastos"),
-    ("Governador", "Sem efeito direto na reeleição; afeta a distribuição de votos", "governador"),
-    ("Projetos", "Não significativa", "projetos"),
-    ("Ausência (% das votações)", "Reduz a chance de reeleição (10%); não afeta a decisão de concorrer", "ausencia_pct"),
-    ("Permanente", "Cargos em comissões permanentes aumentam a chance de concorrer e de ganhar",
-     "permanente"),
-    ("Partpos", "Cargos na hierarquia do partido aumentam a chance de concorrer e de ganhar", "partpos"),
-    ("Senior", "Não significativa", "senior"),
-    ("Histexec", "Reduz a chance de concorrer e de ganhar", "histexec"),
-    ("Burocracia / Empresa", "Só na seleção; não significativas", "burocracia"),
-    ("SairCoalizão", "Reduz a chance de reeleição; não afeta a decisão de concorrer", "sair_coalizao"),
-    ("Índice", "Aumenta a chance de concorrer; não afeta o resultado", "indice"),
-    ("Seleção (ρ)", "Equações independentes: hipótese de ρ = 0 não rejeitada", "rho"),
-]
-
-
 def esc(x):
     return html.escape(str(x))
 
@@ -74,47 +50,33 @@ def celula(c):
             f'<span class="ep">({num(c["ep"])})</span></td>')
 
 
-# --------------------------------------------------------------------------- nosso resultado
-def nosso(chave):
-    a = R["tabela6"]["artigo"]
-    if chave == "rho":
-        return (f"ρ = {num(a['rho'], 2)} (no limite do intervalo); LR χ² = {num(a['lr_rho0'], 2)}, "
-                f"p = {num(a['p_lr_rho0'], 3)}: independência rejeitada", "diverge")
-    if chave == "gastos":
-        g = {(x["variavel"], x["grupo"]): x for x in R["tabelas4_5"]}
-        r, n = g[("gastos_2026", "reeleitos")], g[("gastos_2026", "não reeleitos")]
-        rp, np_ = g[("gastos_por_eleitor_2026", "reeleitos")], g[("gastos_por_eleitor_2026", "não reeleitos")]
-        return (f"Reeleitos gastam mais (R$ {num(r['media'] / 1e6, 2)} mi × {num(n['media'] / 1e6, 2)} mi) e a "
-                f"dispersão dos perdedores é maior (CV {num(n['cv'], 2)} × {num(r['cv'], 2)}); "
-                f"por eleitor, os reeleitos também gastam mais ({num(rp['media'], 2)} × {num(np_['media'], 2)})",
-                "parcial")
-    if chave in ("competicao_2026",):
-        t = {x["variavel"]: x for x in R["tabela2"]}[chave]
-        return (f"Reeleitos enfrentam menos competição: médias {num(t['media_reeleitos'])} × "
-                f"{num(t['media_nao_reeleitos'])} (Z = {num(t['z'], 2)}{estrelas(t['p'])})", "confirma")
-    s = coef_de(a, "seleção", chave)
-    o = coef_de(a, "resultado", chave)
+# ------------------------------------------------------------------ Tabela 6 do artigo (1998)
+def tabela6_artigo():
+    import csv
+    linhas = [l for l in Path("dados/manual/artigo_1998_tabela6.csv").read_text().splitlines() if not l.startswith("#")]
+    nomes = {"concentracao": "concentracao_2022", "ausencia": "ausencia_pct"}
+    coefs = []
+    for r in csv.DictReader(linhas, delimiter=";"):
+        if r["variavel"] in ("emendas", "pork", "media_execucao"):
+            continue
+        c, z = float(r["coef"]), float(r["z"])
+        coefs.append({"equacao": r["equacao"], "variavel": nomes.get(r["variavel"], r["variavel"]), "coef": c,
+                      "ep": abs(c / z) if z else float("nan"), "z": z, "p": float(r["p"])})
+    at, at_ep = 0.6641988, 0.6641988 / 1.11
+    return {"coefs": coefs, "n": 536, "n_selecionados": 430, "n_reeleitos": "–", "rho": math.tanh(at),
+            "rho_ic95": [math.tanh(at - 1.96 * at_ep), math.tanh(at + 1.96 * at_ep)], "lr_rho0": 1.14,
+            "p_lr_rho0": 0.2855, "loglik": -493.0925}
 
-    def f(c):
-        return "–" if c is None else f"{num(c['coef'])}{estrelas(c['p']) or ' (n.s.)'}"
-    texto = f"seleção {f(s)}; resultado {f(o)}"
-    sig_o = o is not None and o["p"] < 0.1
-    sig_s = s is not None and s["p"] < 0.1
-    veredito = {
-        "concentracao_2022": "confirma" if sig_o and o["coef"] < 0 else "diverge",
-        "mesma_base": "confirma" if not sig_o else "diverge",
-        "governador": "confirma" if not sig_o else "diverge",
-        "projetos": "confirma" if not sig_o and not sig_s else "diverge",
-        "ausencia_pct": "diverge" if not (sig_o and o["coef"] < 0) else ("confirma" if not sig_s else "parcial"),
-        "permanente": "confirma" if sig_o and sig_s and o["coef"] > 0 and s["coef"] > 0 else "parcial",
-        "partpos": "confirma" if sig_o and sig_s and o["coef"] > 0 and s["coef"] > 0 else "parcial",
-        "senior": "confirma" if not sig_o else "diverge",
-        "histexec": ("confirma" if sig_o and sig_s else "parcial") if (s and s["coef"] < 0) else "diverge",
-        "burocracia": "confirma" if not sig_s else "diverge",
-        "sair_coalizao": "confirma" if sig_o and o["coef"] < 0 else "diverge",
-        "indice": "confirma" if sig_s and s["coef"] > 0 and not sig_o else "parcial",
-    }.get(chave, "parcial")
-    return texto, veredito
+
+ART6 = tabela6_artigo()
+
+
+def concorda(a, b):
+    """1 se os dois coeficientes têm a mesma leitura (ambos n.s., ou ambos significativos com o mesmo sinal)."""
+    if a is None or b is None:
+        return None
+    sa, sb = a["p"] < 0.1, b["p"] < 0.1
+    return int(sa == sb and (not sa or (a["coef"] > 0) == (b["coef"] > 0)))
 
 
 ROTULO_VEREDITO = {"confirma": "Confirma", "parcial": "Em parte", "diverge": "Diverge"}
@@ -123,39 +85,38 @@ ROTULO_VEREDITO = {"confirma": "Confirma", "parcial": "Em parte", "diverge": "Di
 VAL = Path("resultados/validacao_1998/resultados.json")
 # diagnóstico de cada divergência, com base no modelo reduzido estimado para 1998 e 2026
 DIAG = [
-    ("Seleção (ρ)", "rho", "Independência (ρ = 0 não rejeitado)", "cenario",
-     "Com as variáveis corrigidas, o nosso código reproduz a independência em 1998 (ρ não difere de 0). Em 2026 ρ vai "
-     "ao limite. Na primeira validação 1998 também dava ρ → 1, por causa das três medidas erradas abaixo."),
-    ("Ausência", None, "Proporção de votações sem voto; reduz a reeleição (10%)", "corrigido",
-     "Usávamos o número de faltas; o artigo usa a proporção (médias 0,23 e 0,21). Corrigido. Em 2026 a proporção "
-     "reduz a chance de concorrer e não afeta o resultado. Sem votos nominais de 1995-1998 para testar."),
-    ("Burocracia", "burocracia", "Só na seleção, não significativa (média ≈ 0,5)", "corrigido",
-     "Nossa medida dava 4% em 1998; passou a incluir ocupações anteriores em órgãos públicos (cadastro da Câmara) e "
-     "chega a 0,56-0,66. Em 1998 deixa de ser significativa, como no artigo. Em 2026 é negativa no modelo "
-     "completo (Tabela 6) e não significativa no reduzido."),
-    ("Governador", "governador", "Sem efeito direto na reeleição", "corrigido",
-     "Em 1994 a composição das coligações não vem no cadastro de candidatos; passou a vir do arquivo de coligações do "
-     "TSE. Sem efeito no resultado em 1998 e 2026."),
-    ("EntrarCoalizão", "entrar_coalizao", "Troca de partido para a coalizão (médias 0,11 e 0,07)", "corrigido",
-     "Contávamos qualquer troca com destino na coalizão; passou a ser de fora para dentro, simétrica a SairCoalizão. "
-     "Médias de 1998: 0,18 e 0,11."),
-    ("SairCoalizão", "sair_coalizao", "Negativa no resultado, sem efeito na seleção", "cenario",
-     "Em 1998 o nosso código reproduz o artigo; em 2026 o efeito some. Ressalva: a planilha do Ipea termina em "
-     "abr/2024."),
+    ("Seleção (ρ)", "rho", "ρ ≈ 0,58, z = 1,11; independência não rejeitada (p = 0,29)", "nt",
+     "ρ vai a um dos limites conforme a especificação, em 1998 e em 2026. O próprio artigo estima ρ com muita "
+     "imprecisão. Não dá para atribuir a diferença ao cenário."),
+    ("Concentração (seleção)", "concentracao_ant", "Positiva na seleção (0,007**, em p.p.)", "cenario",
+     "Em 1998 o nosso código reproduz o sinal positivo; em 2026 é negativa: quem concentrou votos concorre menos."),
+    ("Histexec", "histexec", "Negativa na seleção (−0,17*) e no resultado (−0,29**)", "cenario",
+     "Em 1998 o nosso código reproduz as duas (−0,27*** e −0,23**); em 2026 segue negativa na seleção e passa a "
+     "positiva no resultado."),
+    ("SairCoalizão", "sair_coalizao", "Negativa no resultado (−0,95**); n.s. na seleção", "cenario",
+     "Em 1998 o nosso código reproduz o artigo (−0,84*); em 2026 não tem efeito. Ressalva: a planilha do Ipea termina "
+     "em abr/2024."),
     ("Senior", "senior", "Não significativa", "cenario",
-     "Em 1998 não é significativa, como no artigo; em 2026 é negativa. Mesma medida nos dois períodos."),
-    ("Histexec", "histexec", "Negativa na seleção e no resultado", "nt",
-     "Em 1998 reproduz o efeito na seleção, mas no resultado também sai não significativa. A divergência de 2026 no "
-     "resultado não pode ser atribuída ao cenário."),
-    ("Concentração", "concentracao_ant", "Dispersar votos favorece a reeleição", "ok",
-     "Negativa no resultado nos dois períodos; médias de 1998 quase iguais às do artigo."),
-    ("MesmaBase", "mesma_base", "Não significativa", "ok", "Não significativa nos dois períodos."),
-    ("Gastos por eleitor", None, "Perdedores gastam mais por eleitor", "nt",
+     "Não significativa em 1998, como no artigo; em 2026 reduz a chance de concorrer."),
+    ("Histleg, Burocracia, EntrarCoalizão", "burocracia", "Não significativas", "ok",
+     "Não significativas em 1998, como no artigo (Burocracia mostrada)."),
+    ("MesmaBase, Governador (resultado)", "mesma_base", "Não significativas", "ok",
+     "Não significativas em 1998 (MesmaBase mostrada). Em 2026 MesmaBase passa a negativa."),
+    ("Ausência", None, "Proporção; −1,02* no resultado, n.s. na seleção", "corrigido",
+     "Usávamos o número de faltas; corrigido para proporção. Em 2026 reduz a chance de concorrer, não a de se "
+     "reeleger. Sem votos nominais de 1995-1998 para testar."),
+    ("Burocracia, Governador, EntrarCoalizão (medidas)", None, "Médias das Tabelas 2 e 3", "corrigido",
+     "Corrigidas com as tabelas do artigo: ocupações em órgãos públicos, coligações de 1994 do TSE e troca de fora "
+     "para dentro da coalizão."),
+    ("Projetos, Esquerda, Governador e Empresa na seleção", None, "Não significativas", "limite",
+     "Diferem em 1998 por limite dos dados da época: situação atual das proposições; ideologia da onda de 2018 de "
+     "Bolognesi; coligações de 1994 incompletas."),
+    ("Gastos por eleitor", None, "Perdedores gastam mais por eleitor", "limite",
      "Não há prestação de contas de 1998 nos dados abertos do TSE."),
 ]
 ROT_DIAG = {"metodo": ("diverge", "Método ou medida"), "cenario": ("confirma", "Cenário mudou"),
-            "ok": ("confirma", "Sem divergência"), "nt": ("parcial", "Inconclusivo"),
-            "corrigido": ("parcial", "Erro nosso, corrigido")}
+            "ok": ("confirma", "Reproduz o artigo"), "nt": ("parcial", "Inconclusivo"),
+            "corrigido": ("parcial", "Erro nosso, corrigido"), "limite": ("parcial", "Limite dos dados de 1998")}
 ARTIGO_MEDIAS = Path("dados/manual/artigo_1998_tabelas.csv")
 # variável do artigo -> (coluna em medias_1998, coluna nas tabelas 2-3 de 2026, multiplicador)
 MAPA_MEDIAS = {
@@ -229,8 +190,8 @@ def secao_validacao():
   <h2 id="s-val">Validação com os dados de 1998</h2>
   <p>Para separar falha de dados de mudança de cenário, o mesmo código foi aplicado à 50ª legislatura (1995-1999) e à
   eleição de 1998, o caso do artigo. A Câmara não tem votações nominais, Mesa, comissões nem lideranças antes de 2003,
-  então o teste usa um modelo reduzido (Concentração 94/22, MesmaBase, Governador, Projetos, Senior, Histleg, Histexec,
-  Entrar/SairCoalizão, ideologia; Burocracia e Empresa só na seleção), estimado igual para 1998 e 2026.</p>
+  então o teste usa a estrutura da Tabela 6 do artigo só com as variáveis que existem nos dois períodos (Concentração,
+  Histleg, Burocracia e Empresa só na seleção; MesmaBase só no resultado), estimada igual para 1998 e 2026.</p>
   <div class="numeros">
     <div class="numero"><b>{a['painel']}</b><span>deputados da 50ª legislatura</span></div>
     <div class="numero"><b>{a['analise']}</b><span>na análise de 1998</span></div>
@@ -254,22 +215,39 @@ def secao_validacao():
 
 
 def secao_comparacao():
+    """Artigo (Tabela 6) x 2026 (mesma especificação), equação a equação."""
+    m = R["tabela6"]["artigo"]
+    vars_ = []
+    for c in ART6["coefs"]:
+        if c["variavel"] != "const" and c["variavel"] not in vars_:
+            vars_.append(c["variavel"])
+
+    def f(c):
+        return "–" if c is None else f"{num(c['coef'], 2)}{estrelas(c['p']) or ' n.s.'}"
     linhas = []
-    for nome, artigo, chave in ARTIGO:
-        texto, v = nosso(chave)
-        linhas.append(f'<tr><th scope="row">{esc(nome)}</th><td>{esc(artigo)}</td><td>{esc(texto)}</td>'
-                      f'<td><span class="chip {v}">{ROTULO_VEREDITO[v]}</span></td></tr>')
+    for v in vars_:
+        a_s, a_r = coef_de(ART6, "seleção", v), coef_de(ART6, "resultado", v)
+        n_s, n_r = coef_de(m, "seleção", v), coef_de(m, "resultado", v)
+        acordos = [x for x in (concorda(a_s, n_s), concorda(a_r, n_r)) if x is not None]
+        ver = "confirma" if all(acordos) else ("diverge" if not any(acordos) else "parcial")
+        linhas.append(f'<tr><th scope="row">{esc(rot(v))}</th><td class="n">{f(a_s)}</td><td class="n">{f(a_r)}</td>'
+                      f'<td class="n">{f(n_s)}</td><td class="n">{f(n_r)}</td>'
+                      f'<td><span class="chip {ver}">{ROTULO_VEREDITO[ver]}</span></td></tr>')
+    linhas.append(f'<tr><th scope="row">ρ (LR, ρ = 0)</th><td class="n" colspan="2">{num(ART6["rho"], 2)} (p = '
+                  f'{num(ART6["p_lr_rho0"], 3)})</td><td class="n" colspan="2">{num(m["rho"], 2)} (p = '
+                  f'{num(m["p_lr_rho0"], 3)})</td><td><span class="chip parcial">Instável</span></td></tr>')
     return "\n".join(linhas)
 
 
 def tabela_heck():
-    specs = [("artigo", "Especificação do artigo"), ("controles", "Com controles de mandato"),
-             ("titulares", "Só titulares de fev/2023")]
+    specs = [("art1998", "Artigo, 1998"), ("artigo", "2026, especificação do artigo"),
+             ("controles", "2026, com controles de mandato"), ("titulares", "2026, só titulares de fev/2023")]
+    T6 = dict(R["tabela6"], art1998=ART6)
     ordem = []
     for eq in ("seleção", "resultado"):
         vs = []
         for k, _ in specs:
-            for c in R["tabela6"][k]["coefs"]:
+            for c in T6[k]["coefs"]:
                 if c["equacao"] == eq and c["variavel"] not in vs:
                     vs.append(c["variavel"])
         vs = [v for v in vs if v != "const"] + ["const"]
@@ -283,7 +261,7 @@ def tabela_heck():
                 todas.append(v)
     corpo = []
     for v in todas:
-        cels = "".join(celula(coef_de(R["tabela6"][k], "seleção", v)) + celula(coef_de(R["tabela6"][k], "resultado", v))
+        cels = "".join(celula(coef_de(T6[k], "seleção", v)) + celula(coef_de(T6[k], "resultado", v))
                        for k, _ in specs)
         corpo.append(f'<tr><th scope="row">{esc(rot(v))}</th>{cels}</tr>')
     rod = []
@@ -294,9 +272,9 @@ def tabela_heck():
         ("LR χ²(1) para ρ = 0", lambda m: f"{num(m['lr_rho0'], 2)}{estrelas(m['p_lr_rho0'])} (p = {num(m['p_lr_rho0'], 3)})"),
         ("Log-verossimilhança", lambda m: num(m["loglik"], 1)),
     ):
-        cels = "".join(f'<td class="n" colspan="2">{esc(f(R["tabela6"][k]))}</td>' for k, _ in specs)
+        cels = "".join(f'<td class="n" colspan="2">{esc(f(T6[k]))}</td>' for k, _ in specs)
         rod.append(f'<tr><th scope="row">{rotulo}</th>{cels}</tr>')
-    return (f'<table class="larga"><thead><tr><th></th>{cab}</tr><tr><th scope="col">Variável</th>{sub}</tr></thead>'
+    return (f'<table class="larga t6"><thead><tr><th></th>{cab}</tr><tr><th scope="col">Variável</th>{sub}</tr></thead>'
             f'<tbody>{"".join(corpo)}</tbody><tfoot>{"".join(rod)}</tfoot></table>')
 
 
@@ -443,6 +421,7 @@ td.vazio {{ color: var(--muted); }}
 sup {{ font-size: 10px; margin-left: 1px; }}
 .ep {{ display: block; color: var(--muted); font-size: 11.5px; font-weight: 400; }}
 table.larga {{ min-width: 860px; }}
+table.t6 {{ min-width: 1100px; }}
 .comparacao td:nth-child(2), .comparacao td:nth-child(3) {{ min-width: 220px; }}
 .chip {{ display: inline-block; font: 600 11.5px/1 var(--body); padding: 5px 9px; border-radius: 999px; white-space: nowrap; }}
 .chip.confirma {{ color: var(--ok); background: var(--ok-bg); }}
@@ -489,24 +468,29 @@ a:focus-visible {{ outline: 2px solid var(--accent); outline-offset: 2px; }}
 
 <section aria-labelledby="s-comp">
   <h2 id="s-comp">Comparação com 1998</h2>
-  <p>Cada linha resume o achado do artigo e o resultado correspondente aqui, na especificação do artigo
-  (coeficientes do probit com seleção; * p&lt;0,10, ** p&lt;0,05, *** p&lt;0,01).</p>
-  <div class="rolagem"><table class="comparacao larga"><thead><tr><th scope="col">Variável</th>
-  <th scope="col">Artigo (1998)</th><th scope="col">Esta replicação (2026)</th><th scope="col">Leitura</th></tr></thead>
+  <p>Coeficientes da Tabela 6 do artigo e do mesmo modelo estimado para 2026, sem as variáveis de emendas
+  (* p&lt;0,10, ** p&lt;0,05, *** p&lt;0,01). Seleção = concorrer à reeleição; resultado = reeleger-se. "Confirma"
+  quando as duas equações têm a mesma leitura (ambas não significativas, ou significativas com o mesmo sinal).
+  Concentração em proporção aqui e em pontos percentuais no artigo.</p>
+  <div class="rolagem"><table class="larga"><thead><tr><th scope="col">Variável</th>
+  <th scope="col">Artigo: seleção</th><th scope="col">Artigo: resultado</th><th scope="col">2026: seleção</th>
+  <th scope="col">2026: resultado</th><th scope="col">Leitura</th></tr></thead>
   <tbody>{secao_comparacao()}</tbody></table></div>
   <ul class="achados">
-    <li><strong>Dispersar votos continua decisivo.</strong> Quem concentrou votos em um município em 2022 teve chance
-    bem menor de se reeleger, em todas as especificações.</li>
-    <li><strong>Posição hierárquica conta; produção legislativa não.</strong> Liderança partidária (Partpos) e cargos em
-    comissões permanentes aumentam a chance de concorrer e de ganhar; projetos aprovados não fazem diferença.</li>
-    <li><strong>Lealdade ao governo pesa na decisão de concorrer, não no resultado</strong>, como em 1998.</li>
-    <li><strong>A correlação entre as equações vai ao limite (ρ → 1)</strong>, e a independência é rejeitada, ao
-    contrário do artigo. Com as variáveis corrigidas, o nosso código reproduz a independência com os dados de 1998
-    (seção de validação), então essa diferença é de 2026. Mesmo assim, com ρ na fronteira, o probit simples é o teste
-    mais seguro: nele Concentração, Partpos, Permanente e Mesa se mantêm.</li>
-    <li><strong>Diferenças que a validação com 1998 atribui ao cenário:</strong> senioridade reduz a chance de
-    concorrer e, nas versões com controles e só com titulares, a de se reeleger; mudar de partido para a oposição (SairCoalizão) não tem efeito; Burocracia reduz a chance de concorrer no modelo completo.
-    Ausência, agora medida em proporção como no artigo, reduz a chance de concorrer e não a de se reeleger.</li>
+    <li><strong>Confirmado em 2026:</strong> cargos na hierarquia do partido (Partpos) e em comissões permanentes
+    aumentam a chance de concorrer, e Partpos também a de se reeleger; lealdade ao governo (Índice) aumenta a chance
+    de concorrer; Projetos, Governador, Especial e EntrarCoalizão não têm efeito; Histexec reduz a chance de
+    concorrer.</li>
+    <li><strong>Mudou em 2026</strong> (a validação com 1998 reproduz o artigo com o mesmo código, então a diferença
+    é do período): quem concentrou votos em 2022 tem menos chance de concorrer, quando em 1998 tinha mais; Histexec
+    passa a aumentar a chance de reeleição, quando em 1998 reduzia; SairCoalizão deixa de punir; Senior passa a
+    reduzir a chance de concorrer; manter a mesma base municipal passa a reduzir a chance de reeleição.</li>
+    <li><strong>Diferenças sem teste com 1998</strong> (sem votos nominais nem cargos da época na API): Ausência reduz
+    a chance de concorrer, não a de se reeleger; Índice reduz a chance de reeleição; Mesa a aumenta.</li>
+    <li><strong>ρ não é estável.</strong> No artigo ρ ≈ 0,58 com z = 1,11. Nas nossas estimativas ele vai a um dos
+    limites (−1 em 2026; +1 na validação de 1998) conforme a especificação. Em 2026 a Concentração tem efeito direto
+    forte na reeleição; deixá-la só na seleção, como o artigo, joga esse efeito em ρ. Os coeficientes do probit simples
+    (nota 24) confirmam as leituras acima.</li>
   </ul>
 </section>
 
@@ -515,13 +499,15 @@ a:focus-visible {{ outline: 2px solid var(--accent); outline-offset: 2px; }}
 <section aria-labelledby="s-t6">
   <h2 id="s-t6">Tabela 6 · Probit com seleção de Heckman</h2>
   <p>Equação de seleção: o deputado concorre a deputado federal em 2026. Equação de resultado: é reeleito, dado que
-  concorreu. Burocracia e Empresa entram só na seleção (restrições de exclusão), como no artigo. Coeficientes com
-  erro-padrão entre parênteses. Na versão com controles, a ausência entra em % das votações.</p>
+  concorreu. Como na Tabela 6 do artigo: Concentração da eleição anterior, Histleg, Burocracia e Empresa só na seleção;
+  MesmaBase só no resultado; Direita é a referência da ideologia. Coeficientes com erro-padrão entre parênteses (no
+  artigo, calculado a partir do z publicado). Ausência em proporção das votações.</p>
   <div class="rolagem">{tabela_heck()}</div>
   <div class="aviso"><strong>ρ no limite do intervalo</strong>
-  <p>Nas três especificações a verossimilhança cresce até ρ → 1 (tabela abaixo). A estimativa na fronteira indica que
-  as restrições de exclusão identificam pouco a correlação; os erros-padrão dessa estimativa são pouco confiáveis.
-  Por isso o probit simples (nota 24 do artigo) é o teste de robustez mais importante aqui.</p></div>
+  <p>Na especificação do artigo, a verossimilhança de 2026 cresce em direção a ρ = −1 (tabela abaixo). A Concentração
+  2022 entra só na seleção, como no artigo, mas em 2026 ela tem efeito direto forte sobre a reeleição; esse efeito
+  passa para ρ. Os erros-padrão na fronteira são pouco confiáveis, por isso o probit simples (nota 24) é o teste de
+  robustez mais importante.</p></div>
   <div class="rolagem">{tabela_perfil()}</div>
 </section>
 

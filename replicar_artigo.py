@@ -37,10 +37,12 @@ ROTULOS = {
 }
 
 # --------------------------------------------------------------------- especificações
+# Especificação da Tabela 6 do artigo (sem Emendas, Pork e MédiaExecução). Direita é a referência da ideologia.
+# Restrições de exclusão (só na seleção): Concentração94, Histleg, Burocracia, Empresa. MesmaBase só no resultado.
 NACIONAIS = ["projetos", "ausencia_pct", "indice", "mesa", "permanente", "especial", "partpos", "senior",
-             "histleg", "histexec", "entrar_coalizao", "sair_coalizao", "centro", "direita"]
-SELECAO = ["concentracao_2022", "governador"] + NACIONAIS + ["burocracia", "empresa"]   # carreira só na seleção
-RESULTADO = ["concentracao_2022", "mesma_base", "governador"] + NACIONAIS
+             "histexec", "entrar_coalizao", "sair_coalizao", "esquerda", "centro"]
+SELECAO = ["concentracao_2022", "histleg", "governador"] + NACIONAIS + ["burocracia", "empresa"]
+RESULTADO = ["mesma_base", "governador"] + NACIONAIS
 CONTROLES = ["eleito_2022", "anos_exercicio"]
 AUX = ["concentracao_2022", "governador", "projetos", "ausencia_pct", "indice", "mesa", "permanente", "especial",
        "partpos", "senior"]

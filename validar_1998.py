@@ -43,10 +43,11 @@ FAIXAS = [(1.5, "esquerda"), (3.0, "esquerda"), (4.5, "esquerda"), (5.5, "centro
           (8.5, "direita"), (10.01, "direita")]
 
 # Modelo reduzido: só variáveis que existem em 1998 e em 2026
-SEL = ["concentracao_ant", "governador", "projetos", "senior", "histleg", "histexec",
-       "entrar_coalizao", "sair_coalizao", "centro", "direita", "burocracia", "empresa"]
-OUT = ["concentracao_ant", "mesma_base", "governador", "projetos", "senior", "histleg", "histexec",
-       "entrar_coalizao", "sair_coalizao", "centro", "direita"]
+# mesma estrutura da Tabela 6 do artigo (Direita como referência; Concentração94 e Histleg só na seleção)
+SEL = ["concentracao_ant", "histleg", "histexec", "senior", "empresa", "burocracia", "governador", "projetos",
+       "entrar_coalizao", "sair_coalizao", "esquerda", "centro"]
+OUT = ["mesma_base", "governador", "senior", "histexec", "projetos", "entrar_coalizao", "sair_coalizao",
+       "esquerda", "centro"]
 
 # O que o artigo diz sobre cada variável testável (texto de Pereira & Rennó 2001)
 ARTIGO = {

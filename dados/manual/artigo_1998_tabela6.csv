@@ -1,0 +1,44 @@
+# Pereira & Rennó (2001), Tabela 6: probit com seleção de Heckman (transcrita da imagem enviada pelo usuário em 20/11/2026).
+# N = 536 (censuradas 106, não censuradas 430); log-verossimilhança -493,0925; athrho = 0,6641988 (z 1,11; p 0,267);
+# LR de independência (rho = 0): chi2(1) = 1,14, p = 0,2855. Direita é a categoria de referência da ideologia.
+# Concentração94 em pontos percentuais. Ausência em proporção.
+equacao;variavel;coef;z;p
+resultado;mesma_base;-0.0881871;-0.52;0.604
+resultado;governador;-0.0324806;-0.21;0.831
+resultado;emendas;-0.0316175;-1.92;0.054
+resultado;pork;0.3444355;1.81;0.070
+resultado;media_execucao;0.0120715;3.19;0.001
+resultado;senior;-0.0004461;-0.01;0.993
+resultado;histexec;-0.2855194;-2.51;0.012
+resultado;projetos;0.1214789;0.87;0.385
+resultado;ausencia;-1.021705;-1.71;0.087
+resultado;mesa;0.0810102;1.50;0.182
+resultado;permanente;0.1017757;2.12;0.034
+resultado;especial;0.0269179;0.51;0.610
+resultado;indice;0.0121396;0.03;0.979
+resultado;entrar_coalizao;-0.1109674;-0.49;0.625
+resultado;sair_coalizao;-0.9476684;-2.24;0.025
+resultado;partpos;0.2158216;1.72;0.086
+resultado;esquerda;0.0699558;0.37;0.714
+resultado;centro;0.0418411;0.22;0.829
+resultado;const;-0.3470659;-1.31;0.191
+seleção;concentracao;0.0074706;2.44;0.015
+seleção;histleg;0.0436295;0.88;0.380
+seleção;histexec;-0.1730562;-1.71;0.088
+seleção;senior;0.0178761;0.34;0.736
+seleção;empresa;0.1602187;1.03;0.301
+seleção;burocracia;0.0014852;0.01;0.992
+seleção;governador;-0.0214259;-0.16;0.873
+seleção;media_execucao;0.0099703;2.68;0.007
+seleção;projetos;0.0568634;0.36;0.718
+seleção;ausencia;-0.5982021;-0.99;0.322
+seleção;mesa;2.342539;0.02;0.983
+seleção;permanente;0.1262306;2.37;0.018
+seleção;especial;-0.0692943;-1.41;0.159
+seleção;indice;1.229241;3.48;0.001
+seleção;entrar_coalizao;0.2070572;0.83;0.405
+seleção;sair_coalizao;-0.366649;-0.94;0.345
+seleção;partpos;0.3154907;2.24;0.025
+seleção;esquerda;0.3861476;1.45;0.145
+seleção;centro;-0.0797632;-0.54;0.589
+seleção;const;-0.867646;-2.14;0.032
