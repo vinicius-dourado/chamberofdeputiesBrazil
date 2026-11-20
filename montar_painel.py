@@ -75,6 +75,10 @@ def faixa_7(x):
     return next(nome for lim, nome in FAIXAS_7 if x < lim)
 
 
+# entidades públicas na ocupação anterior declarada à Câmara (Burocracia)
+OCUPACAO_PUBLICA = (r"Secretaria|Minist[ée]rio|Prefeitura|Governo|Fundação Nacional|Ag[êe]ncia|Autarquia|Departamento|"
+                    r"Instituto Nacional|Superintend[êe]ncia|Tribunal|Pol[íi]cia|Receita|Casa Civil")
+
 SIGLA_IPEA = {"UNIAO": "UNIAO", "REP": "REPUBLICANOS", "PCDOB": "PCDOB", "REDE": "REDE", "PODEMOS": "PODE"}
 
 
@@ -261,7 +265,8 @@ def main():
     tr[["id", "nome", "anterior", "siglaPartido", "dataInicio", "orig_base", "dest_base"]].to_parquet(
         D / "reeleicao_trocas_partido.parquet", index=False)
     p["trocas_partido"] = p["id"].map(tr.groupby("id").size()).fillna(0).astype(int)
-    p["entrar_coalizao"] = p["id"].isin(tr.loc[tr["dest_base"] == True, "id"]).astype(int)  # noqa: E712
+    # EntrarCoalizão: troca de fora para dentro da coalizão (simétrica a SairCoalizão; nota 13 do artigo)
+    p["entrar_coalizao"] = p["id"].isin(tr.loc[(tr["orig_base"] == False) & (tr["dest_base"] == True), "id"]).astype(int)  # noqa: E712
     p["sair_coalizao"] = p["id"].isin(tr.loc[(tr["orig_base"] == True) & (tr["dest_base"] == False), "id"]).astype(int)  # noqa: E712
 
     # ---------------------------------------------------------------- Projetos
@@ -339,9 +344,7 @@ def main():
     # ------------------------------------------------------ Burocracia / Empresa
     prof = pd.read_parquet(D / "deputados_profissoes.parquet")
     oc = pd.read_parquet(D / "deputados_ocupacoes.parquet")
-    oc_pub = oc[oc["entidade"].fillna("").str.contains(
-        r"Secretaria|Minist[ée]rio|Prefeitura|Governo|Fundação Nacional|Ag[êe]ncia|Autarquia|Departamento|"
-        r"Instituto Nacional|Superintend[êe]ncia|Tribunal|Pol[íi]cia|Receita|Casa Civil", case=False, regex=True)]
+    oc_pub = oc[oc["entidade"].fillna("").str.contains(OCUPACAO_PUBLICA, case=False, regex=True)]
     ocup22 = cand[ANO_ANT].set_index("NR_CPF_CANDIDATO")["DS_OCUPACAO"]
     ocup22 = ocup22[~ocup22.index.duplicated()]
     p["ocupacao_tse_2022"] = p["cpf"].map(ocup22)

@@ -1,0 +1,20 @@
+# Pereira & Rennó (2001), Tabela 1. Líder: razão de chances (logit); Concentração98 e Competição: coeficientes (MQO).
+# Significância: * <0,05; ** <0,01; *** <0,001. N = 461. Pseudo-R2 Líder 25%; R2 ajustado Concentração98 78%, Competição 10%.
+variavel;lider;concentracao_98;competicao
+concentracao_94;;0.77***;
+senior;1.53***;;
+governador;;-2.72**;0.02*
+histexec;0.44**;;
+emendas;;0.32**;
+pork;;;0.08***
+media_execucao;;-0.08**;
+projetos;1.83**;;-0.02*
+ausencia;;;-0.21***
+permanente;1.39***;;
+especial;1.46***;;
+lider;;-2.43*;
+indice;1.61**;;
+partido;1.611*;;-0.02*
+esquerda;4.77***;;
+centro;;-3.61***;
+constante;;5.80;0.008

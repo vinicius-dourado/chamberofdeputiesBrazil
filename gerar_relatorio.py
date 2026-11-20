@@ -23,7 +23,7 @@ ARTIGO = [
                "per capita, os perdedores gastam mais. Fora do modelo", "gastos"),
     ("Governador", "Sem efeito direto na reeleição; afeta a distribuição de votos", "governador"),
     ("Projetos", "Não significativa", "projetos"),
-    ("Ausência", "Reduz a chance de reeleição (10%); não afeta a decisão de concorrer", "ausencia"),
+    ("Ausência (% das votações)", "Reduz a chance de reeleição (10%); não afeta a decisão de concorrer", "ausencia_pct"),
     ("Permanente", "Cargos em comissões permanentes aumentam a chance de concorrer e de ganhar",
      "permanente"),
     ("Partpos", "Cargos na hierarquia do partido aumentam a chance de concorrer e de ganhar", "partpos"),
@@ -105,7 +105,7 @@ def nosso(chave):
         "mesma_base": "confirma" if not sig_o else "diverge",
         "governador": "confirma" if not sig_o else "diverge",
         "projetos": "confirma" if not sig_o and not sig_s else "diverge",
-        "ausencia": "diverge" if not (sig_o and o["coef"] < 0) else "confirma",
+        "ausencia_pct": "diverge" if not (sig_o and o["coef"] < 0) else ("confirma" if not sig_s else "parcial"),
         "permanente": "confirma" if sig_o and sig_s and o["coef"] > 0 and s["coef"] > 0 else "parcial",
         "partpos": "confirma" if sig_o and sig_s and o["coef"] > 0 and s["coef"] > 0 else "parcial",
         "senior": "confirma" if not sig_o else "diverge",
@@ -123,31 +123,82 @@ ROTULO_VEREDITO = {"confirma": "Confirma", "parcial": "Em parte", "diverge": "Di
 VAL = Path("resultados/validacao_1998/resultados.json")
 # diagnóstico de cada divergência, com base no modelo reduzido estimado para 1998 e 2026
 DIAG = [
-    ("Seleção (ρ)", "rho", "Independência (ρ = 0 não rejeitado)", "metodo",
-     "Com os dados de 1998 o nosso código também leva ρ ao limite e rejeita a independência. A diferença vem da "
-     "estimação ou da especificação (ρ mal identificado, variáveis que faltam), não de mudança de cenário. "
-     "O estimador foi testado em dados simulados e recupera o ρ verdadeiro."),
-    ("Burocracia", "burocracia", "Só na seleção, não significativa", "metodo",
-     "Negativa na seleção também em 1998. Nossa medida (ocupação declarada ao TSE e profissão no cadastro da "
-     "Câmara) não é a do artigo (cargo na burocracia antes do mandato)."),
+    ("Seleção (ρ)", "rho", "Independência (ρ = 0 não rejeitado)", "cenario",
+     "Com as variáveis corrigidas, o nosso código reproduz a independência em 1998 (ρ não difere de 0). Em 2026 ρ vai "
+     "ao limite. Na primeira validação 1998 também dava ρ → 1, por causa das três medidas erradas abaixo."),
+    ("Ausência", None, "Proporção de votações sem voto; reduz a reeleição (10%)", "corrigido",
+     "Usávamos o número de faltas; o artigo usa a proporção (médias 0,23 e 0,21). Corrigido. Em 2026 a proporção "
+     "reduz a chance de concorrer e não afeta o resultado. Sem votos nominais de 1995-1998 para testar."),
+    ("Burocracia", "burocracia", "Só na seleção, não significativa (média ≈ 0,5)", "corrigido",
+     "Nossa medida dava 4% em 1998; passou a incluir ocupações anteriores em órgãos públicos (cadastro da Câmara) e "
+     "chega a 0,56-0,66. Em 1998 deixa de ser significativa, como no artigo. Em 2026 é negativa no modelo "
+     "completo (Tabela 6) e não significativa no reduzido."),
+    ("Governador", "governador", "Sem efeito direto na reeleição", "corrigido",
+     "Em 1994 a composição das coligações não vem no cadastro de candidatos; passou a vir do arquivo de coligações do "
+     "TSE. Sem efeito no resultado em 1998 e 2026."),
+    ("EntrarCoalizão", "entrar_coalizao", "Troca de partido para a coalizão (médias 0,11 e 0,07)", "corrigido",
+     "Contávamos qualquer troca com destino na coalizão; passou a ser de fora para dentro, simétrica a SairCoalizão. "
+     "Médias de 1998: 0,18 e 0,11."),
     ("SairCoalizão", "sair_coalizao", "Negativa no resultado, sem efeito na seleção", "cenario",
-     "Em 1998 o nosso código reproduz o artigo. Em 2026 o efeito some. Ressalva: a planilha do Ipea termina em "
-     "abr/2024, e a troca de partido de 2026 é avaliada contra o gabinete Lula 3-4."),
+     "Em 1998 o nosso código reproduz o artigo; em 2026 o efeito some. Ressalva: a planilha do Ipea termina em "
+     "abr/2024."),
     ("Senior", "senior", "Não significativa", "cenario",
      "Em 1998 não é significativa, como no artigo; em 2026 é negativa. Mesma medida nos dois períodos."),
-    ("Histexec", "histexec", "Negativa na seleção e no resultado", "cenario",
-     "Em 1998 o nosso código reproduz o artigo nas duas equações; em 2026 o efeito no resultado desaparece."),
+    ("Histexec", "histexec", "Negativa na seleção e no resultado", "nt",
+     "Em 1998 reproduz o efeito na seleção, mas no resultado também sai não significativa. A divergência de 2026 no "
+     "resultado não pode ser atribuída ao cenário."),
     ("Concentração", "concentracao_ant", "Dispersar votos favorece a reeleição", "ok",
-     "Negativa no resultado nos dois períodos, como no artigo."),
+     "Negativa no resultado nos dois períodos; médias de 1998 quase iguais às do artigo."),
     ("MesmaBase", "mesma_base", "Não significativa", "ok", "Não significativa nos dois períodos."),
-    ("Ausência", None, "Negativa no resultado", "nt",
-     "Sem votos nominais de 1995-1998 na API da Câmara. Em 2026 o sinal positivo do número de faltas é efeito do "
-     "tempo de mandato; em % das votações não há diferença."),
     ("Gastos por eleitor", None, "Perdedores gastam mais por eleitor", "nt",
      "Não há prestação de contas de 1998 nos dados abertos do TSE."),
 ]
 ROT_DIAG = {"metodo": ("diverge", "Método ou medida"), "cenario": ("confirma", "Cenário mudou"),
-            "ok": ("confirma", "Sem divergência"), "nt": ("parcial", "Não testável")}
+            "ok": ("confirma", "Sem divergência"), "nt": ("parcial", "Inconclusivo"),
+            "corrigido": ("parcial", "Erro nosso, corrigido")}
+ARTIGO_MEDIAS = Path("dados/manual/artigo_1998_tabelas.csv")
+# variável do artigo -> (coluna em medias_1998, coluna nas tabelas 2-3 de 2026, multiplicador)
+MAPA_MEDIAS = {
+    "concentracao_94": ("concentracao_ant", "concentracao_2022", 100), "concentracao_98": ("concentracao_atual", "concentracao_2026", 100),
+    "competicao": ("competicao_atual", "competicao_2026", 1), "governador_94": ("governador", "governador", 1),
+    "mesma_base": ("mesma_base", "mesma_base", 1), "projetos": ("projetos", "projetos", 1),
+    "ausencia": (None, "ausencia_pct", 1), "mesa": (None, "mesa", 1), "permanente": (None, "permanente", 1),
+    "especial": (None, "especial", 1), "histleg": ("histleg", "histleg", 1), "histexec": ("histexec", "histexec", 1),
+    "burocracia": ("burocracia", "burocracia", 1), "empresa": ("empresa", "empresa", 1),
+    "entrar_coalizao": ("entrar_coalizao", "entrar_coalizao", 1), "sair_coalizao": ("sair_coalizao", "sair_coalizao", 1),
+    "indice": (None, "indice", 1),
+}
+NOMES_MEDIAS = {"concentracao_94": "Concentração 94 / 22 (%)", "concentracao_98": "Concentração 98 / 26 (%)",
+                "competicao": "Competição", "governador_94": "Governador", "mesma_base": "MesmaBase",
+                "projetos": "Projetos", "ausencia": "Ausência (proporção)", "mesa": "Mesa", "permanente": "Permanente",
+                "especial": "Especial", "histleg": "Histleg", "histexec": "Histexec", "burocracia": "Burocracia",
+                "empresa": "Empresa", "entrar_coalizao": "EntrarCoalizão", "sair_coalizao": "SairCoalizão",
+                "indice": "Índice"}
+
+
+def tabela_medias_comparadas(v):
+    import csv
+    art = {r["variavel"]: r for r in csv.DictReader(
+        (l for l in ARTIGO_MEDIAS.read_text().splitlines() if not l.startswith("#")), delimiter=";")}
+    m98 = {r["variavel"]: r for r in v["medias_1998"]}
+    m26 = {r["variavel"]: r for r in R["tabela2"] + R["tabela3"]}
+
+    def trio(r, k, chave_n, chave_r):
+        if r is None:
+            return '<td class="n vazio">–</td>' * 3
+        return (f'<td class="n">{num(k * float(r[chave_n]), 2)}</td><td class="n">{num(k * float(r[chave_r]), 2)}</td>'
+                f'<td class="n">{num(float(r["z"]), 2)}<sup>{estrelas(2 * (1 - __import__("scipy").stats.norm.cdf(abs(float(r["z"])))))}</sup></td>')
+    linhas = []
+    for var, (c98, c26, k) in MAPA_MEDIAS.items():
+        a = art.get(var)
+        ca = trio(a, 1, "media_nao_reeleitos", "media_reeleitos") if a else '<td class="n vazio">–</td>' * 3
+        c1 = trio(m98.get(c98), k, "media_nao_reeleitos", "media_reeleitos") if c98 else '<td class="n vazio">–</td>' * 3
+        c2 = trio(m26.get(c26), k, "media_nao_reeleitos", "media_reeleitos")
+        linhas.append(f'<tr><th scope="row">{NOMES_MEDIAS[var]}</th>{ca}{c1}{c2}</tr>')
+    cab = "".join(f'<th scope="col" colspan="3">{t}</th>' for t in ("Artigo, 1998", "Nosso código, 1998", "Nosso código, 2026"))
+    sub = '<th scope="col">Não reel.</th><th scope="col">Reel.</th><th scope="col">Z</th>' * 3
+    return (f'<table class="larga"><thead><tr><th></th>{cab}</tr><tr><th scope="col">Variável</th>{sub}</tr></thead>'
+            f'<tbody>{"".join(linhas)}</tbody></table>')
 
 
 def secao_validacao():
@@ -191,9 +242,14 @@ def secao_validacao():
   <div class="rolagem"><table class="larga"><thead><tr><th scope="col">Variável</th><th scope="col">Artigo (1998)</th>
   <th scope="col">Nosso código, 1998</th><th scope="col">Nosso código, 2026</th><th scope="col">Diagnóstico</th></tr></thead>
   <tbody>{"".join(linhas)}</tbody></table></div>
-  <p class="nota">Coeficientes do probit com seleção reduzido (sel. = concorrer; res. = reeleger-se). As tabelas
-  numéricas do artigo não foram consultadas (estão em imagem); a comparação usa o texto. Projetos aprovados de 1995-1998
-  usam a situação atual das proposições, por isso não servem de teste.</p>
+  <p class="nota">Coeficientes do probit com seleção reduzido (sel. = concorrer; res. = reeleger-se). Projetos aprovados
+  de 1995-1998 usam a situação atual das proposições, por isso não servem de teste.</p>
+  <h3>Médias de reeleitos e não reeleitos: Tabelas 2 e 3 do artigo, número a número</h3>
+  <div class="rolagem">{tabela_medias_comparadas(v)}</div>
+  <p class="nota">Valores do artigo transcritos de <code>dados/manual/artigo_1998_tabelas.csv</code>. Competição: o
+  artigo não normaliza pelo eleitorado. Mesa, comissões e liderança usam escalas próprias em cada período, então só a
+  direção é comparável. Na Tabela 1 do artigo, Concentração94 explica Concentração98 com coeficiente 0,77 e R² ajustado
+  de 0,78; em 2026, Concentração 2022 explica a de 2026 com 0,80 e R² de 0,80.</p>
 </section>"""
 
 
@@ -445,13 +501,12 @@ a:focus-visible {{ outline: 2px solid var(--accent); outline-offset: 2px; }}
     comissões permanentes aumentam a chance de concorrer e de ganhar; projetos aprovados não fazem diferença.</li>
     <li><strong>Lealdade ao governo pesa na decisão de concorrer, não no resultado</strong>, como em 1998.</li>
     <li><strong>A correlação entre as equações vai ao limite (ρ → 1)</strong>, e a independência é rejeitada, ao
-    contrário do artigo. O mesmo acontece com os dados de 1998 (seção de validação), então isso reflete a estimação e
-    as variáveis disponíveis, e não uma mudança de 2026. Concentração, Partpos e Permanente mantêm sinal e
-    significância no probit simples; Índice e Mesa não.</li>
+    contrário do artigo. Com as variáveis corrigidas, o nosso código reproduz a independência com os dados de 1998
+    (seção de validação), então essa diferença é de 2026. Mesmo assim, com ρ na fronteira, o probit simples é o teste
+    mais seguro: nele Concentração, Partpos, Permanente e Mesa se mantêm.</li>
     <li><strong>Diferenças que a validação com 1998 atribui ao cenário:</strong> senioridade reduz a chance de
-    reeleição; mudar de partido para a oposição (SairCoalizão) não tem efeito; ter governado município ou estado
-    (Histexec) não afeta mais o resultado. <strong>Outra diferença:</strong> a ausência medida em número de faltas tem sinal positivo, efeito mecânico do tempo
-    de mandato (em % das votações não há diferença).</li>
+    concorrer e, nas versões com controles e só com titulares, a de se reeleger; mudar de partido para a oposição (SairCoalizão) não tem efeito; Burocracia reduz a chance de concorrer no modelo completo.
+    Ausência, agora medida em proporção como no artigo, reduz a chance de concorrer e não a de se reeleger.</li>
   </ul>
 </section>
 

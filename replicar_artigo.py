@@ -37,12 +37,12 @@ ROTULOS = {
 }
 
 # --------------------------------------------------------------------- especificações
-NACIONAIS = ["projetos", "ausencia", "indice", "mesa", "permanente", "especial", "partpos", "senior",
+NACIONAIS = ["projetos", "ausencia_pct", "indice", "mesa", "permanente", "especial", "partpos", "senior",
              "histleg", "histexec", "entrar_coalizao", "sair_coalizao", "centro", "direita"]
 SELECAO = ["concentracao_2022", "governador"] + NACIONAIS + ["burocracia", "empresa"]   # carreira só na seleção
 RESULTADO = ["concentracao_2022", "mesma_base", "governador"] + NACIONAIS
 CONTROLES = ["eleito_2022", "anos_exercicio"]
-AUX = ["concentracao_2022", "governador", "projetos", "ausencia", "indice", "mesa", "permanente", "especial",
+AUX = ["concentracao_2022", "governador", "projetos", "ausencia_pct", "indice", "mesa", "permanente", "especial",
        "partpos", "senior"]
 
 
@@ -204,8 +204,8 @@ def main():
     print("Heckman probit: especificação do artigo...")
     modelos["artigo"] = heckprobit(a, SELECAO, RESULTADO)
     print("Heckman probit: com controles de mandato...")
-    sel_c = [v if v != "ausencia" else "ausencia_pct" for v in SELECAO] + CONTROLES
-    out_c = [v if v != "ausencia" else "ausencia_pct" for v in RESULTADO] + CONTROLES
+    sel_c = SELECAO + CONTROLES
+    out_c = RESULTADO + CONTROLES
     modelos["controles"] = heckprobit(a, sel_c, out_c)
     print("Heckman probit: titulares empossados em fev/2023...")
     modelos["titulares"] = heckprobit(a[a["titular_posse_fev2023"] == 1], SELECAO, RESULTADO)

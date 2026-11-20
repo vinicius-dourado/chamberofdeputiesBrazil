@@ -24,7 +24,7 @@ import numpy as np
 import pandas as pd
 
 from baixar_legislatura import API, api_paginada, get, ler_anos, salvar
-from montar_painel import (ANTECESSORES, gabinetes, gabinete_em, norm, siglas_coligacao)
+from montar_painel import (ANTECESSORES, OCUPACAO_PUBLICA, gabinetes, gabinete_em, norm, siglas_coligacao)
 from replicar_artigo import heckprobit, probit_simples, teste_medias
 
 LEG = 50
@@ -60,7 +60,7 @@ ARTIGO = {
     "burocracia": "só na seleção, não significativa",
     "empresa": "só na seleção, não significativa",
     "sair_coalizao": "negativa no resultado, sem efeito na seleção",
-    "entrar_coalizao": "esperada positiva (não destacada nos resultados)",
+    "entrar_coalizao": "troca de partido de fora para dentro da coalizão; esperada positiva (não destacada)",
     "rho": "equações independentes (ρ = 0 não rejeitado)",
 }
 
@@ -82,18 +82,20 @@ def coletar_camara():
 
     def detalhe(i):
         d = get(f"{API}/deputados/{i}").json()["dados"]
-        return d, lista(i, "mandatosExternos"), lista(i, "profissoes")
+        return d, lista(i, "mandatosExternos"), lista(i, "profissoes"), lista(i, "ocupacoes")
 
     with ThreadPoolExecutor(6) as ex:
         res = list(ex.map(detalhe, ids))
     salvar(pd.DataFrame([{"id": d["id"], "cpf": d.get("cpf"), "nomeCivil": d.get("nomeCivil"),
                           "dataNascimento": d.get("dataNascimento"),
                           "siglaUf": (d.get("ultimoStatus") or {}).get("siglaUf"),
-                          "nome": (d.get("ultimoStatus") or {}).get("nomeEleitoral")} for d, _, _ in res]),
+                          "nome": (d.get("ultimoStatus") or {}).get("nomeEleitoral")} for d, *_ in res]),
            "deputados_ident", D)
-    salvar(pd.DataFrame([dict(m, id=d["id"]) for d, ms, _ in res for m in ms]), "deputados_mandatos_externos", D)
-    salvar(pd.DataFrame([dict(p, id=d["id"]) for d, _, ps in res for p in ps if p.get("titulo")]),
+    salvar(pd.DataFrame([dict(m, id=d["id"]) for d, ms, _, _ in res for m in ms]), "deputados_mandatos_externos", D)
+    salvar(pd.DataFrame([dict(p, id=d["id"]) for d, _, ps, _ in res for p in ps if p.get("titulo")]),
            "deputados_profissoes", D)
+    salvar(pd.DataFrame([dict(o, id=d["id"]) for d, _, _, os_ in res for o in os_
+                         if o.get("titulo") or o.get("entidade")]), "deputados_ocupacoes", D)
 
     print("Câmara: legislaturas anteriores (senioridade)...")
     alvo = set(ids)
@@ -191,8 +193,19 @@ def montar():
     p["mesma_base"] = np.where(mun94.notna() & mun98.notna(), (mun94 == mun98).astype(float), np.nan)
 
     # ---- Governador: partido do deputado em 1994 na coligação do governador eleito em 1994
+    # (consulta_cand_1994 não traz a composição; ela vem de consulta_coligacao_1994)
+    import zipfile
+    zc = zipfile.ZipFile(Path("dados/brutos/tse/consulta_coligacao_1994.zip"))
+    col = pd.concat(pd.read_csv(zc.open(n), sep=";", encoding="latin-1", dtype=str)
+                    for n in zc.namelist() if n.endswith(".csv"))
+    col = col[col["DS_CARGO"].str.upper() == "GOVERNADOR"]
     g = cand94[(cand94["DS_CARGO"].str.upper() == "GOVERNADOR") & cand94["DS_SIT_TOT_TURNO"].str.startswith("ELEITO", na=False)]
-    gov = {r.SG_UF: siglas_coligacao(r.DS_COMPOSICAO_COLIGACAO, r.SG_PARTIDO) for r in g.itertuples()}
+    gov = {}
+    for r in g.itertuples():
+        s_ = set()
+        for t in col[(col["SG_UF"] == r.SG_UF) & (col["SG_PARTIDO"] == r.SG_PARTIDO)]["DS_COMPOSICAO_COLIGACAO"]:
+            s_ |= siglas_coligacao(t, r.SG_PARTIDO)
+        gov[r.SG_UF] = s_ or {norm(r.SG_PARTIDO)}
     p["governador"] = [float(norm(pt) in gov[u]) if u in gov and isinstance(pt, str) else np.nan
                        for u, pt in zip(p["uf"], p["partido_1994"])]
 
@@ -222,7 +235,9 @@ def montar():
     # ---- Burocracia / Empresa (ocupação declarada ao TSE antes do mandato, 1994; senão 1998)
     oc = p["ocupacao_1994"].fillna(p["ocupacao_1998"]).fillna("").str.upper()
     prof = pd.read_parquet(D / "deputados_profissoes.parquet")
-    p["burocracia"] = (oc.str.contains("SERVIDOR PÚBLICO|SERVIDOR PUBLICO") | p["id"].isin(
+    ocup = pd.read_parquet(D / "deputados_ocupacoes.parquet")
+    ocup_pub = ocup[ocup["entidade"].fillna("").str.contains(OCUPACAO_PUBLICA, case=False, regex=True)]
+    p["burocracia"] = (oc.str.contains("SERVIDOR PÚBLICO|SERVIDOR PUBLICO") | p["id"].isin(ocup_pub["id"]) | p["id"].isin(
         prof.loc[prof["titulo"].str.contains("Servidor", case=False), "id"])).astype(int)
     p["empresa"] = (oc.str.contains("EMPRES") | p["id"].isin(
         prof.loc[prof["titulo"].str.contains("Empres", case=False), "id"])).astype(int)
@@ -243,7 +258,8 @@ def montar():
     ob = [base(x, "1995-02-01") for x in p["partido_1994"]]
     db = [base(x, ELEICAO) for x in p["partido_1998"]]
     p["trocou_partido"] = trocou.astype(int)
-    p["entrar_coalizao"] = (trocou & pd.Series([d is True for d in db], index=p.index)).astype(int)
+    p["entrar_coalizao"] = (trocou & pd.Series([o is False and d is True for o, d in zip(ob, db)],
+                                               index=p.index)).astype(int)
     p["sair_coalizao"] = (trocou & pd.Series([o is True and d is False for o, d in zip(ob, db)],
                                              index=p.index)).astype(int)
 
