@@ -78,11 +78,12 @@ def num(chave, valor, nd=4):
 
 
 def pct(x, nd=1):
-    return "–" if x is None or pd.isna(x) else f"{100 * x:.{nd}f}".replace(".", ",")
+    return "–" if x is None or pd.isna(x) else f"{100 * x:.{nd}f}".replace(".", ",").replace("-", "−")
 
 
 def br(x, nd=2):
-    return "–" if x is None or pd.isna(x) else f"{x:.{nd}f}".replace(".", ",")
+    """Decimal com vírgula e sinal de menos tipográfico."""
+    return "–" if x is None or pd.isna(x) else f"{x:.{nd}f}".replace(".", ",").replace("-", "−")
 
 
 def milhar(x):
@@ -634,6 +635,9 @@ def rice_estabilidade(rp, rp20, ps):
     num("rice_spearman_disp10_disp20", spearmanr(a["rice"], b["rice"], nan_policy="omit")[0])
     num("rice_spearman_disp_carey", spearmanr(a["rice"], a["rice_carey"])[0])
     num("rice_spearman_disp_todas", spearmanr(a["rice"], a["rice_todas"])[0])
+    ok2 = a[["rice", "rice_m10"]].dropna()
+    num("rice_spearman_bruto_m10", spearmanr(ok2["rice"], ok2["rice_m10"])[0])
+    num("rice_n_sem_m10", int(a["rice_m10"].isna().sum()))
 
 
 # ================================================================ pontos ideais (IRT)
@@ -961,8 +965,15 @@ def ols_fe(y, X, fes, clusters, nomes):
     if not ok.all():
         print(f"    aviso: colunas não identificadas removidas: {[n for n, k in zip(nomes, ok) if not k]}")
     Xt, nomes = Xt[:, ok], [n for n, k in zip(nomes, ok) if k]
-    if np.linalg.matrix_rank(Xt) < Xt.shape[1]:
-        raise ValueError("matriz de regressores com posto incompleto após os efeitos fixos")
+    # remove, em ordem, colunas linearmente dependentes das anteriores (não identificadas em conjunto)
+    manter = []
+    for k in range(Xt.shape[1]):
+        cand = manter + [k]
+        if np.linalg.matrix_rank(Xt[:, cand], tol=1e-8 * np.linalg.norm(Xt[:, cand])) == len(cand):
+            manter = cand
+    if len(manter) < Xt.shape[1]:
+        print(f"    aviso: colunas colineares removidas: {[nomes[k] for k in range(len(nomes)) if k not in manter]}")
+    Xt, nomes = Xt[:, manter], [nomes[k] for k in manter]
     XtX_inv = np.linalg.inv(Xt.T @ Xt)
     b = XtX_inv @ Xt.T @ yt
     e = yt - Xt @ b
@@ -1169,6 +1180,31 @@ def estudo_evento(base, dep):
         dd = tr[(tr["origem"] == o) & (tr["destino"] == d_)]["data"]
         num(f"fusao_data_{o}", dd.min().strftime("%Y-%m-%d") if len(dd) else None)
     return res, janelas
+
+
+def selecao_troca(X):
+    """Seleção ou influência? Para quem trocou de partido individualmente e tem pontos (dim1 global,
+    >= 30 votos) nos dois partidos: o destino estava mais perto da posição anterior do deputado do
+    que a origem? E quanto a posição do deputado mudou entre os dois períodos?"""
+    tr = trocas_partido()
+    tr = tr[~tr["fusao"]].drop_duplicates("deputado_id")
+    Xc = X[X["n_votos"] >= 30]
+    med = Xc.groupby("partido")["dim1"].median()
+    sd = Xc.groupby("partido")["dim1"].std()
+    pts = Xc.set_index(["deputado_id", "partido"])["dim1"]
+    linhas = []
+    for _, r in tr.iterrows():
+        k0, k1 = (r["deputado_id"], r["origem"]), (r["deputado_id"], r["destino"])
+        if k0 in pts.index and k1 in pts.index and r["destino"] in med.index:
+            x0, x1 = pts[k0], pts[k1]
+            linhas.append((abs(x0 - med[r["destino"]]) < abs(x0 - med[r["origem"]]), abs(x1 - x0),
+                           abs(med[r["destino"]] - med[r["origem"]])))
+    t = pd.DataFrame(linhas, columns=["destino_mais_perto", "mudanca_pos", "dist_medianas"])
+    num("sel_n", len(t)); num("sel_destino_mais_perto", t["destino_mais_perto"].mean())
+    num("sel_mudanca_pos_mediana", float(t["mudanca_pos"].median()))
+    num("sel_dist_medianas_mediana", float(t["dist_medianas"].median()))
+    num("sel_sd_tipico_partido", float(sd.median()))
+    return t
 
 
 def antes_depois_troca(d):
@@ -1688,6 +1724,9 @@ FORMATOS = {
     "d1": lambda x: br(x, 1), "d2": lambda x: br(x, 2), "d3": lambda x: br(x, 3), "d4": lambda x: br(x, 4),
     "int": lambda x: milhar(x), "raw": lambda x: str(x),
     "data": lambda x: pd.Timestamp(x).strftime("%d/%m/%Y"),
+    # formatos em inglês (Abstract)
+    "pcten": lambda x: f"{100 * x:.1f}", "pct0en": lambda x: f"{100 * x:.0f}", "ppen": lambda x: f"{100 * x:.1f}",
+    "inten": lambda x: f"{int(x):,}", "dataen": lambda x: pd.Timestamp(x).strftime("%d %B %Y"),
 }
 
 
@@ -1999,6 +2038,7 @@ def main():
                   nota="Coeficientes em pontos percentuais (IC 95%, EP agrupados por deputado e por votação). "
                        "Distância medida na dim1 global estimada com as votações do outro biênio.")
         ev, janelas = estudo_evento(base, dep)
+        selecao_troca(glob["X"])
         fig_evento(ev, janelas)
         intra = interpretar_intra(A, vt, dep, glob, temas_vt)
         tabela_md(tabela_cargas(intra["vv"]), "tab11_cargas",
