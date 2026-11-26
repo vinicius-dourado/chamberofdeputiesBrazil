@@ -479,3 +479,89 @@ O Apêndice B cobre 17 dos 21 desvios listados na seção 6 da rodada 1. Os quat
 - Rodar `analise.py` de novo.
 - Reverificar a Figura 5, a §5.7, a §5.1, o Resumo, o Abstract, a §8 e a §9.
 - Os P2 podem seguir para o Stage 3, se o usuário preferir. As três notas "[verificar]" precisam estar resolvidas até o Stage 4.5.
+
+---
+
+# Rodada 3 (última) — reverificação depois do commit b9bc81b
+
+**Data:** 26/11/2026. **Modo:** 1, reverificação completa, não só dos itens corrigidos (anti-padrão 6).
+
+**O que foi conferido:**
+- o diff de `analise.py` (25ab720 → b9bc81b);
+- todo o texto alterado do Resumo, do Abstract, de §4.3, §5.1, §5.2, §5.6, §5.7, §5.8, §7, §8 e §9 e dos Apêndices A e B;
+- as Tabelas 6, 7 e 11 e a Figura 5.
+
+**Reexecução com cache** (cópia em `scratchpad/repo4`, 88 s): `artigo.md`, as 11 tabelas, a Figura 5 e as 1.585 chaves de `resultados.json` saíram idênticos ao commit. Na rodada 2, a execução sem cache já tinha reproduzido todos os ajustes de IRT (668 s). As mudanças desta rodada não tocam nos ajustes: são filtro de grupo, formatação, arredondamento e tabelas.
+
+## Veredito da rodada 3: **PASS WITH NOTES**
+
+São **0 P0, 0 P1 e 9 P2** (MINOR), mais 3 notas "[verificar]" abertas por instrução do usuário. No checklist dos 7 modos, nenhum modo bloqueia; o modo 4 segue como sinalização para o Stage 3. O artigo pode entrar no Stage 3.
+
+**Ressalva para o Stage 4.5.** Lá a exigência é zero problemas. Os P2 abaixo e as três notas "[verificar]" vão precisar estar resolvidos, ou receber uma decisão registrada do usuário.
+
+## R3.1 Situação dos P1 da rodada 2
+
+| ID | Situação | Evidência |
+|---|---|---|
+| R2-P1-A (placebo na Figura 5) | **Resolvido** | `estudo_evento` pula o grupo sem votos antes do evento (`ev_U_fus_n_pre = 0`; em D, `n_pre = 524`, e o grupo é estimado). Não há mais chave `ev_U_fus:*` em `resultados.json`. A Figura 5 mostra só as trocas individuais, e a legenda e a §5.7 dizem que os coeficientes das fusões em U não são identificados. Conferi a figura renderizada. |
+| R2-P1-B (seleção × adaptação) | **Resolvido** | `sel_lado_destino` = 0,676, `sel_moveu_rumo_destino` = 0,697 e `sel_mov_dir_mediana` = 0,128, iguais aos que eu tinha reproduzido na rodada 2. A §5.7, o Resumo, o Abstract, a §8 e a §9 agora dizem que os dados são compatíveis com seleção e com ajuste e que a mudança individual é ruidosa. Resta um ajuste de redação (R3-P2-2). |
+| R2-P1-C (composição em 2025) | **Resolvido** | A §5.1 diz que "cerca de metade da alta vem da composição". A diferença bruta é 2,8 p.p. e a de composição fixa, 1,5 p.p.; confere. |
+
+## R3.2 Situação dos P2 da rodada 2
+
+**Resolvidos:**
+- R2-P2-1: o arredondamento duplo acabou. `num()` guarda 6 casas, e o texto agora traz União 82,4 e D própria do PP 94,9, iguais à Tabela 2.
+- R2-P2-2: excesso por partido.
+- R2-P2-3: o contrafactual (ii) foi declarado pouco crível para a esquerda.
+- R2-P2-4: a Tabela 11 mostra o resultado de cada votação.
+- R2-P2-5: o IC básico foi truncado em 0 (NOVO [0,00; 0,12]).
+- R2-P2-6: a nota da Tabela 7 menciona |z| ≥ 2.
+- R2-P2-9: título da §4.3.
+- R2-P2-10: o Apêndice B não diz mais "revisado".
+- R2-P2-14: chave enganosa retirada.
+- R2-P2-15: tempos de execução (docstring com cerca de 11 min sem cache; o Apêndice A cita a medição).
+
+**Ainda abertos:** R2-P2-8, R2-P2-11, R2-P2-12, R2-P2-13, R2-P2-17 e R2-P2-18. R2-P2-7 está parcialmente aberto. Todos estão em R3.3.
+
+**Mantido como nota:** R2-P2-16, os três "[verificar]": páginas de Nicolau, mecanismo de Figueiredo e Limongi, fórmula de Carey.
+
+## R3.3 Problemas P2 (MINOR; recomendado corrigir antes do Stage 3 e obrigatório até o Stage 4.5)
+
+| ID | Local | Problema / correção |
+|---|---|---|
+| R3-P2-1 | §1, 2º parágrafo | Continua "a série temporal ... é, em 2025, um artefato de cobertura", mais forte que a §5.1 ("compatível com um artefato de cobertura, composição e seleção"). Harmonizar. (Era R2-P2-8.) |
+| R3-P2-2 | §5.7 | "A favor da adaptação: ... e a mediana do destino estava mais perto ... em só 44,8% dos casos." Os 44,8% pesam contra a seleção pura, não a favor da adaptação. Mover para "contra a seleção como única explicação". |
+| R3-P2-3 | §5.6 | "Evair Vieira de Melo e Pezenti, mencionados nas notas anteriores do projeto" não aparece em nenhum arquivo do repositório (`NOTAS_PASSAGEM.md`, blueprint, painel). Citar a fonte (o enunciado do projeto) ou retirar. (Resto de R2-P2-7.) |
+| R3-P2-4 | Abstract | "year-to-year change in U is 1.6 point" deveria ser "1.6 percentage points". (Era R2-P2-11.) |
+| R3-P2-5 | §3, "Partido na data" | A frase continua truncada: "reflete a janela partidária de março–abril de 2026, e nos meses seguintes (março–maio), quando ocorreram 139...". (Era R2-P2-12.) |
+| R3-P2-6 | §5.3 | "Nada o ordenamento" ainda cita como evidência o ρ entre m = 10 e m = 5. O ρ entre o Rice bruto e o de m = 10 (0,99) está só na §6. (Era R2-P2-13.) |
+| R3-P2-7 | §4.3 | "M3L ... (contém M3 e, na prática, M2)": o segundo encaixe não é exato. (Era R2-P2-18.) |
+| R3-P2-8 | `referencias.bib` (`cameron2011`) | O campo `note` ainda diz "conferir DOI [verificar]". O DOI 10.1198/jbes.2010.07136 foi verificado na rodada 1. (Era R2-P2-17.) |
+| R3-P2-9 | Tabela 6 (nota) | A nota não diz que o IC é o bootstrap "básico", truncado em 0, como a §4.5 descreve. |
+
+**Notas abertas (não são problemas no Stage 2.5):** os três "[verificar]" (Nicolau, Figueiredo e Limongi, Carey). São marcados por instrução do usuário e não há fabricação; a existência das três obras está confirmada.
+
+## R3.4 Conferências que passaram
+
+- **Código novo.**
+  - O filtro `n_pre == 0` está correto e identifica o grupo em relação à referência: o grupo D de fusão tem 90 votos na janela de referência (rodada 1).
+  - `selecao_troca` está com o sinal correto.
+  - `pd.to_numeric(aprovacao)` funciona: a Tabela 11 traz 3 votações "aprovada", 8 "rejeitada" e 5 "–". As 5 com "–" são destaques "Mantido o texto", em que o campo `aprovacao` da Câmara vem vazio; o resultado poderia ser derivado da descrição (nota, sem severidade).
+  - IC truncado em 0.
+- **Números do texto novo.** Conferi 31 valores de Resumo, Abstract, §5.1, §5.7, §5.8 e §8 contra `resultados.json` e as tabelas. Todos batem: 67,6; 69,7; 0,13; 44,8; 145; 3,8 [3,0; 4,9] (a chave passou a 0,038478); 16,5; 34%; os excessos por partido; 92,0/90,5; 82,4; 94,9; 83,8; 11,6; 79,4.
+- **Resumo × Abstract.** Equivalentes; o 3,8 e as leituras de seleção e ajuste aparecem nos dois. Não há afirmação do Resumo sem respaldo no corpo.
+- **Referências.** 24 na lista, 24 citadas no texto, 24 no .bib. Nenhuma órfã.
+
+## R3.5 Checklist dos 7 modos (rodada 3)
+
+| Modo | Rodada 2 → Rodada 3 | Evidência |
+|---|---|---|
+| 1. Bug de implementação | SUSPECTED → **CLEAR** | Placebo não identificado fora da estimação e da figura; coluna da Tabela 11 corrigida; arredondamento duplo eliminado; IC truncado. Reprodução idêntica com cache (rodada 3) e sem cache (rodada 2). |
+| 2. Citação alucinada | CLEAR → **CLEAR** | As 24 obras existem; os 3 "[verificar]" estão declarados. |
+| 3. Resultado alucinado | CLEAR → **CLEAR** | 100% dos marcadores reproduzidos. A única afirmação sem fonte é a de R3-P2-3, sobre a origem de dois nomes, não um resultado. |
+| 4. Atalho | SUSPECTED → **SUSPECTED** (só sinalização) | O contrafactual (ii) é pouco crível para a esquerda, e isso está declarado; os 16,5 dependem dele. Para o Stage 3, sugiro reportar o (ii) sem PSOL, PSB e PDT. Não bloqueia no Stage 2.5. |
+| 5. Bug reapresentado como achado | CLEAR (com nota) → **CLEAR** | A leitura das trocas de partido foi moderada para "compatível com os dois mecanismos". |
+| 6. Fabricação de metodologia | CLEAR → **CLEAR** | O Método corresponde ao código, inclusive na exclusão do grupo de fusões em U. |
+| 7. Frame-lock | CLEAR → **CLEAR** | — |
+
+**Bloqueio:** nenhum. O modo 4 vai para o Stage 3 como sinalização.

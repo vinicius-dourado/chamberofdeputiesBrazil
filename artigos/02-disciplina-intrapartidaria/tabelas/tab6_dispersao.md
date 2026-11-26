@@ -19,4 +19,4 @@
 | PL | 108 | 0,48 [0,45; 0,50] | 0,52 |
 | NOVO | 5 | 0,08 [0,00; 0,12] | 0,11 |
 
-*Períodos deputado×partido com ≥ 100 votos; partidos com ≥ 5 períodos. IC por bootstrap de votações com reajuste.*
+*Períodos deputado×partido com ≥ 100 votos; partidos com ≥ 5 períodos. IC bootstrap básico (2θ̂ menos os quantis; bootstrap de votações com reajuste e Procrustes), truncado em 0.*

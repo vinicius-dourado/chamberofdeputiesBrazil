@@ -2033,7 +2033,7 @@ def main():
                                 "DP dim1 (IC 95%)": [f"{br(r['std'])} [{br(r['lo'])}; {br(r['hi'])}]" for _, r in dt_.iterrows()],
                                 "IIQ dim1": dt_["iqr"].map(br)}),
                   "tab6_dispersao", "Tabela 6 – Dispersão interna dos partidos no eixo governo × oposição (dim1 global, Plenário)",
-                  nota="Períodos deputado×partido com ≥ 100 votos; partidos com ≥ 5 períodos. IC por bootstrap de votações com reajuste.")
+                  nota="Períodos deputado×partido com ≥ 100 votos; partidos com ≥ 5 períodos. IC bootstrap básico (2θ̂ menos os quantis; bootstrap de votações com reajuste e Procrustes), truncado em 0.")
         dist = distancia_fora_periodo(p, A)
         reg = regressao_desvio(base, dep, per, dist)
         linhas = []
