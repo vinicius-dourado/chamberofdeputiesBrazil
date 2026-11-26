@@ -119,9 +119,14 @@ COR = {"s1": "#2a78d6", "s2": "#eb6834", "s3": "#1baf7a", "cinza": "#8a8f98",
        "texto": "#0b0b0b", "texto2": "#52514e", "grade": "#d9d8d4"}
 
 
+DIGITAL = ""   # impressão digital dos dados do IRT (definida em prep_irt), entra no nome do cache
+
+
 def em_cache(nome, func, *a, **k):
-    """Guarda em dados_aux/cache/<nome>.pkl o resultado de func (ajustes de IRT)."""
-    arq = CACHE / f"{nome}.pkl"
+    """Guarda em dados_aux/cache/<nome>_<digital>.pkl o resultado de func (ajustes de IRT). A
+    impressão digital depende do nº de votos, votações, períodos e da soma de y; mudanças nos
+    hiperparâmetros exigem apagar a pasta (os nomes já os incluem quando variam)."""
+    arq = CACHE / f"{nome}_{DIGITAL}.pkl"
     if arq.exists():
         return pickle.loads(arq.read_bytes())
     res = func(*a, **k)
@@ -377,7 +382,7 @@ def descritivo(v, vt, dep):
     ind = tr[~tr["fusao"]]
     num("n_transicoes_individuais", len(ind))
     num("n_deputados_troca_individual", ind["deputado_id"].nunique())
-    num("n_transicoes_janela2026", int(((ind["data"] >= "2026-03-01") & (ind["data"] < "2026-05-01")).sum()))
+    num("n_transicoes_janela2026", int(((ind["data"] >= "2026-03-01") & (ind["data"] < "2026-06-01")).sum()))
     num("n_deputados_total", len(dep))
     num("n_suplentes_ou_efetivados", int(dep["condicaoEleitoral"].isin(["Suplente", "Efetivado"]).sum()))
     n_post = p.loc[p["dt"] >= "2026-04-04", "idVotacao"].nunique()
@@ -445,6 +450,15 @@ def disciplina(v):
         num(f"disc_ano_{a}", d.loc[d["ano"] == a, "seguiu"].mean())
         num(f"cobD_ano_{a}", (d["ano"] == a).sum() / (p["ano"] == a).sum())
         num(f"unid_ano_{a}", u.loc[u["ano"] == a, "unido"].mean())
+    # D por ano com a composição partidária fixa (pesos = votos de cada partido em D no total)
+    pa = d.groupby(["ano", "partido"])["seguiu"].mean().unstack()
+    w = d["partido"].value_counts(normalize=True)
+    for a in pa.index:
+        r = pa.loc[a].dropna()
+        num(f"disc_ano_aj_{a}", float((r * w.reindex(r.index)).sum() / w.reindex(r.index).sum()))
+    ua = u.groupby("ano")["unido"].mean()
+    us = u.groupby("semestre")["unido"].mean()
+    num("unid_amplitude_anos", ua.max() - ua.min()); num("unid_amplitude_semestres", us.max() - us.min())
     sem = pd.DataFrame({"D": d.groupby("semestre")["seguiu"].mean(),
                         "cobD": d.groupby("semestre").size() / p.groupby("semestre").size(),
                         "U": u.groupby("semestre")["unido"].mean(),
@@ -637,6 +651,9 @@ def prep_irt(p, min_minoria=0.025):
     base, deps = pd.factorize(periodos.str.split("|").str[0].astype(int))
     grp, celulas = pd.factorize(x["partido"] + "|" + x["idVotacao"])
     part_per, partidos = pd.factorize(periodos.str.split("|").str[1])
+    global DIGITAL
+    if not DIGITAL:   # o primeiro prep_irt é o da amostra completa do Plenário
+        DIGITAL = f"{len(x)}_{len(votacoes)}_{len(periodos)}_{int(x['y'].sum())}"
     return dict(df=x, i=i, j=j, y=x["y"].to_numpy(), base=base, grp=grp, part_per=part_per,
                 periodos=periodos, votacoes=votacoes, deps=deps, partidos=partidos, celulas=celulas,
                 n_i=len(periodos), n_j=len(votacoes))
@@ -794,7 +811,15 @@ def regra_orientacao(A, m_tr, m_te, maj_cel):
     regra = np.where(np.isnan(regra), (qv[A["j"]] > 0.5).astype(float), regra)
     acc = np.mean(regra[m_tr] == A["y"][m_tr])
     pr = np.where(regra == 1, acc, 1 - acc)
-    return pr[m_te], acc
+    # versão calibrada por fonte da regra × partido (taxa de acerto no treino de cada estrato)
+    fonte = np.where(~np.isnan(ori), df["camada"].to_numpy(), np.where(~np.isnan(maj_cel[A["grp"]]), "maioria partido", "maioria votação"))
+    estrato = pd.Series(fonte).astype(str) + "|" + df["partido"].astype(str).to_numpy()
+    acerto = pd.Series((regra == A["y"]).astype(float))
+    acc_e = acerto[m_tr].groupby(estrato[m_tr]).agg(["sum", "size"])
+    acc_e = (acc_e["sum"] + 1) / (acc_e["size"] + 2)
+    a_e = estrato.map(acc_e).fillna(acc).to_numpy()
+    prc = np.where(regra == 1, a_e, 1 - a_e)
+    return pr[m_te], acc, prc[m_te]
 
 
 def metricas(y, p):
@@ -805,8 +830,10 @@ def metricas(y, p):
 
 
 MODELOS_CV = [("M1", "fe", 1, 1e4), ("M3", "intra", 1, 4.0), ("M4", "intra", 2, 4.0), ("M5", "global", 2, 4.0)]
-NOMES_M = {"M0": "M0 orientação do líder", "M1": "M1 só partido×votação", "M2": "M2 + lealdade individual",
-           "M3": "M3 intra 1D", "M4": "M4 intra 2D", "M5": "M5 global 2D (sem partido)"}
+NOMES_M = {"M0": "M0 orientação do líder", "M0c": "M0c orientação, calibrada por partido e fonte",
+           "M1": "M1 só partido×votação", "M2": "M2 = M1 + lealdade individual",
+           "M3": "M3 intra 1D", "M3L": "M3L = M3 + lealdade individual", "M4": "M4 intra 2D",
+           "M5": "M5 global 2D (sem partido)"}
 
 
 def validacao_cruzada(A, K=5):
@@ -818,7 +845,7 @@ def validacao_cruzada(A, K=5):
              ("M1_lamg1", 0, "fe", 1, 1e4, 1.0), ("M3_lamg1", 0, "intra", 1, 4.0, 1.0)]
     fits = em_cache(f"cv_K{K}", rodar_jobs, A, jobs)
     n = len(A["y"])
-    P = {k: np.full(n, np.nan) for k in ["M0", "M1", "M2", "M3", "M4", "M5"]}
+    P = {k: np.full(n, np.nan) for k in ["M0", "M0c", "M1", "M2", "M3", "M3L", "M4", "M5"]}
     P_sens = {}
     info = dict(maj=np.full(n, np.nan), n_tr=np.full(n, np.nan), min_tr=np.full(n, np.nan))
     for k in range(K):
@@ -827,11 +854,14 @@ def validacao_cruzada(A, K=5):
         info["maj"][te] = maj[A["grp"][te]]
         info["n_tr"][te] = ncel[A["grp"][te]]
         info["min_tr"][te] = minoria[A["grp"][te]]
-        P["M0"][te], _ = regra_orientacao(A, tr, te, maj)
+        P["M0"][te], _, P["M0c"][te] = regra_orientacao(A, tr, te, maj)
         from scipy.special import logit
         z1 = logit(np.clip(prever(fits[("M1", k)][0], A, np.ones(n, bool)), 1e-9, 1 - 1e-9))
         fl = em_cache(f"cv_lealdade_{k}", ajustar_lealdade, A, tr, maj, z1)
         P["M2"][te] = prever_lealdade(fl, A, te, z1)
+        z3 = logit(np.clip(prever(fits[("M3", k)][0], A, np.ones(n, bool)), 1e-9, 1 - 1e-9))
+        fl3 = em_cache(f"cv_lealdade_M3_{k}", ajustar_lealdade, A, tr, maj, z3)
+        P["M3L"][te] = prever_lealdade(fl3, A, te, z3)
         if k == 0:
             num("m2_r_sd", float(np.std(fl["r"])))
         for nome, mod, nd, ld in MODELOS_CV:
@@ -876,7 +906,8 @@ def avaliar_cv(A, P, P_sens, info, B=1000):
         perdas[mn] = np.bincount(dep, ll, nd)
     rng = np.random.default_rng(SEMENTE)
     W = np.stack([np.bincount(rng.integers(0, nd, nd), minlength=nd) for _ in range(B)])
-    pares = [("M0", "M1"), ("M1", "M2"), ("M2", "M3"), ("M3", "M4"), ("M1", "M3"), ("M5", "M4"), ("M0", "M4")]
+    pares = [("M0", "M1"), ("M0c", "M1"), ("M0", "M0c"), ("M1", "M2"), ("M2", "M3"), ("M2", "M3L"), ("M3", "M3L"),
+             ("M3", "M4"), ("M1", "M3"), ("M5", "M4"), ("M0", "M4")]
     difs = []
     for a, b in pares:
         est = (perdas[a] - perdas[b]).sum() / cont.sum()
@@ -924,7 +955,15 @@ def ols_fe(y, X, fes, clusters, nomes):
     (Cameron, Gelbach & Miller 2011): V = V_c1 + V_c2 − V_c1∩c2."""
     Z = demean(np.column_stack([y, X]), fes)
     yt, Xt = Z[:, 0], Z[:, 1:]
-    XtX_inv = np.linalg.pinv(Xt.T @ Xt)
+    # colunas que somem depois de retirar os efeitos fixos não são identificadas: saem
+    norma0 = np.linalg.norm(np.asarray(X, float), axis=0)
+    ok = np.linalg.norm(Xt, axis=0) > 1e-6 * np.maximum(norma0, 1e-12)
+    if not ok.all():
+        print(f"    aviso: colunas não identificadas removidas: {[n for n, k in zip(nomes, ok) if not k]}")
+    Xt, nomes = Xt[:, ok], [n for n, k in zip(nomes, ok) if k]
+    if np.linalg.matrix_rank(Xt) < Xt.shape[1]:
+        raise ValueError("matriz de regressores com posto incompleto após os efeitos fixos")
+    XtX_inv = np.linalg.inv(Xt.T @ Xt)
     b = XtX_inv @ Xt.T @ yt
     e = yt - Xt @ b
 
@@ -949,12 +988,13 @@ def wald(b, V, idx):
 def painel_exercicio(dep, p):
     """Painel de presença: para cada votação, deputados em exercício (valida contra 513)."""
     per = periodos_exercicio(dep)
-    datas = p.drop_duplicates("idVotacao")[["idVotacao", "dt"]]
+    datas = p.drop_duplicates("dt")[["idVotacao", "dt"]]
     out = []
     for _, r in datas.iterrows():
         em = per[(per["inicio"] <= r["dt"] + pd.Timedelta(hours=23)) & (per["fim"] > r["dt"])]
         out.append((r["idVotacao"], len(em["deputado_id"].unique())))
     c = pd.DataFrame(out, columns=["idVotacao", "n_exercicio"])
+    num("presenca_n_datas", len(c))
     num("presenca_media_em_exercicio", c["n_exercicio"].mean(), 1)
     num("presenca_share_datas_513_mais_menos_5", ((c["n_exercicio"] - 513).abs() <= 5).mean())
     num("presenca_min", int(c["n_exercicio"].min())); num("presenca_max", int(c["n_exercicio"].max()))
@@ -1066,6 +1106,13 @@ def regressao_desvio(base, dep, per, dist):
         num(f"var_{nome}_share_sinal_compl", 1 - sinal / total)
         num(f"var_{nome}_share_partido_no_sinal", entre / sinal)
         num(f"var_{nome}_share_intra_no_sinal", 1 - entre / sinal)
+        # versão ajustada: excesso de desvio sobre a média da célula partido×votação
+        cm = z.groupby(fe)["desvio"].transform("mean").to_numpy()
+        za = pd.DataFrame({"dep": z["deputado_id"], "exc": z["desvio"] - cm, "v": cm * (1 - cm)})
+        ga = za.groupby("dep").agg(exc=("exc", "mean"), v=("v", "sum"), n=("exc", "size"))
+        ga = ga[ga["n"] >= 50]
+        ta = ga["exc"].var()
+        num(f"var_{nome}_aj_share_ruido", (ga["v"] / ga["n"] ** 2).mean() / ta)
         out[nome] = (tab, g, z)
     return out
 
@@ -1099,8 +1146,13 @@ def estudo_evento(base, dep):
         X, nomes = X[:, keep], [n for n, k in zip(nomes, keep) if k]
         fe1 = pd.factorize(x["deputado_id"])[0]
         fe2 = pd.factorize(x["partido"] + "|" + x["idVotacao"])[0]
+        for nm_, col in zip(nomes, X.T):
+            num(f"ev_{nome}_{nm_}_nvotos", int(col.sum()))
+            num(f"ev_{nome}_{nm_}_ndep", int(x.loc[col > 0, "deputado_id"].nunique()))
         tab, V, _ = ols_fe(x["desvio"].to_numpy(float), X, [fe1, fe2],
                            (fe1, pd.factorize(x["idVotacao"])[0]), nomes)
+        for nm_ in nomes:
+            num(f"ev_{nome}_{nm_}_identificado", nm_ in tab.index)
         for k, r in tab.iterrows():
             for c in ["coef", "lo", "hi"]:
                 num(f"ev_{nome}_{k}_{c}", r[c], 5)
@@ -1111,6 +1163,11 @@ def estudo_evento(base, dep):
         res[nome] = tab
     num("ev_n_trocadores_ind", int(ind.index.isin(base["u"]["deputado_id"]).sum()))
     num("ev_n_fusao", int(fus.index.isin(base["u"]["deputado_id"]).sum()))
+    num("ev_n_fusao_D", int(fus.index.isin(base["d"]["deputado_id"]).sum()))
+    num("ev_n_mais_de_uma_troca", int((tr[~tr["fusao"]].groupby("deputado_id").size() > 1).sum()))
+    for o, d_ in [("PSC", "PODE"), ("PATRIOTA", "PRD")]:
+        dd = tr[(tr["origem"] == o) & (tr["destino"] == d_)]["data"]
+        num(f"fusao_data_{o}", dd.min().strftime("%Y-%m-%d") if len(dd) else None)
     return res, janelas
 
 
@@ -1193,7 +1250,19 @@ def dispersao_pivos(A, base_p, dep, per):
         num(f"disp_repo_{pt_}", evc.loc[evc["partido"] == pt_, "dim1"].std(), 3)
     # reprodução exata dos números prévios do projeto: emb_votos (Plenário + comissões), deputados
     # com >= 50 votos, agrupados pelo partido ATUAL (deputados.siglaPartido, pós-janela de 2026)
-    evp = ev[ev["confiavel"]]
+    evp = ev[ev["confiavel"]].copy()
+    medp_ = evp["dim1"].median()
+    evp["dmed"] = (evp["dim1"] - medp_).abs()
+    num("prev_pivos", ", ".join(evp.nsmallest(5, "dmed")["nome"]))
+    plp = evp[evp["siglaPartido"] == "PL"].copy()
+    plp["rel"] = plp["dim1"] - plp["dim1"].median()
+    num("prev_diss_pl", ", ".join(plp.nlargest(3, "rel")["nome"]))
+    al = pd.read_parquet(DADOS / "embeddings" / "alinhamento.parquet").merge(
+        ev[["deputado_id", "siglaPartido", "confiavel"]], on="deputado_id")
+    al = al[al["confiavel"]]
+    ap = al.groupby("siglaPartido")["taxa_alinhamento_partido"].mean()
+    for pt_ in ["PT", "PSOL", "NOVO", "UNIÃO", "PP", "PSD", "MDB", "REPUBLICANOS"]:
+        num(f"prev_alinh_{pt_}", ap.get(pt_))
     for pt_ in ["PDT", "PT", "PSOL", "PL", "MDB", "PODE"]:
         num(f"disp_prev_{pt_}", evp.loc[evp["siglaPartido"] == pt_, "dim1"].std(), 2)
     # posição, entre os mais próximos da mediana (>= 100 votos), dos pivôs citados antes no projeto
@@ -1215,9 +1284,13 @@ def dispersao_pivos(A, base_p, dep, per):
     for pt_ in disp.index:
         mk = sel & (X["partido"] == pt_).to_numpy()
         s = Xb1[:, mk].std(axis=1, ddof=1)
-        sds.append((pt_, np.percentile(s, 2.5), np.percentile(s, 97.5)))
-        num(f"disp_lo_{pt_}", np.percentile(s, 2.5), 3); num(f"disp_hi_{pt_}", np.percentile(s, 97.5), 3)
-    disp = disp.join(pd.DataFrame(sds, columns=["partido", "lo", "hi"]).set_index("partido"))
+        est = disp.loc[pt_, "std"]
+        # IC bootstrap básico (2θ − quantis): corrige o deslocamento para cima da reamostragem
+        lo_, hi_ = 2 * est - np.percentile(s, 97.5), 2 * est - np.percentile(s, 2.5)
+        sds.append((pt_, lo_, hi_, np.mean(s) - est))
+        num(f"disp_lo_{pt_}", lo_, 3); num(f"disp_hi_{pt_}", hi_, 3); num(f"disp_vies_{pt_}", np.mean(s) - est, 3)
+    disp = disp.join(pd.DataFrame(sds, columns=["partido", "lo", "hi", "vies"]).set_index("partido"))
+    num("disp_vies_mediano", float(disp["vies"].median()))
     # mediana do plenário na legislatura: deputados com >= 100 votos, 5 mais próximos
     Uc = U[U["n_votos"] >= 100].copy()
     med = Uc["dim1"].median()
@@ -1277,12 +1350,14 @@ def dispersao_pivos(A, base_p, dep, per):
     num("pl_resto_share_saiu", pl.loc[pl["rel_z"] <= 1, "saiu"].mean())
     num("pl_gov_share_saiu", gov_pl["saiu"].mean())
     num("diss_n_ic_exclui_0", len(diss)); num("diss_n_elegiveis", int(((X["n_votos"] >= 100) & X["partido"].isin(disp.index)).sum()))
+    num("diss_n_z2", int((diss["rel_z"].abs() >= 2).sum()))
     return dict(f=f, U=U, X=X, disp=disp, piv=piv, Ub=Ub, Xb=Xb)
 
 
 def tabela_dissidentes(X, k=6):
     """Os deputados mais distantes da mediana do partido em cada sentido (IC exclui 0)."""
-    x = X[(X["n_votos"] >= 100) & X["sd_partido"].notna() & ((X["rel_lo"] > 0) | (X["rel_hi"] < 0))].copy()
+    x = X[(X["n_votos"] >= 100) & X["sd_partido"].notna() & ((X["rel_lo"] > 0) | (X["rel_hi"] < 0))
+          & (X["rel_z"].abs() >= 2)].copy()
     gov = x.nlargest(k, "rel_z")
     opo = x.nsmallest(k, "rel_z")
     linhas = []
@@ -1328,6 +1403,7 @@ def interpretar_intra(A, vt, dep, glob, temas_vt):
     vv["descricao"] = vv["idVotacao"].map(info["descricao"])
     vv["proposicao"] = vv["idVotacao"].map(info["proposicao_titulo"])
     vv["ementa"] = vv["idVotacao"].map(info["proposicao_ementa"])
+    vv["aprovada"] = vv["idVotacao"].map(info["aprovacao"])
     vv["data"] = vv["idVotacao"].map(info["data"])
     vv["tipo"] = vv["descricao"].map(classificar_votacao)
     og = A["df"].drop_duplicates("idVotacao").set_index("idVotacao")
@@ -1447,6 +1523,7 @@ def tabela_cargas(vv, k=8):
             d = d if len(d) <= 120 else d[:117] + "..."
             linhas.append({"Sinal": lado, "Data": str(r["data"])[:10], "Proposição": str(r["proposicao"]).split(",")[0],
                            "Tipo": r["tipo"], "Ementa": d, "Gov.": r["orientacao_governo"] or "–",
+                           "Resultado": {1: "aprovada", 0: "rejeitada", True: "aprovada", False: "rejeitada"}.get(r["aprovada"], "–"),
                            "Carga": br(r["carga"], 2)})
     return pd.DataFrame(linhas)
 
@@ -1504,6 +1581,24 @@ def partido_vs_governo(base, cvP, A, dep, per, dist, camadas=("própria", "bloco
     cf = cf[cf["n"] >= 300]
     for q, r in cf.iterrows():
         num(f"div_cf_{q}_obs", r["obs"]); num(f"div_cf_{q}_prev", r["prev"])
+    # robustez: M5 reestimado sem os votos dos partidos da base nas células divergentes
+    # (as cargas das votações vêm dos demais deputados; os pontos, das outras votações)
+    cel_div = set(xb["partido"] + "|" + xb["idVotacao"])
+    chave_cel = (A["df"]["partido"] + "|" + A["df"]["idVotacao"]).to_numpy()
+    fora = np.isin(chave_cel, list(cel_div))
+    f_sd = em_cache("global_sem_divergentes", ajustar, A, ~fora, "global")
+    p_sd = pd.Series(prever(f_sd, A, np.ones(len(A["y"]), bool), grupos=False), index=key)
+    z["p_sim_sd"] = z["k"].map(p_sd)
+    z["p_partido_sd"] = np.where(z["od"] == 1, z["p_sim_sd"], 1 - z["p_sim_sd"])
+    num("div_cf_previsto_sd", z["p_partido_sd"].mean())
+    num("div_cf_excesso_sd", z["segue_partido"].mean() - z["p_partido_sd"].mean())
+    exc = (z.groupby("idVotacao")["segue_partido"].sum() - z.groupby("idVotacao")["p_partido_sd"].sum())
+    lo, hi = boot_razao(exc.to_numpy()[:, None], nn.to_numpy()[:, None].astype(float))
+    num("div_cf_excesso_sd_lo", lo[0]); num("div_cf_excesso_sd_hi", hi[0])
+    cf["prev_sd"] = z.groupby("partido")["p_partido_sd"].mean().reindex(cf.index)
+    cf["excesso"] = cf["obs"] - cf["prev"]
+    for q, r in cf.iterrows():
+        num(f"div_cf_{q}_prev_sd", r["prev_sd"]); num(f"div_cf_{q}_excesso", r["excesso"])
     # quem segue o Governo contra o partido (mesma votação, mesmo partido)
     w = covariaveis_voto(xb, dep, per)
     w = anexar_distancia(w, dist)
@@ -1561,6 +1656,9 @@ def ausencia_pec(p, per):
     filiacao["ini"] = pd.to_datetime(filiacao["dataInicio"])
     filiacao["fim"] = pd.to_datetime(filiacao["dataFim"]).fillna(pd.Timestamp("2027-02-01"))
     pec = p[(p["tipo_votacao"] == "PEC (mérito)")]
+    bruto = pd.read_parquet(DADOS / "votos.parquet", columns=["idVotacao", "deputado_id", "voto"])
+    presid = bruto[bruto["voto"] == "Artigo 17"].assign(deputado_id=lambda x: x["deputado_id"].astype(int)) \
+        .groupby("idVotacao")["deputado_id"].apply(set)
     linhas = []
     for vid, s in pec.groupby("idVotacao"):
         dt = s["dt"].iloc[0]
@@ -1573,7 +1671,7 @@ def ausencia_pec(p, per):
             membros = set(fi.loc[fi["siglaPartido"] == q, "id"])
             pres = s[s["partido"] == q]
             seg = (pres["vd"] == 1).sum()
-            aus = len(membros - set(pres["deputado_id"]))
+            aus = len(membros - set(pres["deputado_id"]) - presid.get(vid, set()))
             linhas.append((vid, q, seg, len(pres), aus))
     t = pd.DataFrame(linhas, columns=["idVotacao", "partido", "seguiu", "presentes", "ausentes"])
     num("pec_n_votacoes", t["idVotacao"].nunique())
@@ -1680,9 +1778,9 @@ def fig_rice(rp, ps):
 
 def fig_validacao(difs):
     plt = plt_setup()
-    rot = {"M0 − M1": "posição do partido na votação\nalém da orientação registrada (M0→M1)",
+    rot = {"M0c − M1": "posição do partido na votação além da\norientação registrada (M0c→M1)",
            "M1 − M2": "lealdade individual\nsem direção (M1→M2)",
-           "M2 − M3": "direção individual: 1ª dimensão\nintrapartidária (M2→M3)",
+           "M2 − M3L": "direção individual além da\nlealdade (M2→M3L)",
            "M3 − M4": "2ª dimensão intrapartidária\n(M3→M4)",
            "M5 − M4": "partido além das preferências\nespaciais (M5→M4)"}
     t = difs[difs["par"].isin(rot)].iloc[::-1]
@@ -1779,7 +1877,7 @@ def tabela_partidos(tab, taD, taU, rp):
     t = pd.DataFrame({"Partido": tab.index,
                       "D (IC 95%)": [f"{pct(r['D'])} [{pct(r['D_lo'])}; {pct(r['D_hi'])}]" for _, r in tab.iterrows()],
                       "Cob. D": tab["cobD"].map(lambda x: pct(x, 0)),
-                      "D própria": tab["Dp"].map(pct),
+                      "D própria (n)": [f"{pct(r['Dp'])} ({milhar(r['nDp'])})" if pd.notna(r["Dp"]) else "–" for _, r in tab.iterrows()],
                       "U (IC 95%)": [f"{pct(r['U'])} [{pct(r['U_lo'])}; {pct(r['U_hi'])}]" if pd.notna(r["U"]) else "–"
                                      for _, r in tab.iterrows()]})
     for a in [2023, 2024, 2025, 2026]:
