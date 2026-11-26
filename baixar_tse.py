@@ -16,17 +16,24 @@ Saídas (em dados/tse/), Parquet (+ CSV ; UTF-8 gerado localmente, ignorado pelo
                              físicas) e despesas contratadas/pagas
 
 Uso:
-  python baixar_tse.py                             # gerais 2018 2022 2026, municipais 2020 2024
+  python baixar_tse.py                             # gerais 2010-2026, municipais 2008-2024
   python baixar_tse.py --gerais 2022 --municipais 2020
 
 CPF: as tabelas trazem apenas `cpf_hash` (SHA-256 do CPF com 11 dígitos, 16 primeiros hex),
 mesma chave de deputados_complemento - não publicamos CPF/título de eleitor de candidatos.
-Os ZIPs brutos ficam em dados/brutos/tse/ (cache; ~3 GB para os anos padrão).
+Como o TSE mascara o CPF a partir de 2024 (municipais), há também `nome_nasc_hash`
+(nome civil normalizado + data de nascimento), igualmente presente em deputados_complemento.
+Prestação de contas de 2010 e 2014 usa o layout antigo do TSE (financas_legado): há um único
+arquivo de despesas (-> despesas_contratadas; despesas_pagas fica vazio) e existe a categoria
+receita_pessoas_juridicas (doações de empresas, proibidas a partir de 2015).
+
+Os ZIPs brutos ficam em dados/brutos/tse/ (cache; ~5 GB para os anos padrão).
 """
 import argparse
 import hashlib
 import re
 import time
+import unicodedata
 import zipfile
 from pathlib import Path
 
@@ -90,6 +97,22 @@ def cpf_hash(s):
                  if isinstance(c, str) and c.isdigit() and len(c) == 11 else pd.NA)
 
 
+def nome_nasc_hash(nomes, nascimentos):
+    """Chave alternativa ao CPF: SHA-256 de NOME CIVIL (sem acento, maiúsculo, espaços simples) +
+    data de nascimento (AAAA-MM-DD). Necessária a partir de 2024, quando o TSE passou a
+    mascarar o CPF (-4) nos arquivos municipais. Mesma função em baixar_camara_complementar.py."""
+    n = (nomes.fillna("").map(lambda x: unicodedata.normalize("NFKD", x).encode("ascii", "ignore")
+                              .decode()).str.upper().str.replace(r"[^A-Z ]", " ", regex=True)
+         .str.split().str.join(" "))
+    s = nascimentos.astype("string").str.strip()
+    iso = s.str.match(r"^\d{4}-\d{2}-\d{2}", na=False)        # Câmara: AAAA-MM-DD
+    d = pd.to_datetime(s.where(iso).str[:10], errors="coerce", format="%Y-%m-%d").fillna(
+        pd.to_datetime(s.where(~iso), errors="coerce", format="%d/%m/%Y"))  # TSE: DD/MM/AAAA
+    d = d.dt.strftime("%Y-%m-%d")
+    return pd.Series([hashlib.sha256(f"{a}|{b}".encode()).hexdigest()[:16] if a and isinstance(b, str)
+                      else pd.NA for a, b in zip(n, d)], index=nomes.index)
+
+
 def limpa_nulos(df):
     return df.replace({"#NULO": pd.NA, "#NULO#": pd.NA, "#NE": pd.NA, "-1": pd.NA, "-3": pd.NA,
                        "-4": pd.NA})
@@ -112,9 +135,12 @@ def candidatos(ano, brutos, cargos=None):
     filtro = (lambda d: d[d["CD_CARGO"].isin(cargos)]) if cargos else None
     df = pd.concat([ler(z, m, cols, filtro) for m in membros], ignore_index=True)
     df = limpa_nulos(df)
-    df["eleito"] = df["DS_SIT_TOT_TURNO"].str.startswith("ELEITO", na=False)
-    df.insert(df.columns.get_loc("NR_CPF_CANDIDATO"), "cpf_hash",
-              cpf_hash(df["NR_CPF_CANDIDATO"].str.zfill(11)))
+    # 2010 e anteriores: eleito por média aparece só como "MÉDIA"
+    df["eleito"] = (df["DS_SIT_TOT_TURNO"].str.startswith("ELEITO", na=False)
+                    | df["DS_SIT_TOT_TURNO"].eq("MÉDIA"))
+    pos = df.columns.get_loc("NR_CPF_CANDIDATO")
+    df.insert(pos, "cpf_hash", cpf_hash(df["NR_CPF_CANDIDATO"].str.zfill(11)))
+    df.insert(pos + 1, "nome_nasc_hash", nome_nasc_hash(df["NM_CANDIDATO"], df["DT_NASCIMENTO"]))
     df = df.drop(columns="NR_CPF_CANDIDATO")
     # 2º turno gera nova linha para o mesmo candidato: mantém a última (resultado final)
     df = (df.sort_values(["SQ_CANDIDATO", "NR_TURNO"])
@@ -176,13 +202,58 @@ def categoria_receita(fonte, origem):
     cat[outros & o.str.contains("PARTIDO POL|OUTROS CANDIDATOS")] = "receita_partidos_candidatos"
     cat[outros & o.str.contains("COLETIVO|INTERNET")] = "receita_financiamento_coletivo"
     cat[outros & o.str.contains("PESSOAS F")] = "receita_pessoas_fisicas"
+    cat[outros & o.str.contains("PESSOAS JUR")] = "receita_pessoas_juridicas"   # até 2014
     cat[outros & o.str.contains("PRÓPRIOS|PROPRIOS")] = "receita_proprios"
     cat[f.str.contains("FUNDO PARTID")] = "receita_fundo_partidario"
     cat[f.str.contains("FUNDO ESPECIAL")] = "receita_fefc"
     return cat
 
 
+ARQ_FINANCAS_LEGADO = {  # eleições anteriores a 2018: outro arquivo e outro layout
+    2010: ("prestacao_contas_2010.zip", r"candidato/([A-Z]{2})/ReceitasCandidatos\.txt$",
+           r"candidato/([A-Z]{2})/DespesasCandidatos\.txt$"),
+    2014: ("prestacao_final_2014.zip", r"receitas_candidatos_2014_([A-Z]{2})\.txt$",
+           r"despesas_candidatos_2014_([A-Z]{2})\.txt$"),
+}
+
+
+def financas_legado(ano, brutos):
+    nome, pad_rec, pad_desp = ARQ_FINANCAS_LEGADO[ano]
+    z = zipfile.ZipFile(baixar("prestacao_contas", nome, brutos))
+
+    def ler_leg(pad, colvalor, extra):
+        partes = []
+        for m in z.namelist():
+            if (g := re.search(pad, m)) and g.group(1) not in ("BR",):
+                with z.open(m) as f:
+                    d = pd.read_csv(f, sep=";", encoding="latin1", dtype=str, keep_default_na=False,
+                                    na_values=[""])
+                d.columns = [re.sub(r"\s+", " ", c).strip() for c in d.columns]
+                d = d[d["Cargo"].str.strip().str.upper() == "DEPUTADO FEDERAL"]
+                partes.append(d[["Sequencial Candidato", colvalor] + extra])
+        d = pd.concat(partes, ignore_index=True).rename(columns={"Sequencial Candidato": "SQ_CANDIDATO"})
+        d["v"] = num(d[colvalor])
+        return d
+
+    col_esp = "Especie recurso" if ano == 2014 else "Espécie recurso"
+    rec = ler_leg(pad_rec, "Valor receita", ["Tipo receita", "Fonte recurso", col_esp])
+    rec["cat"] = categoria_receita(rec["Fonte recurso"], rec["Tipo receita"])
+    r = pd.DataFrame({"receita_total": rec.groupby("SQ_CANDIDATO")["v"].sum()})
+    esp = rec[col_esp].fillna("").str.upper()
+    r["receita_financeira"] = rec[~esp.str.contains("ESTIMADO")].groupby("SQ_CANDIDATO")["v"].sum()
+    r = r.join(rec.pivot_table(index="SQ_CANDIDATO", columns="cat", values="v", aggfunc="sum"))
+    desp = ler_leg(pad_desp, "Valor despesa", [])
+    # layout antigo tem um único arquivo de despesas (equivalente às contratadas)
+    r = r.join(desp.groupby("SQ_CANDIDATO")["v"].sum().rename("despesas_contratadas"), how="outer")
+    f = r.fillna(0).reset_index().rename(columns={"index": "SQ_CANDIDATO"})
+    f["despesas_pagas"] = float("nan")
+    print(f"  finanças dep. federal {ano} (layout antigo): {len(f):,} candidatos")
+    return f
+
+
 def financas_depfed(ano, brutos):
+    if ano in ARQ_FINANCAS_LEGADO:
+        return financas_legado(ano, brutos)
     z = zipfile.ZipFile(baixar("prestacao_contas", f"prestacao_de_contas_eleitorais_candidatos_{ano}.zip",
                                brutos))
     so_depfed = lambda d: d[d["CD_CARGO"] == CARGO_DEPFED]
@@ -226,8 +297,8 @@ def salvar(df, nome, saida: Path):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--gerais", type=int, nargs="*", default=[2018, 2022, 2026])
-    ap.add_argument("--municipais", type=int, nargs="*", default=[2020, 2024])
+    ap.add_argument("--gerais", type=int, nargs="*", default=[2010, 2014, 2018, 2022, 2026])
+    ap.add_argument("--municipais", type=int, nargs="*", default=[2008, 2012, 2016, 2020, 2024])
     ap.add_argument("--saida", default="dados")
     args = ap.parse_args()
     saida, brutos = Path(args.saida) / "tse", Path(args.saida) / "brutos" / "tse"
@@ -251,7 +322,7 @@ def main():
         fin = financas_depfed(ano, brutos)
         c = cg[(cg["ANO_ELEICAO"] == str(ano)) & (cg["CD_CARGO"] == CARGO_DEPFED)]
         c = c[["ANO_ELEICAO", "SG_UF", "SQ_CANDIDATO", "NR_CANDIDATO", "NM_CANDIDATO",
-               "NM_URNA_CANDIDATO", "cpf_hash", "DT_NASCIMENTO", "SG_PARTIDO",
+               "NM_URNA_CANDIDATO", "cpf_hash", "nome_nasc_hash", "DT_NASCIMENTO", "SG_PARTIDO",
                "DS_SITUACAO_CANDIDATURA", "DS_SIT_TOT_TURNO", "eleito", "DS_OCUPACAO"]]
         c = c.merge(ind, on="SQ_CANDIDATO", how="left").merge(fin, on="SQ_CANDIDATO", how="left")
         # competição: nº de candidatos (com votos) na UF e votação média

@@ -61,41 +61,70 @@ python baixar_discursos.py --atualizar     # ignora o cache e baixa tudo de novo
 |---|---|---|
 | `discursos` | um discurso por linha: deputado, partido/UF na data, data/hora, tipo (Pela ordem, Breves comunicações, Como líder...), fase da sessão, `keywords`, `sumario`, `transcricao`, `urlTexto` | `id_discurso`, `deputado_id` |
 
-## Dados para modelos de reeleição (Pereira & Rennó 2007) – legislaturas 55, 56, 57 + TSE
+## Dados para modelos de reeleição e de relação Executivo–Legislativo – legislaturas 53 a 57 + TSE
 
-Para replicar análises de sucesso eleitoral de deputados federais candidatos à reeleição
-(eleições de 2018, 2022 e 2026), o repositório também traz as legislaturas 55 (2015–2019) e
-56 (2019–2023), complementos da API da Câmara e dados do TSE.
+O repositório traz as legislaturas 53 (2007–2011) a 57 (2023–2027), complementos da API da
+Câmara, a agenda legislativa do Executivo e dados do TSE (eleições gerais de 2010 a 2026 e
+municipais de 2008 a 2024).
 
 ```bash
-python baixar_legislatura.py --legislatura 56      # idem 55; a 57 já está no repositório
-python baixar_camara_complementar.py               # legislaturas 55, 56, 57 (~5 min cada)
-python baixar_tse.py                               # TSE: gerais 2018/2022/2026, municipais 2020/2024 (~3 GB de ZIPs em cache)
+python baixar_legislatura.py --legislatura 56      # idem 53, 54, 55; a 57 já está no repositório
+python baixar_camara_complementar.py               # legislaturas 53–57 (~5 min cada)
+python baixar_camara_complementar.py --so-exercicio  # só deputados_exercicio, sem API
+python baixar_proposicoes_executivo.py             # agenda do Executivo, 2007–hoje (~20 min)
+python baixar_tse.py                               # TSE (~5 GB de ZIPs em cache)
 ```
+
+**Orientação do Governo:** até 2022 a Câmara registra a liderança do Governo como `GOV.`
+(convivendo com `Governo`). Desde a correção em `baixar_legislatura.py`, `orientacao_governo`
+cobre 67–92% das votações nominais de plenário em todos os anos de 2007 a 2026 (antes, quase
+zero até 2019).
 
 ### `baixar_camara_complementar.py` → `dados/leg<N>/`
 
 | Tabela | Conteúdo | Uso no modelo |
 |---|---|---|
-| `deputados_complemento` | `cpf_hash` (chave para o TSE), nome civil, nascimento, legislaturas anteriores em exercício | Sênior; ligação Câmara↔TSE |
+| `deputados_complemento` | `cpf_hash` e `nome_nasc_hash` (chaves para o TSE), nome civil, nascimento, legislaturas anteriores em exercício | Sênior; ligação Câmara↔TSE |
+| `deputados_exercicio` | períodos por situação (Exercício, Licença, Suplência, Convocado...), partido e condição, reconstruídos de `deputados_historico` | quem estava em exercício em cada data; ausência; dias de mandato |
 | `deputados_orgaos` | participação em órgãos na legislatura (cargo, tipo: Mesa, comissão permanente, especial, CPI...) | Mesa Diretora, C. Permanente, C. Especial |
 | `deputados_mandatos_externos` | mandatos fora da Câmara (vereador, prefeito, dep. estadual, governador...) | Hist. Legislativo / Executivo |
 | `deputados_ocupacoes`, `deputados_profissoes` | ocupações e profissões declaradas | Empresário |
-| `lideres` | líderes/vice-líderes de partidos, blocos, Governo, Maioria, Minoria, Oposição, com período | Posição no partido |
+| `lideres` | líderes/vice-líderes de partidos, blocos, Governo, Maioria, Minoria, Oposição, com período | Posição no partido; Líder do Governo |
 | `mesa` | composição da Mesa Diretora com período | Mesa Diretora |
+
+`deputados_exercicio` foi validada: há 512–513 deputados em exercício em qualquer data da
+57ª legislatura, e 99,99% dos votos nominais caem dentro de um período de exercício.
+
+### `baixar_proposicoes_executivo.py` → `dados/executivo/`
+
+| Tabela | Conteúdo |
+|---|---|
+| `proposicoes_executivo` | proposições com autor "Órgão do Poder Executivo" (MPV, PL, PLP, PEC, PLN, MSC, TVR...), presidente na data de apresentação, situação atual, relator |
+| `autores_executivo` | autoria |
+| `tramitacoes_executivo` | tramitação completa (API) dos tipos PL, PLP, PEC, MPV, PLN, PDL, PLV |
+| `relacionadas_executivo` | proposições relacionadas/apensadas |
+
+Os arquivos em massa `proposicoesTramitacoes-AAAA` são incompletos (a PEC 6/2019 tem 13
+registros no arquivo e 791 na API); por isso a tramitação vem da API.
 
 ### `baixar_tse.py` → `dados/tse/`
 
 | Tabela | Conteúdo |
 |---|---|
-| `candidatos_gerais` | todas as candidaturas de 2018, 2022 e 2026 (todos os cargos), situação final (`eleito`), ocupação, partido |
-| `candidatos_municipais` | candidatos a prefeito/vice em 2020 e 2024 (variável Prefeito) |
+| `candidatos_gerais` | todas as candidaturas de 2010, 2014, 2018, 2022 e 2026 (todos os cargos), situação final (`eleito`), ocupação, partido |
+| `candidatos_municipais` | candidatos a prefeito/vice de 2008, 2012, 2016, 2020 e 2024 (variável Prefeito) |
 | `votacao_depfed_municipio` | votos de cada candidato a dep. federal por município |
-| `depfed_resumo` | um candidato a dep. federal por linha: votação, município-reduto, `concentracao` (votos no reduto / total), `dominancia_reduto`, `dominancia_media` (Ames), HHI, nº de candidatos na UF, receitas por fonte (FEFC, fundo partidário, próprios, pessoas físicas...) e despesas contratadas/pagas |
+| `depfed_resumo` | um candidato a dep. federal por linha: votação, município-reduto, `concentracao`, `dominancia_reduto`, `dominancia_media` (Ames), HHI, nº de candidatos na UF, receitas por fonte (FEFC, fundo partidário, próprios, pessoas físicas, pessoas jurídicas até 2014...) e despesas |
 
-**Ligação Câmara↔TSE:** `deputados_complemento.cpf_hash` = `candidatos_gerais.cpf_hash`
-(cobertura de 100% dos deputados). Para não republicar CPFs de candidatos, as tabelas guardam
-apenas o SHA-256 do CPF (16 primeiros hex); título de eleitor não é mantido.
+**Ligação Câmara↔TSE.** Não publicamos CPF nem título de eleitor; as tabelas trazem chaves
+pseudonimizadas (SHA-256, 16 hex):
+* `cpf_hash`: liga 100% dos deputados que concorreram em 2010–2026;
+* `nome_nasc_hash` (nome civil normalizado + data de nascimento): necessário para as
+  **municipais de 2024**, em que o TSE mascara o CPF. Concorda com o CPF em 97–98% dos casos
+  (91% em 2010), sem falsos positivos.
+
+Prestação de contas de 2010 e 2014 usa o layout antigo do TSE: um único arquivo de despesas
+(`despesas_contratadas`; `despesas_pagas` vazio) e doações de pessoas jurídicas.
 
 Exemplo – variável dependente para 2022 (deputados da leg. 56):
 ```python
@@ -105,40 +134,11 @@ cand = pd.read_parquet("dados/tse/candidatos_gerais.parquet").query("ANO_ELEICAO
 base = dep.merge(cand, on="cpf_hash", how="left")
 reeleicao = base[base["DS_CARGO"].str.upper() == "DEPUTADO FEDERAL"]   # 503 tentaram; 298 reeleitos
 ```
-## Embeddings dos deputados – `embeddings_deputados.py`
 
-Representa cada deputado por vetores, um por **aspecto**, e mede a proximidade entre deputados em cada
-aspecto e no conjunto. Saídas em `dados/leg57/embeddings/`.
-
-```bash
-pip install scikit-learn scipy sentence-transformers
-python embeddings_deputados.py                     # tudo (discursos: ~30 min em CPU na 1ª vez)
-python embeddings_deputados.py --aspectos nada --consultar "Tabata" --aspecto media
-```
-
-| Arquivo | Aspecto | Técnica |
-|---|---|---|
-| `emb_votos` | votações nominais | pontos ideais (IRT 2D, família IDEAL/NOMINATE); `dim1` = governo (+) × oposição (−), `dim2` = oposição ideológica (+) × centrão (−) |
-| `emb_votos_intra` | votações, **dentro do partido** | mesmo modelo com efeito fixo partido×votação e pontos centrados no partido: só a variação individual |
-| `emb_temas` | temas das proposições | perfil temático (autoria fracionada, projetos com peso maior), embedding de Hellinger |
-| `emb_frentes` | frentes parlamentares | TF-IDF (coordenador com peso 3) + SVD 16D |
-| `emb_discursos_tema` | discursos: assunto | `multilingual-e5-small` sobre sumário + palavras-chave, média por deputado, PCA 32D |
-| `emb_discursos_fala` | discursos: palavras do deputado | idem sobre a transcrição (primeiros 256 tokens) |
-| `trajetoria_partidaria` | troca de partido | sequência de partidos, deslocamento do ponto ideal entre partidos, "salto" ideológico |
-| `alinhamento` | disciplina | taxa de votos seguindo a orientação do partido e do Governo |
-| `similaridades` | pares de deputados | `prox_<aspecto>` = percentil de proximidade (1 = par mais próximo), `prox_media`, `prox_snf` (Similarity Network Fusion) |
-| `avaliacao.json` | qualidade | acurácia em votos fora da amostra; quanto cada aspecto recupera partido e posição de voto |
-
-Coluna `confiavel` indica deputados com dados suficientes no aspecto (ex.: ≥ 50 votos, ≥ 10 discursos).
-
-**Validação (57ª legislatura):** em 10% dos votos fora do ajuste, o modelo de pontos ideais acerta 91,9%
-(seguir a orientação do partido: 84,4%; maioria da votação: 74,8%). O quanto cada aspecto prevê a posição
-governo×oposição (R², validação cruzada): frentes 0,85; discursos 0,37–0,39; temas 0,30; votos intrapartidários
-0,22 (não recupera o partido: acerto ≈ acaso, como esperado).
-
-## Painel interativo – `gerar_painel.py`
-
-`python gerar_painel.py` lê `dados/leg57/embeddings/` e o modelo `painel/modelo.html` e gera
-`painel/painel.html`: página única com o mapa ideológico, ficha de cada deputado (alinhamento, temas,
-deputados mais parecidos por aspecto), coesão dos partidos, pivôs e dissidentes, trocas de partido,
-temas por lado e pares que falam parecido e votam diferente.
+| Legislatura → eleição | Deputados | Tentaram a reeleição | Reeleitos |
+|---|---|---|---|
+| 53 → 2010 | 636 | 460 | 267 (58%) |
+| 54 → 2014 | 671 | 452 | 294 (65%) |
+| 55 → 2018 | 623 | 457 | 252 (55%) |
+| 56 → 2022 | 613 | 503 | 298 (59%) |
+| 57 → 2026 | 648 | 509 | 306 (60%) |
