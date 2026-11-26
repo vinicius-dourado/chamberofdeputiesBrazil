@@ -1,0 +1,327 @@
+<title>Mapa da 57ª Legislatura</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&display=swap">
+<style>
+/* Layout: coluna única de painéis numerados por achado; o mapa ideológico e a ficha do deputado
+   formam o painel principal (2 colunas), os demais se organizam em grade de 2 colunas que empilha. */
+:root {
+  --bg: #f6f7f4; --surface: #fcfcfb; --ink: #0d1512; --ink-2: #4a524e; --muted: #858b86;
+  --grid: #e2e4de; --axis: #c2c6bf; --border: rgba(13,21,18,.11); --wash: rgba(13,21,18,.05);
+  --accent: #0b6b4f; --accent-ink: #ffffff;
+  --gov: #2a78d6; --opo: #eb6834; --cen: #1baf7a; --neutro: #6f7672;
+  --display: "Bricolage Grotesque", "Public Sans", system-ui, sans-serif;
+  --text: "Public Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0e1110; --surface: #181b1a; --ink: #eef0ec; --ink-2: #bfc4bd; --muted: #868c86;
+  --grid: #2a2e2c; --axis: #3a3f3c; --border: rgba(255,255,255,.11); --wash: rgba(255,255,255,.06);
+  --accent: #4fc79f; --accent-ink: #06231a;
+  --gov: #3987e5; --opo: #d95926; --cen: #199e70; --neutro: #9aa19b; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0e1110; --surface: #181b1a; --ink: #eef0ec; --ink-2: #bfc4bd; --muted: #868c86;
+  --grid: #2a2e2c; --axis: #3a3f3c; --border: rgba(255,255,255,.11); --wash: rgba(255,255,255,.06);
+  --accent: #4fc79f; --accent-ink: #06231a;
+  --gov: #3987e5; --opo: #d95926; --cen: #199e70; --neutro: #9aa19b; color-scheme: dark }
+
+* { box-sizing: border-box }
+body { background: var(--bg); color: var(--ink); font: 15px/1.5 var(--text); }
+.wrap { max-width: 1180px; margin: 0 auto; padding-block: 28px 56px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: flex; flex-direction: column; gap: 22px }
+h1 { font: 700 clamp(28px, 4.2vw, 44px)/1.05 var(--display); letter-spacing: -.02em; margin: 0; text-wrap: balance }
+h2 { font: 600 20px/1.2 var(--display); margin: 0; text-wrap: balance }
+h3 { font: 600 13px/1.3 var(--text); margin: 0; color: var(--ink-2); text-transform: uppercase; letter-spacing: .06em }
+p { margin: 0 } .lead { color: var(--ink-2); max-width: 68ch }
+.eyebrow { font: 600 12px/1 var(--text); letter-spacing: .1em; text-transform: uppercase; color: var(--accent) }
+header { display: flex; flex-direction: column; gap: 10px }
+.nums { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0; border-block: 1px solid var(--border) }
+.nums div { padding: 14px 14px 14px 0; display: flex; flex-direction: column; gap: 2px }
+.nums b { font: 700 26px/1.1 var(--display) } .nums span { color: var(--ink-2); font-size: 13px }
+.panel { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px; display: flex; flex-direction: column; gap: 14px; min-width: 0 }
+.panel > .achado { color: var(--ink-2); max-width: 72ch }
+.achado b { color: var(--ink) }
+.cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px }
+.main { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); gap: 22px }
+@media (max-width: 860px) { .cols, .main { grid-template-columns: minmax(0, 1fr) } }
+.controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: end }
+label.f { display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: var(--ink-2); flex: 1 1 180px; min-width: 0 }
+input, select { font: inherit; color: var(--ink); background: var(--bg); border: 1px solid var(--border); border-radius: 7px; padding: 8px 10px; min-width: 0; width: 100% }
+input:focus-visible, select:focus-visible, button:focus-visible, .dot:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 13px; color: var(--ink-2) }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px }
+svg { display: block; width: 100%; height: auto; overflow: visible }
+svg text { font: 11px var(--text); fill: var(--muted) } svg text.lab { fill: var(--ink-2); font-weight: 600 }
+svg text.val { fill: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums }
+.gridl { stroke: var(--grid); stroke-width: 1 } .axisl { stroke: var(--axis); stroke-width: 1 }
+.dot { cursor: pointer; stroke: var(--surface); stroke-width: 1; transition: opacity .15s }
+.dot.dim { opacity: .1 } .dot.sel { stroke: var(--ink); stroke-width: 2.5 }
+#tip { position: fixed; z-index: 20; pointer-events: none; background: var(--ink); color: var(--bg); padding: 7px 10px; border-radius: 7px; font-size: 12.5px; line-height: 1.35; max-width: 260px; box-shadow: 0 4px 14px rgba(0,0,0,.25) }
+#tip b { display: block }
+.ficha { display: flex; flex-direction: column; gap: 14px }
+.ficha .nome { font: 700 24px/1.1 var(--display) } .ficha .sub { color: var(--ink-2) }
+.chip { display: inline-flex; align-items: center; gap: 6px; padding: 2px 9px; border-radius: 99px; background: var(--wash); font-size: 12.5px; font-weight: 600 }
+.chip i { width: 8px; height: 8px; border-radius: 50% }
+.meter { display: grid; grid-template-columns: 1fr auto; gap: 2px 10px; align-items: center; font-size: 13px }
+.meter .bar { grid-column: 1 / -1; height: 6px; border-radius: 3px; background: var(--wash); overflow: hidden }
+.meter .bar i { display: block; height: 100%; background: var(--accent); border-radius: 3px }
+.meter b { font-variant-numeric: tabular-nums }
+.tabs { display: flex; flex-wrap: wrap; gap: 4px }
+.tabs button { font: 600 12.5px var(--text); padding: 5px 10px; border-radius: 99px; border: 1px solid var(--border); background: transparent; color: var(--ink-2); cursor: pointer }
+.tabs button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent) }
+ol.viz, ul.plain { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column }
+ol.viz li, ul.plain li { display: flex; justify-content: space-between; gap: 10px; padding: 6px 0; border-bottom: 1px solid var(--grid); font-size: 14px }
+ol.viz li:last-child, ul.plain li:last-child { border-bottom: 0 }
+.lnk { background: none; border: 0; padding: 0; font: inherit; color: var(--ink); cursor: pointer; text-align: left; text-decoration: underline; text-decoration-color: var(--axis); text-underline-offset: 3px }
+.lnk:hover { text-decoration-color: var(--accent) }
+.sm { color: var(--muted); font-size: 12.5px; white-space: nowrap; font-variant-numeric: tabular-nums }
+.tw { overflow-x: auto } table { border-collapse: collapse; width: 100%; font-size: 13.5px }
+th, td { text-align: left; padding: 6px 10px 6px 0; border-bottom: 1px solid var(--grid); white-space: nowrap }
+th { color: var(--ink-2); font-weight: 600; font-size: 12px } td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; padding-right: 0 }
+.sc { overflow-x: auto } .sc svg { min-width: var(--mw, 460px) }
+details summary { cursor: pointer; color: var(--ink-2); font-size: 13px }
+.nota { font-size: 13px; color: var(--ink-2); max-width: 78ch }
+.nota li { margin-bottom: 4px }
+@media (prefers-reduced-motion: reduce) { .dot { transition: none } }
+</style>
+
+<div class="wrap">
+  <header>
+    <span class="eyebrow">Câmara dos Deputados · 57ª Legislatura · 2023–2026</span>
+    <h1>Quem vota, fala e se associa com quem</h1>
+    <p class="lead">Cada deputado foi representado por vetores calculados a partir das votações nominais, das frentes parlamentares, dos temas das proposições e dos discursos. Estes são os achados até aqui. Clique em qualquer ponto ou nome para abrir a ficha do deputado.</p>
+  </header>
+  <div class="nums" id="nums"></div>
+
+  <section class="panel">
+    <h2>O plenário em dois eixos</h2>
+    <p class="achado">O modelo de pontos ideais posiciona cada deputado só pelo padrão de votos. O eixo horizontal separa <b>governo e oposição</b>. O vertical separa a <b>oposição ideológica</b> dos dois extremos (PSOL, NOVO) do <b>centrão</b>, que vota junto independentemente do lado.</p>
+    <div class="main">
+      <div style="display:flex;flex-direction:column;gap:12px;min-width:0">
+        <div class="controls">
+          <label class="f" for="busca">Buscar deputado<input id="busca" list="lista" placeholder="Digite um nome" autocomplete="off"></label>
+          <label class="f" for="partido">Destacar partido<select id="partido"><option value="">Todos os partidos</option></select></label>
+        </div>
+        <div class="legend" id="leg"></div>
+        <div class="sc" style="--mw:540px"><svg id="mapa" viewBox="0 0 720 470" role="img" aria-label="Mapa ideológico dos deputados"></svg></div>
+      </div>
+      <div class="ficha" id="ficha"></div>
+    </div>
+    <datalist id="lista"></datalist>
+  </section>
+
+  <div class="cols">
+    <section class="panel">
+      <h2>O modelo prevê 92% dos votos</h2>
+      <p class="achado">Em 10% dos votos deixados fora do ajuste, duas coordenadas por deputado acertam mais do que saber a <b>orientação do partido</b>.</p>
+      <div class="sc"><svg id="prev" viewBox="0 0 520 150" role="img" aria-label="Acerto na previsão de votos"></svg></div>
+    </section>
+    <section class="panel">
+      <h2>As frentes revelam o voto; os discursos, bem menos</h2>
+      <p class="achado">Quanto cada aspecto, sozinho, explica a posição governo × oposição do deputado (R², de 0 a 1).</p>
+      <div class="sc"><svg id="r2" viewBox="0 0 520 190" role="img" aria-label="Poder de cada aspecto para prever o voto"></svg></div>
+    </section>
+  </div>
+
+  <section class="panel">
+    <h2>Coesão dos partidos</h2>
+    <p class="achado">Cada linha vai do 10º ao 90º percentil dos deputados do partido no eixo governo × oposição; o ponto é a mediana. <b>PT, PDT e PSOL votam em bloco</b>; MDB, PODE e PP são os mais espalhados. À direita, a taxa média de votos que seguem a orientação da liderança.</p>
+    <div class="sc" style="--mw:640px"><svg id="coesao" viewBox="0 0 900 420" role="img" aria-label="Dispersão dos partidos no eixo governo × oposição"></svg></div>
+    <details><summary>Ver como tabela</summary><div class="tw"><table id="tcoesao"></table></div></details>
+  </section>
+
+  <div class="cols">
+    <section class="panel">
+      <h2>Quem decide e quem destoa</h2>
+      <h3>Pivôs: os mais próximos da mediana do plenário</h3>
+      <ul class="plain" id="pivos"></ul>
+      <h3>Mais governistas que o próprio partido</h3>
+      <ul class="plain" id="govmais"></ul>
+      <h3>Mais oposicionistas que o próprio partido</h3>
+      <ul class="plain" id="opomais"></ul>
+    </section>
+    <section class="panel">
+      <h2>Quem troca de partido muda o voto junto</h2>
+      <p class="achado" id="trocatxt"></p>
+      <div class="sc"><svg id="trocas" viewBox="0 0 520 400" role="img" aria-label="Salto partidário e deslocamento do voto"></svg></div>
+    </section>
+  </div>
+
+  <div class="cols">
+    <section class="panel">
+      <h2>A agenda de cada lado</h2>
+      <p class="achado">Temas das proposições mais associados a cada lado do eixo (correlação entre o peso do tema na agenda do deputado e sua posição de voto).</p>
+      <div class="sc"><svg id="temas" viewBox="0 0 520 330" role="img" aria-label="Temas associados a governo e oposição"></svg></div>
+    </section>
+    <section class="panel">
+      <h2>Falam parecido, votam diferente</h2>
+      <p class="achado">Pares de partidos diferentes cujos discursos estão entre os <b>1,5% mais parecidos</b> da Câmara, ordenados pelos votos mais distantes. Quase todos são PL × PSOL: os dois lados discutem os mesmos assuntos em posições opostas, sinal de que a representação dos discursos capta mais o <b>assunto</b> do que o <b>posicionamento</b>.</p>
+      <div class="tw"><table id="falavoto"></table></div>
+    </section>
+  </div>
+
+  <section class="panel">
+    <h2>Como ler e o que ainda falta</h2>
+    <ul class="nota">
+      <li><b>Grupos de cor:</b> definidos pela mediana do partido no eixo horizontal (oposição abaixo de −0,8; base do governo acima de 0,45; centro no intervalo).</li>
+      <li><b>Só votações nominais:</b> 1.470 votações disputadas entram no modelo; as simbólicas, de consenso, ficam de fora. Deputados com menos de 50 votos não aparecem.</li>
+      <li><b>Retrato da legislatura inteira:</b> as posições são uma média de 2023 a 2026. A evolução ano a ano ainda não foi calculada.</li>
+      <li><b>Orientação de blocos:</b> em cerca de 18% dos votos, a orientação do partido foi inferida a partir do bloco, porque a Câmara publica os nomes dos blocos truncados.</li>
+      <li><b>Discursos:</b> representados pelos primeiros 256 tokens de cada transcrição, com um modelo multilíngue pequeno.</li>
+    </ul>
+  </section>
+</div>
+<div id="tip" hidden></div>
+
+<script>
+const D = /*DADOS*/null;
+const $ = s => document.querySelector(s);
+const NS = "http://www.w3.org/2000/svg";
+const el = (tag, attrs = {}, text) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (text != null) e.textContent = text; return e; };
+const h = (tag, attrs = {}, html) => { const e = document.createElement(tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (html != null) e.innerHTML = html; return e; };
+const fmt = n => n.toLocaleString("pt-BR");
+const pct = (x, d = 1) => (x * 100).toLocaleString("pt-BR", { minimumFractionDigits: d, maximumFractionDigits: d }) + "%";
+const num = (x, d = 2) => x.toLocaleString("pt-BR", { minimumFractionDigits: d, maximumFractionDigits: d });
+const G = { gov: ["Base do governo", "var(--gov)"], cen: ["Centro e centrão", "var(--cen)"], opo: ["Oposição", "var(--opo)"] };
+const deps = D.deps;
+const sem = t => t.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+
+/* ---------- tooltip ---------- */
+const tip = $("#tip");
+function showTip(ev, html) { tip.innerHTML = html; tip.hidden = false; moveTip(ev); }
+function moveTip(ev) { const w = tip.offsetWidth, hh = tip.offsetHeight; let x = ev.clientX + 14, y = ev.clientY + 14;
+  if (x + w > innerWidth - 8) x = ev.clientX - w - 14; if (y + hh > innerHeight - 8) y = ev.clientY - hh - 14;
+  tip.style.left = Math.max(8, x) + "px"; tip.style.top = Math.max(8, y) + "px"; }
+function hideTip() { tip.hidden = true; }
+function hover(node, htmlFn) { node.addEventListener("pointerenter", e => showTip(e, htmlFn())); node.addEventListener("pointermove", moveTip); node.addEventListener("pointerleave", hideTip); }
+const depTip = d => `<b>${d.n}</b>${d.p}-${d.u} · ${G[d.g][0]}<br>Segue o governo em ${d.gov ?? "–"}% dos votos`;
+
+/* ---------- números ---------- */
+const N = D.n;
+[[fmt(N.deputados), "deputados com mandato na legislatura"], [fmt(N.votos), `votos em ${fmt(N.votacoes)} votações nominais`],
+ [fmt(N.discursos), "discursos transcritos"], [fmt(N.frentes), "frentes parlamentares"], [fmt(N.trocaram), "deputados trocaram de partido"]]
+  .forEach(([b, s]) => $("#nums").append(h("div", {}, `<b>${b}</b><span>${s}</span>`)));
+
+/* ---------- mapa ---------- */
+const M = { w: 720, h: 470, l: 34, r: 14, t: 14, b: 40 };
+const xs = deps.map(d => d.x), ys = deps.map(d => d.y);
+const x0 = Math.floor(Math.min(...xs) * 2) / 2 - .1, x1 = Math.ceil(Math.max(...xs) * 2) / 2 + .1;
+const y0 = Math.floor(Math.min(...ys) * 2) / 2 - .1, y1 = Math.ceil(Math.max(...ys) * 2) / 2 + .1;
+const sx = v => M.l + (v - x0) / (x1 - x0) * (M.w - M.l - M.r), sy = v => M.h - M.b - (v - y0) / (y1 - y0) * (M.h - M.t - M.b);
+const mapa = $("#mapa");
+for (let v = Math.ceil(x0); v <= x1; v++) { mapa.append(el("line", { x1: sx(v), x2: sx(v), y1: M.t, y2: M.h - M.b, class: v === 0 ? "axisl" : "gridl" })); mapa.append(el("text", { x: sx(v), y: M.h - M.b + 14, "text-anchor": "middle" }, v)); }
+for (let v = Math.ceil(y0); v <= y1; v++) { mapa.append(el("line", { x1: M.l, x2: M.w - M.r, y1: sy(v), y2: sy(v), class: v === 0 ? "axisl" : "gridl" })); mapa.append(el("text", { x: M.l - 6, y: sy(v) + 4, "text-anchor": "end" }, v)); }
+mapa.append(el("text", { x: M.l, y: M.h - 6, class: "lab" }, "← oposição"));
+mapa.append(el("text", { x: M.w - M.r, y: M.h - 6, class: "lab", "text-anchor": "end" }, "governo →"));
+mapa.append(el("text", { x: M.l + 4, y: M.t + 10, class: "lab" }, "↑ oposição ideológica"));
+mapa.append(el("text", { x: M.l + 4, y: M.h - M.b - 6, class: "lab" }, "↓ centrão"));
+const dots = deps.map((d, i) => { const c = el("circle", { cx: sx(d.x), cy: sy(d.y), r: 4.2, fill: G[d.g][1], class: "dot", tabindex: 0, "aria-label": `${d.n}, ${d.p}` });
+  hover(c, () => depTip(d)); c.addEventListener("click", () => select(i)); c.addEventListener("keydown", e => { if (e.key === "Enter") select(i); }); mapa.append(c); return c; });
+// rótulos de partidos-âncora na mediana do partido
+["PL", "NOVO", "PT", "PSOL", "REPUBLICANOS"].forEach(p => { const g = deps.filter(d => d.p === p); if (!g.length) return;
+  const md = a => a.sort((m, n) => m - n)[Math.floor(a.length / 2)]; const cx = sx(md(g.map(d => d.x))), cy = sy(md(g.map(d => d.y)));
+  const t = el("text", { x: cx, y: cy - 16, "text-anchor": "middle", class: "val", style: "paint-order:stroke;stroke:var(--surface);stroke-width:4px;pointer-events:none" }, p); mapa.append(t); });
+Object.entries(G).forEach(([k, [nome, cor]]) => $("#leg").append(h("span", {}, `<i style="background:${cor}"></i>${nome} (${deps.filter(d => d.g === k).length})`)));
+
+const partidos = [...new Set(deps.map(d => d.p))].sort((a, b) => a.localeCompare(b, "pt"));
+partidos.forEach(p => $("#partido").append(h("option", { value: p }, `${p} (${deps.filter(d => d.p === p).length})`)));
+$("#partido").addEventListener("change", e => { const p = e.target.value; dots.forEach((c, i) => c.classList.toggle("dim", !!p && deps[i].p !== p)); });
+deps.forEach(d => $("#lista").append(h("option", { value: d.n })));
+$("#busca").addEventListener("change", e => { const q = sem(e.target.value.trim()); if (!q) return;
+  let i = deps.findIndex(d => sem(d.n) === q); if (i < 0) i = deps.findIndex(d => sem(d.n).includes(q)); if (i >= 0) { select(i); e.target.value = ""; } });
+
+/* ---------- ficha ---------- */
+let sel = -1, aspecto = "media";
+const ASP = [["media", "Geral"], ["votos", "Votos"], ["frentes", "Frentes"], ["temas", "Temas"], ["fala", "Discursos"]];
+function nomeBtn(i) { const b = h("button", { class: "lnk", type: "button" }, deps[i].n); b.addEventListener("click", () => select(i)); return b; }
+function select(i) { if (sel >= 0) dots[sel].classList.remove("sel"); sel = i; dots[i].classList.add("sel"); mapa.append(dots[i]); ficha(); }
+function ficha() { const d = deps[sel], f = $("#ficha"); f.innerHTML = "";
+  f.append(h("div", {}, `<div class="nome">${d.n}</div><div class="sub">${d.p} · ${d.u} · ${fmt(d.nv)} votos no modelo</div>`));
+  f.append(h("div", {}, `<span class="chip"><i style="background:${G[d.g][1]}"></i>${G[d.g][0]}</span>`));
+  const m = h("div", { style: "display:flex;flex-direction:column;gap:10px" });
+  [["Vota com o governo", d.gov], ["Segue a orientação do partido", d.par]].forEach(([t, v]) => { if (v == null) return;
+    m.append(h("div", { class: "meter" }, `<span>${t}</span><b>${v}%</b><div class="bar"><i style="width:${v}%"></i></div>`)); });
+  f.append(m);
+  const desv = d.i1; f.append(h("p", { class: "sub", style: "font-size:13.5px" },
+    Math.abs(desv) < .25 ? "Vota como a média do próprio partido." : desv > 0 ? "Dentro do partido, vota mais com o governo que os colegas." : "Dentro do partido, vota mais com a oposição que os colegas."));
+  if (d.seq) f.append(h("div", {}, `<h3>Trajetória partidária</h3><p style="margin-top:4px">${d.seq.replaceAll(" > ", " → ")}</p>`));
+  if (d.t.length) f.append(h("div", {}, `<h3>Principais temas das proposições</h3><p style="margin-top:4px">${d.t.map(([t, p]) => `${t} (${p}%)`).join(" · ")}</p>`));
+  const box = h("div", { style: "display:flex;flex-direction:column;gap:8px" }); box.append(h("h3", {}, "Deputados mais parecidos"));
+  const tabs = h("div", { class: "tabs", role: "group", "aria-label": "Aspecto" });
+  ASP.forEach(([k, t]) => { const b = h("button", { type: "button", "aria-pressed": k === aspecto }, t); b.addEventListener("click", () => { aspecto = k; ficha(); }); tabs.append(b); });
+  box.append(tabs); const ol = h("ol", { class: "viz" }); const v = d.v[aspecto] || [];
+  if (!v.length) ol.append(h("li", {}, `<span class="sm" style="white-space:normal">Sem dados suficientes neste aspecto (poucos discursos, frentes ou proposições).</span>`));
+  v.forEach(j => { const li = h("li"); li.append(nomeBtn(j)); li.append(h("span", { class: "sm" }, `${deps[j].p}-${deps[j].u}`)); ol.append(li); });
+  box.append(ol); f.append(box); }
+
+/* ---------- barras horizontais genéricas ---------- */
+function barras(svg, rows, { max, w = 520, labelW = 190, rowH = 30, fmtv }) { const s = $(svg); const top = 6;
+  s.setAttribute("viewBox", `0 0 ${w} ${top + rows.length * rowH + 4}`);
+  const bw = w - labelW - 60; rows.forEach((r, i) => { const y = top + i * rowH, len = Math.max(2, r.v / max * bw);
+    s.append(el("text", { x: labelW - 10, y: y + rowH / 2 + 4, "text-anchor": "end", class: "lab" }, r.l));
+    const b = el("path", { d: `M${labelW},${y + 6} h${len - 4} a4,4 0 0 1 4,4 v${rowH - 20} a4,4 0 0 1 -4,4 h${-(len - 4)} z`, fill: r.c });
+    hover(b, () => `<b>${r.l}</b>${r.tip}`); s.append(b);
+    s.append(el("text", { x: labelW + len + 6, y: y + rowH / 2 + 4, class: "val" }, fmtv(r.v))); }); }
+const A = D.aval;
+barras("#prev", [
+  { l: "Modelo de pontos ideais", v: A.irt_acuracia, c: "var(--accent)", tip: "Duas coordenadas por deputado e três parâmetros por votação" },
+  { l: "Seguir a orientação do partido", v: A.base_orientacao_partido_acuracia, c: "var(--neutro)", tip: "Prever que cada deputado vota como a liderança orientou" },
+  { l: "Votar com a maioria", v: A.base_maioria_acuracia, c: "var(--neutro)", tip: "Prever que todos votam com o lado vencedor" }],
+  { max: 1, labelW: 210, rowH: 40, fmtv: v => pct(v) });
+const R = D.rep;
+barras("#r2", [["frentes", "Frentes parlamentares"], ["discursos_fala", "Discursos (transcrição)"], ["discursos_tema", "Discursos (assunto)"], ["temas", "Temas das proposições"]]
+  .map(([k, l]) => ({ l, v: R[k].r2_preve_dim1_votos, c: "var(--accent)", tip: `${R[k].n_deputados} deputados · acerta o partido de ${pct(R[k].knn5_acerta_partido, 0)} (acaso: ${pct(R[k].acerto_partido_ao_acaso, 0)})` })),
+  { max: 1, labelW: 190, rowH: 40, fmtv: v => num(v) });
+
+/* ---------- coesão ---------- */
+(function () { const s = $("#coesao"), rows = D.coesao, W = 900, L = 120, Rr = 96, T = 8, rh = 27, B = 34; const H = T + rows.length * rh + B;
+  s.setAttribute("viewBox", `0 0 ${W} ${H}`); const lo = -2, hi = 2; const X = v => L + (v - lo) / (hi - lo) * (W - L - Rr);
+  for (let v = lo; v <= hi; v++) { s.append(el("line", { x1: X(v), x2: X(v), y1: T, y2: H - B, class: v === 0 ? "axisl" : "gridl" })); s.append(el("text", { x: X(v), y: H - B + 14, "text-anchor": "middle" }, v)); }
+  s.append(el("text", { x: L, y: H - 4, class: "lab" }, "← oposição")); s.append(el("text", { x: W - Rr, y: H - 4, class: "lab", "text-anchor": "end" }, "governo →"));
+  s.append(el("text", { x: W, y: T + 2, "text-anchor": "end" }, "disciplina"));
+  rows.forEach((r, i) => { const y = T + i * rh + rh / 2 + 6, c = G[r.g][1];
+    s.append(el("text", { x: L - 12, y: y + 4, "text-anchor": "end", class: "lab" }, `${r.p} (${r.n})`));
+    s.append(el("line", { x1: X(r.p10), x2: X(r.p90), y1: y, y2: y, stroke: c, "stroke-width": 3, "stroke-linecap": "round", opacity: .55 }));
+    s.append(el("circle", { cx: X(r.med), cy: y, r: 5.5, fill: c, stroke: "var(--surface)", "stroke-width": 2 }));
+    s.append(el("text", { x: W, y: y + 4, "text-anchor": "end", class: "val" }, r.disc + "%"));
+    const hit = el("rect", { x: 0, y: y - rh / 2, width: W, height: rh, fill: "transparent" });
+    hover(hit, () => `<b>${r.p}</b>${r.n} deputados · mediana ${num(r.med)}<br>80% do partido entre ${num(r.p10)} e ${num(r.p90)}<br>Desvio-padrão ${num(r.dp)} · disciplina ${r.disc}%`); s.append(hit); });
+  const t = $("#tcoesao"); t.innerHTML = `<tr><th>Partido</th><th class="n">Deputados</th><th class="n">Mediana</th><th class="n">P10</th><th class="n">P90</th><th class="n">Desvio-padrão</th><th class="n">Disciplina</th></tr>` +
+    rows.map(r => `<tr><td>${r.p}</td><td class="n">${r.n}</td><td class="n">${num(r.med)}</td><td class="n">${num(r.p10)}</td><td class="n">${num(r.p90)}</td><td class="n">${num(r.dp)}</td><td class="n">${r.disc}%</td></tr>`).join(""); })();
+
+/* ---------- listas ---------- */
+D.pivos.forEach(i => { const li = h("li"); li.append(nomeBtn(i)); li.append(h("span", { class: "sm" }, `${deps[i].p}-${deps[i].u}`)); $("#pivos").append(li); });
+[["#govmais", D.gov_mais], ["#opomais", D.opo_mais]].forEach(([id, arr]) => arr.forEach(r => { const li = h("li"); li.append(nomeBtn(r.i));
+  li.append(h("span", { class: "sm" }, `${deps[r.i].p} · ${r.d > 0 ? "+" : "−"}${num(Math.abs(r.d))}`)); $(id).append(li); }));
+
+/* ---------- trocas ---------- */
+(function () { const s = $("#trocas"), W = 520, H = 400, L = 44, Rr = 12, T = 12, B = 44, lo = -2.6, hi = 2.6;
+  const X = v => L + (v - lo) / (hi - lo) * (W - L - Rr), Y = v => H - B - (v - lo) / (hi - lo) * (H - T - B);
+  for (let v = -2; v <= 2; v++) { s.append(el("line", { x1: X(v), x2: X(v), y1: T, y2: H - B, class: v === 0 ? "axisl" : "gridl" })); s.append(el("line", { x1: L, x2: W - Rr, y1: Y(v), y2: Y(v), class: v === 0 ? "axisl" : "gridl" }));
+    s.append(el("text", { x: X(v), y: H - B + 14, "text-anchor": "middle" }, v)); s.append(el("text", { x: L - 6, y: Y(v) + 4, "text-anchor": "end" }, v)); }
+  s.append(el("line", { x1: X(lo), y1: Y(lo), x2: X(hi), y2: Y(hi), stroke: "var(--axis)", "stroke-dasharray": "4 4" }));
+  s.append(el("text", { x: X(1.25), y: Y(1.55), class: "lab", transform: `rotate(-41 ${X(1.25)} ${Y(1.55)})` }, "voto acompanha o partido"));
+  s.append(el("text", { x: (L + W - Rr) / 2, y: H - 6, "text-anchor": "middle", class: "lab" }, "Distância entre o partido antigo e o novo (→ governo)"));
+  s.append(el("text", { x: 12, y: (T + H - B) / 2, "text-anchor": "middle", class: "lab", transform: `rotate(-90 12 ${(T + H - B) / 2})` }, "Mudança no voto do deputado"));
+  D.trocas.forEach(r => { const d = deps[r.i]; const c = el("circle", { cx: X(r.s), cy: Y(r.d), r: 4.5, fill: "var(--neutro)", opacity: .75, class: "dot" });
+    hover(c, () => `<b>${d.n}</b>${(d.seq || "").replaceAll(" > ", " → ")}<br>Salto do partido ${num(r.s)} · mudança no voto ${num(r.d)}`); c.addEventListener("click", () => { select(r.i); $("#ficha").scrollIntoView({ behavior: "smooth", block: "center" }); }); s.append(c); });
+  $("#trocatxt").innerHTML = `Entre os ${D.trocas.length} deputados que trocaram de partido e votaram nos dois, a correlação entre o tamanho do salto e a mudança no próprio voto é <b>${num(D.r_trocas)}</b>. Pontos longe da diagonal mudaram de legenda sem mudar de comportamento.`; })();
+
+/* ---------- temas ---------- */
+(function () { const s = $("#temas"), rows = [...D.temas].sort((a, b) => b.c - a.c), W = 520, L = 250, Rr = 44, T = 20, rh = 25; const H = T + rows.length * rh + 6;
+  s.setAttribute("viewBox", `0 0 ${W} ${H}`); const mx = Math.max(...rows.map(r => Math.abs(r.c))) * 1.45, mid = L + (W - L - Rr) / 2, half = (W - L - Rr) / 2;
+  s.append(el("line", { x1: mid, x2: mid, y1: T - 4, y2: H - 4, class: "axisl" }));
+  s.append(el("text", { x: mid - 8, y: 11, "text-anchor": "end", class: "lab" }, "← oposição")); s.append(el("text", { x: mid + 8, y: 11, class: "lab" }, "governo →"));
+  rows.forEach((r, i) => { const y = T + i * rh, len = Math.max(2, Math.abs(r.c) / mx * half), pos = r.c >= 0;
+    s.append(el("text", { x: L - 10, y: y + rh / 2 + 4, "text-anchor": "end", class: "lab" }, r.t.length > 38 ? r.t.slice(0, 36) + "…" : r.t));
+    const b = el("rect", { x: pos ? mid + 1 : mid - 1 - len, y: y + 5, width: len, height: rh - 10, rx: 3, fill: pos ? "var(--gov)" : "var(--opo)" });
+    hover(b, () => `<b>${r.t}</b>Correlação com a posição de voto: ${num(r.c)}`); s.append(b);
+    s.append(el("text", { x: pos ? mid + len + 6 : mid - len - 6, y: y + rh / 2 + 4, "text-anchor": pos ? "start" : "end", class: "val" }, (r.c > 0 ? "+" : "−") + num(Math.abs(r.c)))); }); })();
+
+/* ---------- fala × voto ---------- */
+(function () { const t = $("#falavoto"); t.innerHTML = `<tr><th>Deputado</th><th>Deputado</th><th class="n">Fala</th><th class="n">Voto</th></tr>`;
+  D.falavoto.forEach(r => { const tr = h("tr"); [r.a, r.b].forEach(i => { const td = h("td"); td.append(nomeBtn(i)); td.append(h("span", { class: "sm" }, " " + deps[i].p)); tr.append(td); });
+    tr.append(h("td", { class: "n" }, num(r.f, 1))); tr.append(h("td", { class: "n" }, num(r.v, 1))); t.append(tr); });
+  t.append(h("caption", { style: "caption-side:bottom;text-align:left;padding-top:8px;color:var(--muted);font-size:12.5px;white-space:normal" }, "Fala e voto em percentil de proximidade: 100 = par mais parecido da Câmara, 0 = mais distante.")); })();
+
+select(Math.max(0, deps.findIndex(d => d.n === "Tabata Amaral")));
+</script>
