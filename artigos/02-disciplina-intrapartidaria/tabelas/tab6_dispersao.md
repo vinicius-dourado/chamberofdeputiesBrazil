@@ -1,4 +1,4 @@
-**Tabela 8 – Dispersão interna dos partidos no eixo governo × oposição (dim1 global, Plenário)**
+**Tabela 7 – Dispersão interna dos partidos no eixo governo × oposição (dim1 global, Plenário)**
 
 | Partido | Períodos | DP dim1 (EP) | Viés bootstrap | IIQ dim1 |
 |---|---|---|---|---|

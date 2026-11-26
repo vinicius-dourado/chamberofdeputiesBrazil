@@ -1,4 +1,4 @@
-**Tabela 7 – Correlatos do desvio individual: MPL com efeitos fixos partido×votação**
+**Tabela 6 – Correlatos do desvio individual: MPL com efeitos fixos partido×votação**
 
 | Variável | Desvio de D (p.p.) | Desvio de U (p.p.) |
 |---|---|---|

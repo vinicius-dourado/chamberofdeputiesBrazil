@@ -1,4 +1,4 @@
-**Tabela 6 – Votações com maior carga na dimensão intrapartidária (modelo intra 1D)**
+**Tabela 5 – Votações com maior carga na dimensão intrapartidária (modelo intra 1D)**
 
 | Sinal | Data | Proposição | Tipo | Ementa | Gov. | Resultado | Carga |
 |---|---|---|---|---|---|---|---|

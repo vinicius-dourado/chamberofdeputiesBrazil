@@ -1,4 +1,4 @@
-**Tabela 4 – Disciplina (D) e unidade (U) por tema da proposição votada (ordem crescente de U)**
+**Tabela A1 – Disciplina (D) e unidade (U) por tema da proposição votada (ordem crescente de U)**
 
 | Tema | Votações | D | U |
 |---|---|---|---|

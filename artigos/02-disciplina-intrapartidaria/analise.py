@@ -479,6 +479,7 @@ def disciplina(v):
     share_propria = p.assign(pr=p["camada"] == "própria").groupby("partido")["pr"].mean()
     tab = pd.DataFrame({"D": tD["taxa"], "D_lo": icD["lo"], "D_hi": icD["hi"], "nD": tD["n"],
                         "cobD": tD["n"] / nval.loc[ps], "Dp": tDp["taxa"], "nDp": tDp["n"],
+                        "vDp": dp.groupby("partido")["idVotacao"].nunique().reindex(ps),
                         "U": tU["taxa"], "U_lo": icU["lo"], "U_hi": icU["hi"],
                         "cobU": tU["n"] / nval.loc[ps], "share_propria": share_propria.loc[ps]})
     for pt_, r in tab.iterrows():
@@ -514,6 +515,11 @@ def disciplina(v):
                         "Dp": dp.groupby("semestre")["seguiu"].mean()})
     taD = d.pivot_table(index="partido", columns="ano", values="seguiu", aggfunc="mean").reindex(ps)
     taU = u.pivot_table(index="partido", columns="ano", values="unido", aggfunc="mean").reindex(ps)
+    for q in ["PL", "PT", "PSOL", "UNIÃO", "PSD", "MDB", "PP", "REPUBLICANOS"]:
+        if q in taU.index:
+            outros = u[(u["partido"] == q) & (u["ano"] != 2025)]["unido"].mean()
+            num(f"U_2025_{q}", taU.loc[q, 2025]); num(f"U_outros_{q}", outros)
+            num(f"U_queda2025_{q}", outros - taU.loc[q, 2025])
     # por tipo de orientação
     for k, r in taxa_por(d, "orientacao_partido", "seguiu").iterrows():
         num(f"disc_orient_{k}", r["taxa"]); num(f"n_orient_{k}", int(r["n"]))
@@ -629,12 +635,12 @@ def orientacoes_faladas(p):
     vt["tv"] = pd.to_datetime(vt["dataHoraRegistro"])
     vt = vt.dropna(subset=["tv"]).sort_values("tv")
     alt = "|".join(sorted(map(re.escape, NOMES_FALA), key=len, reverse=True))
-    pat = re.compile(r"\b(?:o|a)\s+(%s)\s+(?:orienta|vota|encaminha)\s+[\"“'‘]?\s*(sim|não|nao|obstrução|obstrucao|liberado|liberada)" % alt, re.I)
+    pat = re.compile(r"\b(?:o|a)\s+(%s)\s+(orienta|vota|encaminha)\s+[\"“'‘]?\s*(sim|não|nao|obstrução|obstrucao|liberado|liberada)" % alt, re.I)
     linhas = []
     for t, txt in zip(d["dataHoraInicio"], d["transcricao"].fillna("")):
         for m in pat.finditer(txt[:600]):      # a orientação vem no início da fala
-            linhas.append((pd.Timestamp(t), NOMES_FALA[m.group(1).upper()], m.group(2).lower()))
-    f = pd.DataFrame(linhas, columns=["t", "partido", "ori"]).drop_duplicates()
+            linhas.append((pd.Timestamp(t), NOMES_FALA[m.group(1).upper()], m.group(3).lower(), m.group(2).lower() == "orienta"))
+    f = pd.DataFrame(linhas, columns=["t", "partido", "ori", "estrito"]).drop_duplicates()
     f["ori"] = f["ori"].map({"sim": "Sim", "não": "Não", "nao": "Não", "obstrução": "Obstrução",
                              "obstrucao": "Obstrução", "liberado": "Liberado", "liberada": "Liberado"})
     f = pd.merge_asof(f.sort_values("t"), vt[["tv", "idVotacao"]], left_on="t", right_on="tv",
@@ -649,7 +655,13 @@ def orientacoes_faladas(p):
     num("fala_val_n", int(ok.sum()))
     num("fala_val_concorda", (mm.loc[ok, "ori"] == mm.loc[ok, "orientacao"]).mean())
     num("fala_val_concorda_dir", (mm.loc[ok, "ori"].replace("Obstrução", "Não") == mm.loc[ok, "orientacao"].replace("Obstrução", "Não")).mean())
-    fd = f[f["ori"].isin(["Sim", "Não", "Obstrução"])][["idVotacao", "partido", "ori"]]
+    fd = f[f["ori"].isin(["Sim", "Não", "Obstrução"])][["idVotacao", "partido", "ori", "estrito"]]
+    # conferência manual de 50 associações (dados_aux/validacao_falas.csv)
+    arq = AUX / "validacao_falas.csv"
+    if arq.exists():
+        vm = pd.read_csv(arq, sep=";")
+        num("fala_manual_n", len(vm)); num("fala_manual_corretas", int((vm["avaliacao"] == "correta").sum()))
+        num("fala_manual_incertas", int((vm["avaliacao"] == "incerta").sum()))
     # período do megabloco
     mb = p[p["camada"] == "bloco heterogêneo"]
     x = mb.merge(fd, on=["idVotacao", "partido"])
@@ -657,6 +669,15 @@ def orientacoes_faladas(p):
     num("fala_mb_votos", len(x)); num("fala_mb_votos_total", len(mb))
     num("fala_mb_votacoes", x["idVotacao"].nunique()); num("fala_mb_votacoes_total", mb["idVotacao"].nunique())
     num("fala_mb_D", (x["vd"] == x["od2"]).mean())
+    num("fala_mb_D_estrito", (x.loc[x["estrito"], "vd"] == x.loc[x["estrito"], "od2"]).mean())
+    num("fala_mb_n_estrito", int(x["estrito"].sum()))
+    # nas mesmas votações e partidos: D pela fala x unidade (U)
+    u = amostra_U(p)
+    xu = x.merge(u[["idVotacao", "deputado_id", "unido"]], on=["idVotacao", "deputado_id"])
+    num("fala_mb_U_mesmos", xu["unido"].mean())
+    for q in ["PL", "PT", "UNIÃO", "PSD", "MDB"]:
+        s_ = xu[xu["partido"] == q]
+        num(f"fala_mb_U_{q}", s_["unido"].mean())
     for q in ["PL", "PT", "UNIÃO", "PSD", "MDB"]:
         s_ = x[x["partido"] == q]
         num(f"fala_mb_D_{q}", (s_["vd"] == s_["od2"]).mean()); num(f"fala_mb_vot_{q}", s_["idVotacao"].nunique())
@@ -665,6 +686,8 @@ def orientacoes_faladas(p):
     y["od2"] = y["ori"].map(DIR)
     num("fala_fora_votos", len(y))
     num("fala_fora_D_registro", (y["vd"] == y["od"]).mean()); num("fala_fora_D_fala", (y["vd"] == y["od2"]).mean())
+    uf_ = y.merge(u[["idVotacao", "deputado_id", "unido"]], on=["idVotacao", "deputado_id"])
+    num("fala_fora_U_mesmos", uf_["unido"].mean())
     # registro: o que a Câmara grava nas votações do megabloco
     vmb = mb["idVotacao"].unique()
     om = o[o["idVotacao"].isin(vmb)]
@@ -1073,11 +1096,14 @@ def avaliar_cv(A, P, P_sens, info, B=1000):
     dep = A["base"][A["i"]][sm]
     nd = len(A["deps"])
     cont = np.bincount(dep, minlength=nd)
-    perdas = {}
+    perdas, perdas_obs = {}, {}
     for mn, pr in P.items():
         pp = np.clip(pr[sm], 1e-6, 1 - 1e-6)
         ll = -(y[sm] * np.log(pp) + (1 - y[sm]) * np.log(1 - pp))
         perdas[mn] = np.bincount(dep, ll, nd)
+        perdas_obs[mn] = ll
+    rngv = np.random.default_rng(SEMENTE + 9)
+    Wv = np.stack([np.bincount(rngv.integers(0, A["n_j"], A["n_j"]), minlength=A["n_j"]) for _ in range(B)])
     rng = np.random.default_rng(SEMENTE)
     W = np.stack([np.bincount(rng.integers(0, nd, nd), minlength=nd) for _ in range(B)])
     pares = [("M0", "M1"), ("M0c", "M1"), ("M0", "M0c"), ("M1", "M2"), ("M1", "M2b"), ("M2b", "M3"), ("M3emb", "M3"),
@@ -1088,6 +1114,11 @@ def avaliar_cv(A, P, P_sens, info, B=1000):
         est = (perdas[a] - perdas[b]).sum() / cont.sum()
         bo = (W @ (perdas[a] - perdas[b])) / (W @ cont)
         difs.append(dict(par=f"{a} − {b}", dif=est, lo=np.percentile(bo, 2.5), hi=np.percentile(bo, 97.5)))
+        # bootstrap de votações (unidade de dependência alternativa)
+        vj = A["j"][sm]
+        pv_ = np.bincount(vj, perdas_obs[a] - perdas_obs[b], A["n_j"]); cv_ = np.bincount(vj, minlength=A["n_j"])
+        bv = (Wv @ pv_) / (Wv @ cv_)
+        num(f"cvdif_{a}_{b}_vlo", np.percentile(bv, 2.5), 5); num(f"cvdif_{a}_{b}_vhi", np.percentile(bv, 97.5), 5)
         num(f"cvdif_{a}_{b}", est, 5); num(f"cvdif_{a}_{b}_lo", np.percentile(bo, 2.5), 5)
         num(f"cvdif_{a}_{b}_hi", np.percentile(bo, 97.5), 5)
     # por tamanho de bancada (células disputadas)
@@ -1348,6 +1379,10 @@ def estudo_evento(base, dep):
           X, nomes = X[:, keep], [n for n, k in zip(nomes, keep) if k]
           fe1 = pd.factorize(x["deputado_id"])[0]
           fe2 = pd.factorize(x["partido"] + "|" + x["idVotacao"])[0]
+          if "ind" in [n_.split(":")[0] for n_ in nomes]:
+              t0r = x["deputado_id"].map(ind_v)
+              mr = np.floor((x["dt"] - t0r).dt.days / 30.44)
+              num(f"ev{suf}_{nome}_desvio_ref", float(x.loc[(mr >= -12) & (mr <= -7), "desvio"].mean()))
           for nm_, col in zip(nomes, X.T):
               num(f"ev{suf}_{nome}_{nm_}_nvotos", int(col.sum()))
               num(f"ev{suf}_{nome}_{nm_}_ndep", int(x.loc[col > 0, "deputado_id"].nunique()))
@@ -1790,6 +1825,10 @@ def partido_vs_governo(base, cvP, A, dep, per, dist, camadas=("própria", "bloco
         num(f"div_{rot}_n{sufixo}", len(s))
         num(f"div_{rot}_segue_partido{sufixo}", s["segue_partido"].mean())
         num(f"div_{rot}_segue_governo{sufixo}", s["segue_governo"].mean())
+    # robustez: base datada (PP e REPUBLICANOS a partir de 13/09/2023; UNIÃO e PP fora a partir de 02/09/2025)
+    dat = x["base_gov"] & ~((x["partido"].isin(["PP", "REPUBLICANOS"])) & (x["dt"] < "2023-09-13")) \
+        & ~((x["partido"].isin(["UNIÃO", "PP"])) & (x["dt"] >= "2025-09-02"))
+    num(f"div_base_datada_n{sufixo}", int(dat.sum())); num(f"div_base_datada_segue_partido{sufixo}", x.loc[dat, "segue_partido"].mean())
     xb = x[x["base_gov"]]
     c = xb["partido"].value_counts()
     ps = [q for q in ORDEM_PARTIDOS if c.get(q, 0) >= 300]
@@ -2016,16 +2055,16 @@ def fig_disciplina(tab):
     t = tab.iloc[::-1]
     y = np.arange(len(t))
     fig, ax = plt.subplots(figsize=(7, 5.6))
-    ax.hlines(y + 0.15, t["D_lo"] * 100, t["D_hi"] * 100, color=COR["s1"], lw=2)
+    ax.hlines(y + 0.15, t["D_lo2"] * 100, t["D_hi2"] * 100, color=COR["s1"], lw=2)
     ax.plot(t["D"] * 100, y + 0.15, "o", ms=6, color=COR["s1"], label="D: segue a orientação da liderança")
-    ax.hlines(y - 0.15, t["U_lo"] * 100, t["U_hi"] * 100, color=COR["s2"], lw=2)
+    ax.hlines(y - 0.15, t["U_lo2"] * 100, t["U_hi2"] * 100, color=COR["s2"], lw=2)
     ax.plot(t["U"] * 100, y - 0.15, "s", ms=5.5, color=COR["s2"], label="U: vota com a maioria dos colegas de partido")
     for yy, (_, r) in zip(y, t.iterrows()):
         ax.text(101.2, yy, f"{pct(r['share_propria'], 0)}%", va="center", ha="left", fontsize=8, color=COR["texto2"])
     ax.text(101.2, len(t) - 0.2, "orientação\nprópria", fontsize=7.5, color=COR["texto2"], va="bottom")
     ax.set_yticks(y, t.index)
     ax.set_xlim(76, 100.5)
-    ax.set_xlabel("% dos votos (IC 95%, bootstrap de votações)")
+    ax.set_xlabel("% dos votos (IC 95%, bootstrap em duas vias: votações e deputados)")
     ax.legend(loc="lower left", fontsize=8)
     ax.set_title("Disciplina à liderança (D) e unidade partidária (U), Plenário")
     fig.tight_layout()
@@ -2158,17 +2197,18 @@ def fig_governo(t, cf):
     tt = t.join(cf[["prev"]], how="left").iloc[::-1]
     y = np.arange(len(tt))
     fig, ax = plt.subplots(figsize=(6.8, 4.4))
-    ax.plot(tt["partido_"] * 100, y, "o", ms=7, color=COR["s1"], label="segue o partido (observado)")
+    ax.hlines(y, tt["lo"] * 100, tt["hi"] * 100, color=COR["s1"], lw=2)
+    ax.plot(tt["partido_"] * 100, y, "o", ms=7, color=COR["s1"], label="segue o partido (observado, IC 95%)")
     ax.plot(tt["governo"] * 100, y, "s", ms=6, color=COR["s2"], label="segue o Governo (observado)")
     ax.plot(tt["prev"] * 100, y, "D", ms=6, mfc="none", mew=1.6, color=COR["texto2"],
             label="segue o partido (previsto pelas preferências, M5)")
     for yy, (_, r) in zip(y, tt.iterrows()):
-        ax.text(101, yy, milhar(r["n"]), va="center", fontsize=7.5, color=COR["texto2"])
+        ax.text(101, yy, f"{milhar(r['n'])} ({int(r['votacoes'])})", va="center", fontsize=7.5, color=COR["texto2"])
     ax.set_yticks(y, tt.index)
-    ax.set_xlim(0, 108)
+    ax.set_xlim(0, 112)
     ax.set_xlabel("% dos votos quando a orientação do partido e a do Governo são opostas")
     ax.legend(fontsize=7.5, loc="upper center", bbox_to_anchor=(0.45, -0.13), ncol=2)
-    ax.text(101, len(tt) - 0.4, "votos", fontsize=7.5, color=COR["texto2"])
+    ax.text(101, len(tt) - 0.4, "votos (votações)", fontsize=7.5, color=COR["texto2"])
     ax.set_title("Partidos da base: partido ou Governo?")
     fig.tight_layout()
     fig.savefig(FIG / "fig7_partido_governo.png", bbox_inches="tight")
@@ -2180,7 +2220,8 @@ def tabela_partidos(tab, taD, taU, rp):
     t = pd.DataFrame({"Partido": tab.index,
                       "D (IC 95%)": [f"{pct(r['D'])} [{pct(r['D_lo2'])}; {pct(r['D_hi2'])}]" for _, r in tab.iterrows()],
                       "Cob. D": tab["cobD"].map(lambda x: pct(x, 0)),
-                      "D própria (n)": [f"{pct(r['Dp'])} ({milhar(r['nDp'])})" if pd.notna(r["Dp"]) else "–" for _, r in tab.iterrows()],
+                      "D própria (votações)": [f"{pct(r['Dp'])} ({int(r['vDp'])})" if pd.notna(r["Dp"]) and r["vDp"] >= 10
+                                               else (f"– ({int(r['vDp'])})" if pd.notna(r["vDp"]) else "–") for _, r in tab.iterrows()],
                       "U (IC 95%)": [f"{pct(r['U'])} [{pct(r['U_lo2'])}; {pct(r['U_hi2'])}]" if pd.notna(r["U"]) else "–"
                                      for _, r in tab.iterrows()]})
     for a in [2023, 2024, 2025, 2026]:
@@ -2197,7 +2238,8 @@ def tabela_partidos(tab, taD, taU, rp):
                    "do partido com orientação diretiva aplicável. U: voto na direção da maioria dos demais colegas "
                    "(≥ 5). Rice em votações com minoria ≥ 10%; m = 3 e m = 10: padronização de Desposato; '% racha': "
                    "votações disputadas com Rice < 0,5. IC por bootstrap em duas vias (votações e deputados, 500 réplicas). "
-                   "D própria: só votos sob orientação do próprio partido ou federação (n = votos).")
+                   "D própria: só votos sob orientação do próprio partido ou federação, com o nº de votações entre parênteses; "
+                   "omitida com menos de 10 votações.")
     return t
 
 
@@ -2226,7 +2268,7 @@ def main():
     tt_fmt = tt.reset_index().rename(columns={"tema": "Tema", "votacoes": "Votações"})
     tt_fmt["D"] = tt_fmt["D"].map(pct); tt_fmt["U"] = tt_fmt["U"].map(pct)
     tabela_md(tt_fmt[["Tema", "Votações", "D", "U"]], "tab4_temas",
-              "Tabela 4 – Disciplina (D) e unidade (U) por tema da proposição votada (ordem crescente de U)",
+              "Tabela A1 – Disciplina (D) e unidade (U) por tema da proposição votada (ordem crescente de U)",
               nota="Temas oficiais da Câmara (multi-rótulo, peso 1/k); temas com < 15 votações em 'Outros temas'.")
     g, rp = rice(v)
     g20, rp20 = rice(v, limiar=0.2, sufixo="_d20")
@@ -2243,7 +2285,7 @@ def main():
         rob_fmt[c] = rob_fmt[c].map(pct)
     rob_fmt["ρ (ranking)"] = rob_fmt["ρ (ranking)"].map(lambda x: br(x, 2))
     tabela_md(rob_fmt[["Variante", "Geral", "Cobertura", "ρ (ranking)"] + ps], "tab9_robustez",
-              "Tabela 11 – Robustez da disciplina (D) a decisões de medida, Plenário",
+              "Tabela 8 – Robustez da disciplina (D) a decisões de medida, Plenário",
               nota="ρ: correlação de Spearman entre o ranking dos partidos na variante e na medida principal.")
     antes_depois_troca(base["d"])
     # números prévios do projeto (avaliacao.json de embeddings_deputados.py; Plenário + comissões)
@@ -2262,27 +2304,27 @@ def main():
         P, P_sens, info, tempos = validacao_cruzada(A)
         tab_cv, difs, fx = avaliar_cv(A, P, P_sens, info)
         fig_validacao(difs)
-        tc = tab_cv[tab_cv["amostra"].isin(["disputadas_intra"])].copy()
+        tc = tab_cv[tab_cv["amostra"].isin(["disputadas_intra"]) & (tab_cv["modelo"] != "M3emb")].copy()
         tc["Modelo"] = tc["modelo"].map(NOMES_M)
         tc["Amostra"] = tc["amostra"].map({"todas": "todas as células", "disputadas_intra": "células com divisão interna"})
         tc = tc.assign(**{"Log-loss": tc["logloss"].map(lambda x: br(x, 4)), "Brier": tc["brier"].map(lambda x: br(x, 4)),
                           "Acurácia": tc["acuracia"].map(lambda x: pct(x, 2)),
                           "AUC-PR (desvio)": tc["auc_pr_desvio"].map(lambda x: br(x, 3))})
         tabela_md(tc[["Modelo", "Log-loss", "Brier", "Acurácia", "AUC-PR (desvio)"]], "tab5_validacao",
-                  "Tabela 5 – Desempenho fora da amostra nas células com divisão interna (validação cruzada em 5 dobras de células deputado×votação)",
+                  "Tabela 4 – Desempenho fora da amostra nas células com divisão interna (validação cruzada em 5 dobras de células deputado×votação)",
                   nota="Células com divisão interna: partido×votação com ≥ 5 colegas no treino e ao menos um voto "
                        "contra a maioria do partido no treino. AUC-PR: precisão média ao ranquear os votos contra a "
                        "maioria de treino da célula.")
         glob = dispersao_pivos(A, p, dep, per)
         fig_pontos(glob["X"], ps)
         diss = tabela_dissidentes(glob["X"])
-        tabela_md(diss, "tab7_dissidentes", "Tabela 9 – Dissidentes sistemáticos: maiores distâncias à mediana do próprio partido (dim1 global)",
+        tabela_md(diss, "tab7_dissidentes", "Tabela A2 – Dissidentes sistemáticos: maiores distâncias à mediana do próprio partido (dim1 global)",
                   nota=f"Períodos deputado×partido com ≥ 100 votos, a pelo menos 2 desvios-padrão da mediana do partido "
                        f"e com IC 95% (bootstrap de votações, {R['boot_B_global']} réplicas, Procrustes) que exclui essa mediana.")
         piv = glob["piv"].drop(columns=["partido_mediana"]).rename(columns={
             "semestre": "Semestre", "n_em_exercicio": "Em exercício", "n_com_ponto": "Com ponto ideal",
             "mediana": "Mediano", "pivo_40": "Pivô 40%", "pivo_60": "Pivô 60%"})
-        tabela_md(piv, "tab8_pivos", "Tabela 10 – Deputado mediano e pivôs de 3/5 por semestre (dim1 global)",
+        tabela_md(piv, "tab8_pivos", "Tabela A3 – Deputado mediano e pivôs de 3/5 por semestre (dim1 global)",
                   nota="Deputados em exercício na data de referência do semestre, com ≥ 30 votos no período "
                        "deputado×partido vigente. Pivô 60%: o 308º de 513 a partir da oposição; pivô 40%: o 308º a partir do governo.")
         dt_ = glob["disp"].reindex([q for q in ps if q in glob["disp"].index])
@@ -2290,7 +2332,7 @@ def main():
                                 "DP dim1 (EP)": [f"{br(r['std'])} ({br(r['ep'])})" for _, r in dt_.iterrows()],
                                 "Viés bootstrap": dt_["vies"].map(lambda x: br(x, 3)),
                                 "IIQ dim1": dt_["iqr"].map(br)}),
-                  "tab6_dispersao", "Tabela 8 – Dispersão interna dos partidos no eixo governo × oposição (dim1 global, Plenário)",
+                  "tab6_dispersao", "Tabela 7 – Dispersão interna dos partidos no eixo governo × oposição (dim1 global, Plenário)",
                   nota="Períodos deputado×partido com ≥ 100 votos; partidos com ≥ 5 períodos. EP e viés por bootstrap de votações com reajuste e alinhamento de Procrustes; o viés (média bootstrap menos estimativa) mostra quanto a reamostragem infla a dispersão, sobretudo em bancadas pequenas.")
         dist = distancia_fora_periodo(p, A)
         reg = regressao_desvio(base, dep, per, dist)
@@ -2307,7 +2349,7 @@ def main():
         linhas.append({"Variável": "UF (Wald, 26 g.l.)", **{f"Desvio de {n} (p.p.)": f"χ² = {br(R[f'reg_{n}_uf_wald'], 1)}; p = {br(R[f'reg_{n}_uf_p'], 3)}" for n in ["D", "U"]}})
         linhas.append({"Variável": "N votos (deputados)", **{f"Desvio de {n} (p.p.)": f"{milhar(R[f'reg_{n}_n'])} ({R[f'reg_{n}_n_dep']})" for n in ["D", "U"]}})
         tabela_md(pd.DataFrame(linhas), "tab10_regressao",
-                  "Tabela 7 – Correlatos do desvio individual: MPL com efeitos fixos partido×votação",
+                  "Tabela 6 – Correlatos do desvio individual: MPL com efeitos fixos partido×votação",
                   nota="Coeficientes em pontos percentuais (IC 95%, EP agrupados por deputado e por votação). "
                        "Distância medida na dim1 global estimada com as votações do outro biênio.")
         ev, janelas = estudo_evento(base, dep)
@@ -2315,7 +2357,7 @@ def main():
         fig_evento(ev, janelas)
         intra = interpretar_intra(A, vt, dep, glob, temas_vt)
         tabela_md(tabela_cargas(intra["vv"]), "tab11_cargas",
-                  "Tabela 6 – Votações com maior carga na dimensão intrapartidária (modelo intra 1D)",
+                  "Tabela 5 – Votações com maior carga na dimensão intrapartidária (modelo intra 1D)",
                   nota="Carga positiva: os deputados mais governistas que o próprio partido tendem a votar Sim.")
         x5, t5, cf, tab5 = partido_vs_governo(base, P, A, dep, per, dist)
         partido_vs_governo(base, P, A, dep, per, dist, camadas=("própria", "bloco"), sufixo="_seminf")

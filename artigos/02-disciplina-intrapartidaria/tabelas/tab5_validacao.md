@@ -1,4 +1,4 @@
-**Tabela 5 – Desempenho fora da amostra nas células com divisão interna (validação cruzada em 5 dobras de células deputado×votação)**
+**Tabela 4 – Desempenho fora da amostra nas células com divisão interna (validação cruzada em 5 dobras de células deputado×votação)**
 
 | Modelo | Log-loss | Brier | Acurácia | AUC-PR (desvio) |
 |---|---|---|---|---|
@@ -9,7 +9,6 @@
 | M2b = M1 + lealdade por período × escala por votação | 0,2583 | 0,0765 | 89,68 | 0,703 |
 | M3 intra 1D | 0,2525 | 0,0730 | 90,31 | 0,723 |
 | M3L = M3 + lealdade individual | 0,2491 | 0,0727 | 90,24 | 0,725 |
-| M3 com posições embaralhadas no partido | 0,6736 | 0,1696 | 78,96 | 0,212 |
 | M4 intra 2D | 0,2447 | 0,0707 | 90,56 | 0,738 |
 | M5 global 2D (sem partido) | 0,2655 | 0,0792 | 89,21 | 0,695 |
 

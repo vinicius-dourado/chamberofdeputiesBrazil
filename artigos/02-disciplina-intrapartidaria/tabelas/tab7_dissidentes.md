@@ -1,4 +1,4 @@
-**Tabela 9 – Dissidentes sistemáticos: maiores distâncias à mediana do próprio partido (dim1 global)**
+**Tabela A2 – Dissidentes sistemáticos: maiores distâncias à mediana do próprio partido (dim1 global)**
 
 | Sentido | Deputado | Partido | Votos | Posição relativa (DP do partido) | IC 95% (DP do partido) |
 |---|---|---|---|---|---|
