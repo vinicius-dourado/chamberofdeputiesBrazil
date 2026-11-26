@@ -359,7 +359,7 @@ A Figura 6 mostra o estudo de evento para 173 deputados com troca individual.
 
 - **Antes da troca:** na janela de referência, os futuros trocadores contrariam a maioria dos colegas em 20,6% dos votos. Nenhum coeficiente anterior se distingue de zero individualmente (−1,7, −0,9 e 1,4 pontos), mas o teste conjunto é limítrofe (p = 0,10). A estimativa de −3 a −1 meses fica 3,1 pontos acima da de 13 meses ou mais antes: há uma pré-tendência fraca, compatível com saída anunciada.
 - **Depois da troca:** o desvio em relação à maioria dos novos colegas cai 11,1 pontos nos primeiros três meses (IC 6,5–15,6) na versão com todas as trocas.
-- **Só a coorte da janela de 2026** (129 deputados, com controles que nunca trocaram): a queda é de 6,5 pontos (IC 2,4–10,6), com teste conjunto de pré-tendência também limítrofe (p = 0,11). É a estimativa preferível, porque evita usar trocadores antigos como controles; a da versão completa é maior. Em D, nessa coorte, a queda (3,1 pontos) não se distingue de zero.
+- **Só a coorte da janela de 2026** (129 deputados, com controles que nunca trocaram): a queda é de 6,5 pontos (IC 2,4–10,6), com teste conjunto de pré-tendência também limítrofe (p = 0,11). É a estimativa preferível, porque evita usar trocadores antigos como controles; a da versão completa é maior. Nessa versão, o coeficiente de −6 a −4 meses é negativo (−2,1 pontos), o que não sustenta a leitura de saída anunciada. Em D, nessa coorte, a queda (3,1 pontos) não se distingue de zero.
 - **Fusões:** não servem de placebo. Em U, as bancadas pré-fusão nunca reuniam cinco colegas votando, e os coeficientes não são identificados.
 
 **Seleção ou ajuste?** Estes números vêm dos 145 deputados com pontos nos dois partidos:

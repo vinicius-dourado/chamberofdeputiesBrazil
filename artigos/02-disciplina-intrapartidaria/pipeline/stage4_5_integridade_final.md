@@ -385,3 +385,69 @@ O novo texto do Apêndice A ("cerca de 11 minutos… numa reexecução de verifi
 
 - **Notas abertas, mantidas por instrução do usuário:** páginas e DOI de Nicolau (2000); lista completa dos instrumentos em Figueiredo e Limongi (1999); datas finas da base ministerial.
 - **Afirmações não verificadas sem marca:** as da rodada 1 foram resolvidas (Carey, Nokken, finalidade do megabloco, tempo a frio). Não encontrei outra afirmação não verificada sem marca no texto alterado. A nova frase sobre Krehbiel está dentro do argumento verificado, mas tem o problema conceitual de R2-3.
+
+---
+---
+
+# Rodada 3 (commit `78418c5`)
+
+**Data:** 26/11/2026. **Escopo:** reverificar as correções R2-1 a R2-10 e procurar problemas introduzidos por elas. Usei o diff `1da626c..78418c5` em `artigo_fonte.md`, `artigo.md`, `analise.py` e `resultados.json` (65 chaves mudaram).
+
+## Veredito final: **PASS WITH NOTES**
+
+Não há problemas P0, P1 ou P2 em aberto. Os 7 modos de falha estão CLEAR. Ficam as notas abaixo, que não bloqueiam.
+
+## R3.1 Reprodução
+
+Reexecutei `analise.py` numa cópia nova, sem tabelas nem figuras pré-existentes e com o cache de IRT (176 s, código 0). Resultado:
+
+- `resultados.json`: 2.145/2.146 chaves idênticas ao versionado; só `tempo_execucao_s` difere.
+- `tabelas/*.md`: 11/11 idênticas.
+- Figuras: 7/7 idênticas byte a byte.
+- `artigo.md`: idêntico, salvo a linha do tempo de execução.
+
+**As 65 chaves que mudaram em relação a `1da626c`:** 64 são do estudo de evento por coorte (`ev_c26_*`), o que é coerente com a única mudança de método, nos controles da coorte. A outra é o tempo. Nenhum outro resultado mudou.
+
+**Código** (`estudo_evento`): `excl26 = (todos_ind | set(ind.index)) - set(ind26.index) | set(fus.index)`. Pela precedência dos operadores, a expressão é ((A ∪ B) − C) ∪ D, que é o pretendido. `todos_ind` inclui as trocas individuais anteriores a 01/04/2023, que agora saem dos controles. A coorte continua com 129 deputados.
+
+## R3.2 Situação de R2-1 a R2-10
+
+| ID | Situação | Evidência |
+|---|---|---|
+| R2-1 | Resolvido | §5.1: "(Figura 2, coluna à direita)". A Fig. 2 é o gráfico por partido, com a coluna "orientação própria" |
+| R2-2 | Resolvido | Apêndice A: "as codificações feitas pelo assistente de IA… (`validacao_tipo_votacao.csv`) e as associações fala→votação (`validacao_falas.csv`)". Não sobra "codificação manual" no texto, exceto na coluna "Plano" do Apêndice B, que descreve o que foi planejado |
+| R2-3 | Resolvido | §2: "disciplina *no sentido estrito*…; a medida D adiante é adesão à orientação; só o excesso de lealdade da seção 5.8 aproxima o componente contra a preferência". Fica coerente com §4.1, §5.8 e §7 |
+| R2-4 | Resolvido | §8: "a unidade de quatro partidos de centro cai". Resumo, Abstract e §8 agora coincidem |
+| R2-5 | Resolvido | §5.7: "A estimativa de −3 a −1 meses fica 3,1 pontos acima da de 13 meses ou mais antes" (1,4 − (−1,7) = 3,1 ✓) |
+| R2-6 | Resolvido | `set_xlim(min(76, floor(min IC)·100 − 1), 100,5)` dá 74. Conferi a figura: o IC do PSDB (75,8) aparece inteiro |
+| R2-7 | Resolvido como nota | Lista: "p. 709–735, 2000. [verificar páginas]", coerente com o .bib |
+| R2-8 | Resolvido | Apêndice A: "cada número calculado no texto é uma referência a `resultados.json`; os poucos números escritos à mão (limiares, parâmetros de método) estão definidos no próprio texto ou no código". Confere com a seção 2.3 (o único dado escrito à mão, "< 2%", foi conferido nos dados) |
+| R2-9 | Resolvido | §4.2: "λ_d = 4 para os desvios por período"; §4.3: M2b "com penalidades λ_ρ = 1 e λ_s = 0,04" (= `ajustar_lealdade_b`). O *offset* z^{M1} já indica a estimação em duas etapas. §5.2: "IC 95% por bootstrap de votações" (= `boot_razao`) |
+| R2-10 | Resolvido | §4.4 ("deputados que nunca trocaram como controles") agora corresponde ao código. §5.7: queda de 6,5 pontos (IC 2,4–10,6), teste conjunto p = 0,11. Os marcadores conferem com `ev_c26_U_ind:0 a 3_*` (−0,06486 [−0,10552; −0,0242]) e `ev_c26_U_pre_p` = 0,1086. Em D, a queda de 3,1 pontos continua sem se distinguir de zero ([−1,1; 7,4] na versão negada) |
+
+## R3.3 Problemas introduzidos pelas mudanças
+
+Não achei nenhum. Conferi:
+
+- as 13 remissões a figuras e as 11 a tabelas;
+- Resumo × Abstract (equivalentes);
+- as 31 referências: 31 citadas = 31 na lista = 31 no .bib;
+- os marcadores, renderizados de novo a partir do `resultados.json` de `78418c5`, idênticos ao `artigo.md`;
+- as frases novas da §2, da §4.2/§4.3 e do Apêndice A contra o código;
+- os números novos da coorte contra o texto ("limítrofe", "6,5", "não se distingue de zero" em D).
+
+**Nota (não é problema):** com os controles novos, o coeficiente de −6 a −4 meses na coorte de 2026 tem IC de [−4,26; −0,007] p.p. e passa a excluir zero por margem mínima (antes, [−4,25; +0,02]). O texto não afirma nada sobre coeficientes individuais da coorte; ele fala só do teste conjunto (p = 0,11, "limítrofe"). O sinal é negativo, ou seja, o desvio é menor 4 a 6 meses antes da troca, e não sustenta o aumento de "saída anunciada" observado na versão completa. Se quiserem precisão total, podem acrescentar: "na coorte, as estimativas pré-troca não mostram aumento".
+
+## R3.4 Checklist dos 7 modos
+
+1–7 **CLEAR**, com a mesma evidência da rodada 2. Acrescento a reprodução da rodada 3 (Modos 1 e 3) e a correspondência entre o Método e o código nos controles da coorte (Modo 6). Nenhum modo bloqueia.
+
+## R3.5 Notas abertas (não bloqueiam)
+
+1. Páginas e DOI de Nicolau (2000): `[verificar]`, mantido por instrução do usuário.
+2. Lista completa dos instrumentos em Figueiredo e Limongi (1999): `[verificar]`, mantido por instrução do usuário.
+3. Datas finas da base ministerial: `[verificar]`, mantido por instrução do usuário.
+4. Cobertura da verificação: busca nova na web para 5 de 32 referências (as demais pelas trilhas dos Stages 1, 2.5 e 4); originalidade em cerca de 10% dos parágrafos, abaixo dos 50% do protocolo; reprodução feita com o cache de IRT (o tempo a frio vem do Stage 2.5). Antes da submissão, recomendo conferir os DOIs no Crossref e rodar um verificador profissional de originalidade.
+5. O IC do coeficiente de −6 a −4 meses na coorte (R3.3).
+
+**Não há afirmações não verificadas sem a marca `[verificar]`** no texto atual.

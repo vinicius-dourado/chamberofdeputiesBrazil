@@ -10,13 +10,15 @@
   - Stage 4: `stage4_resposta.md` e `stage4_bibliografia.md`.
   - Stage 3': `stage3b_rerevisao.md`, Major com um único item obrigatório, R-1.
   - Stage 4': commit 0467017.
-  - Stage 4.5: `stage4_5_integridade_final.md`.
+  - Stage 4.5: `stage4_5_integridade_final.md`, três rodadas, a última PASS WITH NOTES.
+  - Stage 5: manuscrito final em Markdown.
+  - Stage 6: `stage6_processo.md`.
 - O usuário autorizou seguir sem parar nos checkpoints ("pode seguir direto").
 
 ## Achados principais
 - O registro de orientações é de bloco para o centro. Em 2025, o megabloco PL + federação do PT deixou o registro quase vazio, mas as transcrições mostram que os partidos orientaram. D sobe em 2025 por artefato; U cai no centro (PSD, MDB, PP, União).
 - D = 90,9% e U = 89,5%. A indisciplina tem estrutura pequena: M2b→M3 = 0,006, com IC acima de zero. A dimensão é o eixo governo–oposição dentro do partido.
-- A distância espacial ao partido (medida no outro biênio) domina os correlatos do desvio. Depois da troca de partido, o desvio em relação aos novos colegas cai (6,5 p.p. na coorte de 2026); os dados são compatíveis com seleção e com ajuste.
+- A distância espacial ao partido (medida no outro biênio) domina os correlatos do desvio. Depois da troca de partido, o desvio em relação aos novos colegas cai (6,5 p.p. na coorte de 2026; controles = nunca trocaram); os dados são compatíveis com seleção e com ajuste.
 - Partido × Governo: o excesso de lealdade ao partido fica entre 4,2 e 17,1 p.p., conforme o contrafactual.
 
 ## Pendências
