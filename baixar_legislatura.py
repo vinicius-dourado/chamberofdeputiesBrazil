@@ -71,14 +71,22 @@ def baixar_arquivo(nome, ano, destino: Path):
     caminho = destino / arq
     if not caminho.exists():
         print(f"  baixando {arq} ...", flush=True)
-        r = get(f"{ARQ}/{nome}/csv/{arq}", stream=True)
-        if r is None:
-            print(f"  (não disponível: {arq})")
-            return None
         tmp = caminho.with_suffix(".part")
-        with open(tmp, "wb") as f:
-            for chunk in r.iter_content(1 << 20):
-                f.write(chunk)
+        for tentativa in range(5):               # conexão pode cair no meio do streaming
+            r = get(f"{ARQ}/{nome}/csv/{arq}", stream=True)
+            if r is None:
+                print(f"  (não disponível: {arq})")
+                return None
+            try:
+                with open(tmp, "wb") as f:
+                    for chunk in r.iter_content(1 << 20):
+                        f.write(chunk)
+                break
+            except requests.RequestException:
+                print(f"  conexão interrompida ({arq}), tentando de novo...", flush=True)
+                time.sleep(2 ** tentativa)
+        else:
+            raise RuntimeError(f"Falha ao baixar {arq}")
         tmp.rename(caminho)
     return caminho
 

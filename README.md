@@ -60,3 +60,48 @@ python baixar_discursos.py --atualizar     # ignora o cache e baixa tudo de novo
 | Tabela | Conteúdo | Chaves |
 |---|---|---|
 | `discursos` | um discurso por linha: deputado, partido/UF na data, data/hora, tipo (Pela ordem, Breves comunicações, Como líder...), fase da sessão, `keywords`, `sumario`, `transcricao`, `urlTexto` | `id_discurso`, `deputado_id` |
+
+## Dados para modelos de reeleição (Pereira & Rennó 2007) – legislaturas 55, 56, 57 + TSE
+
+Para replicar análises de sucesso eleitoral de deputados federais candidatos à reeleição
+(eleições de 2018, 2022 e 2026), o repositório também traz as legislaturas 55 (2015–2019) e
+56 (2019–2023), complementos da API da Câmara e dados do TSE.
+
+```bash
+python baixar_legislatura.py --legislatura 56      # idem 55; a 57 já está no repositório
+python baixar_camara_complementar.py               # legislaturas 55, 56, 57 (~5 min cada)
+python baixar_tse.py                               # TSE: gerais 2018/2022/2026, municipais 2020/2024 (~3 GB de ZIPs em cache)
+```
+
+### `baixar_camara_complementar.py` → `dados/leg<N>/`
+
+| Tabela | Conteúdo | Uso no modelo |
+|---|---|---|
+| `deputados_complemento` | `cpf_hash` (chave para o TSE), nome civil, nascimento, legislaturas anteriores em exercício | Sênior; ligação Câmara↔TSE |
+| `deputados_orgaos` | participação em órgãos na legislatura (cargo, tipo: Mesa, comissão permanente, especial, CPI...) | Mesa Diretora, C. Permanente, C. Especial |
+| `deputados_mandatos_externos` | mandatos fora da Câmara (vereador, prefeito, dep. estadual, governador...) | Hist. Legislativo / Executivo |
+| `deputados_ocupacoes`, `deputados_profissoes` | ocupações e profissões declaradas | Empresário |
+| `lideres` | líderes/vice-líderes de partidos, blocos, Governo, Maioria, Minoria, Oposição, com período | Posição no partido |
+| `mesa` | composição da Mesa Diretora com período | Mesa Diretora |
+
+### `baixar_tse.py` → `dados/tse/`
+
+| Tabela | Conteúdo |
+|---|---|
+| `candidatos_gerais` | todas as candidaturas de 2018, 2022 e 2026 (todos os cargos), situação final (`eleito`), ocupação, partido |
+| `candidatos_municipais` | candidatos a prefeito/vice em 2020 e 2024 (variável Prefeito) |
+| `votacao_depfed_municipio` | votos de cada candidato a dep. federal por município |
+| `depfed_resumo` | um candidato a dep. federal por linha: votação, município-reduto, `concentracao` (votos no reduto / total), `dominancia_reduto`, `dominancia_media` (Ames), HHI, nº de candidatos na UF, receitas por fonte (FEFC, fundo partidário, próprios, pessoas físicas...) e despesas contratadas/pagas |
+
+**Ligação Câmara↔TSE:** `deputados_complemento.cpf_hash` = `candidatos_gerais.cpf_hash`
+(cobertura de 100% dos deputados). Para não republicar CPFs de candidatos, as tabelas guardam
+apenas o SHA-256 do CPF (16 primeiros hex); título de eleitor não é mantido.
+
+Exemplo – variável dependente para 2022 (deputados da leg. 56):
+```python
+import pandas as pd
+dep = pd.read_parquet("dados/leg56/deputados_complemento.parquet")
+cand = pd.read_parquet("dados/tse/candidatos_gerais.parquet").query("ANO_ELEICAO == '2022'")
+base = dep.merge(cand, on="cpf_hash", how="left")
+reeleicao = base[base["DS_CARGO"].str.upper() == "DEPUTADO FEDERAL"]   # 503 tentaram; 298 reeleitos
+```
