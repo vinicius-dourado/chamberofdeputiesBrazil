@@ -2068,7 +2068,7 @@ def fig_disciplina(tab):
     ax.legend(loc="lower left", fontsize=8)
     ax.set_title("Disciplina à liderança (D) e unidade partidária (U), Plenário")
     fig.tight_layout()
-    fig.savefig(FIG / "fig1_disciplina_unidade.png", bbox_inches="tight")
+    fig.savefig(FIG / "fig2_disciplina_unidade.png", bbox_inches="tight")
     plt.close(fig)
 
 
@@ -2094,7 +2094,7 @@ def fig_serie(sem):
     a2.set_ylabel("Cobertura de D (%)")
     a2.set_xticks(x, sem.index)
     fig.tight_layout()
-    fig.savefig(FIG / "fig2_serie_semestral.png", bbox_inches="tight")
+    fig.savefig(FIG / "fig1_serie_semestral.png", bbox_inches="tight")
     plt.close(fig)
 
 

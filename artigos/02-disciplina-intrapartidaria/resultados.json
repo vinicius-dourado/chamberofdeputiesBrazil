@@ -2143,6 +2143,6 @@
  "div_REPUBLICANOS_segue_partido_seminf": 0.935185,
  "div_REPUBLICANOS_n_seminf": 648,
  "versoes": "Python 3.13.18; numpy 2.5.3; pandas 3.0.5; scipy 1.18.1; scikit-learn 1.9.1; matplotlib 3.11.2",
- "tempo_execucao_s": 180,
+ "tempo_execucao_s": 183,
  "n_chaves": 2146
 }
