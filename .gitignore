@@ -2,3 +2,5 @@
 dados/brutos/
 dados/**/*.csv
 __pycache__/
+# vetores por discurso e matriz SNF (grandes; recriados por embeddings_deputados.py)
+dados/**/embeddings/*.npy
