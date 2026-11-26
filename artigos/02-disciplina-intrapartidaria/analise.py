@@ -1352,7 +1352,9 @@ def estudo_evento(base, dep):
     # (Sun e Abraham, 2021: com adoção escalonada, tratados antigos não devem servir de controle;
     # aqui os demais trocadores são retirados da amostra e os controles são os que nunca trocaram)
     ind26 = ind[(ind >= "2026-03-01") & (ind < "2026-06-01")]
-    excl26 = set(ind.index) - set(ind26.index) | set(fus.index)
+    # controles da coorte: só quem nunca trocou individualmente (inclusive antes de abril de 2023)
+    todos_ind = set(trocas_partido().query("~fusao")["deputado_id"])
+    excl26 = (todos_ind | set(ind.index)) - set(ind26.index) | set(fus.index)
     num("ev_c26_n_coorte", len(ind26))
     versoes = [("", ind, fus, set()), ("_c26", ind26, fus.iloc[:0], excl26)]
     for suf, ind_v, fus_v, excl in versoes:
@@ -2063,7 +2065,7 @@ def fig_disciplina(tab):
         ax.text(101.2, yy, f"{pct(r['share_propria'], 0)}%", va="center", ha="left", fontsize=8, color=COR["texto2"])
     ax.text(101.2, len(t) - 0.2, "orientação\nprópria", fontsize=7.5, color=COR["texto2"], va="bottom")
     ax.set_yticks(y, t.index)
-    ax.set_xlim(76, 100.5)
+    ax.set_xlim(min(76, np.floor(np.nanmin(t[["D_lo2", "U_lo2"]].to_numpy()) * 100) - 1), 100.5)
     ax.set_xlabel("% dos votos (IC 95%, bootstrap em duas vias: votações e deputados)")
     ax.legend(loc="lower left", fontsize=8)
     ax.set_title("Disciplina à liderança (D) e unidade partidária (U), Plenário")

@@ -300,3 +300,88 @@ Todos conferem.
 **Aviso sobre ferramentas:** a checagem de originalidade (Fase D) usa buscas na web, é heurística e cobriu cerca de 10% dos parágrafos, abaixo dos 50% do protocolo. Ela não substitui Turnitin ou iThenticate. O risco é baixo porque o texto descreve análises originais de dados de 2023–2026, mas recomenda-se um verificador profissional antes da submissão. As referências sem busca nova nesta sessão (27/32) se apoiam nas trilhas registradas nos Stages 1, 2.5 e 4.
 
 **Arquivos da reexecução:** `/tmp/claude-0/-home-user-chamberofdeputiesBrazil/f52fda40-72cc-5ee2-acb5-2b134774c1a2/scratchpad/rep/` (cópia; nenhum arquivo do artigo foi editado).
+
+---
+---
+
+# Rodada 2 (commit `1da626c`)
+
+**Data:** 26/11/2026. **Escopo:** reverificar as correções da rodada 1 e procurar problemas introduzidos por elas (diff `3b4a7a4..1da626c` em `artigo_fonte.md`, `artigo.md`, `analise.py`, `referencias.bib` e `resultados.json`). Também refiz os pontos da rodada 1 que não estavam na lista de correções do coordenador. As marcas `[verificar]` continuam como notas abertas, por instrução do usuário.
+
+## Veredito da rodada 2: **FAIL** (0 P1; 10 P2, todos de texto ou forma)
+
+Os dois P1 foram resolvidos. O Modo 6 passa a CLEAR e o Modo 2 a CLEAR. Restam 10 P2. Dois deles foram **introduzidos pela correção**: a referência à figura errada no §5.1 e uma definição de "disciplina" que a medida D não satisfaz. Os outros oito são P2 da rodada 1 que não estavam na lista de correções. Como o Stage 4.5 exige zero problemas, o veredito formal continua FAIL. Nenhum P2 afeta número, direção ou conclusão. Com os 10 corrigidos, o esperado é **PASS WITH NOTES**, com as três notas `[verificar]`.
+
+## R2.1 Reprodução
+
+Reexecutei `analise.py` numa cópia nova, com o cache e sem figuras pré-existentes (173 s, código 0). Resultado:
+
+- `resultados.json`: 2.145/2.146 chaves idênticas; só `tempo_execucao_s` muda.
+- `tabelas/*.md`: 11/11 idênticas.
+- Figuras: 7/7 idênticas byte a byte, com os novos nomes (`fig1_serie_semestral.png`, `fig2_disciplina_unidade.png`). A pasta não tem arquivos antigos órfãos.
+- `artigo.md`: idêntico, exceto o tempo do Apêndice A.
+
+A mudança em `analise.py` está restrita aos dois nomes de arquivo em `savefig`.
+
+O novo texto do Apêndice A ("cerca de 11 minutos… numa reexecução de verificação (Stage 2.5)") confere com `stage2_5_integridade.md` (R2-P2-15: "668 s, ou cerca de 11 min, em 4 núcleos").
+
+## R2.2 Situação dos problemas da rodada 1
+
+| Rodada 1 | Situação | Evidência (`artigo.md` em `1da626c`) |
+|---|---|---|
+| P1-1 codificação por IA | **Resolvido no §3**; resíduo no Apêndice A → R2-2 | §3: "…codificadas pelo assistente de IA que conduziu a análise, a partir da leitura das descrições, sem segundo codificador"; nas falas: "feita pelo mesmo assistente de IA…, sem segundo codificador". O Apêndice A (l. 514) ainda diz "a codificação manual dos tipos de votação" |
+| P1-2 Carey / Nokken | **Resolvido** | "ponderar pela disputa" ficou sem atribuição. "Carey (2007; 2009) mostra que a unidade de voto é menor onde 'principais concorrentes'…" está dentro do verificado (resumo AJPS; eScholarship). "Como em Nokken (2000)" foi retirado. A atribuição da distinção a Krehbiel (1993) confere com o argumento verificado no Stage 1 ("só há efeito partidário quando o legislador vota com o partido apesar de discordar"). Ver, porém, R2-3 |
+| P2-1 órfãs | **Resolvido** | Lista com 31 entradas e .bib com 31 entradas; as 31 obras citadas batem 1:1; 0 órfãs, 0 citações sem entrada |
+| P2-2 legenda da Fig. 1 (agora Fig. 2) | **Resolvido**; resíduo do corte do PSDB → R2-6 | Legenda: "bootstrap em duas vias (votações e deputados)". `fig_disciplina` mantém `set_xlim(76, …)`, e o limite inferior de D do PSDB (75,8) continua cortado |
+| P2-3 ordem das figuras | **Resolvido** | Fig. 1 (série) é citada no §5.1 e mostrada antes da Fig. 2 (§5.2). As Figuras 1–7 aparecem em ordem; cada `![Figura n]` aponta para o arquivo certo |
+| P2-4 M3emb no Método | **Resolvido** | O §4.3 não menciona mais M3emb. O Apêndice B o explica ao dizer que foi retirado; a linha da tabela "M3emb acrescentados" é aceitável nesse contexto |
+| P2-5 Nicolau, páginas na lista × .bib | **Não tratado** → R2-7 | A lista diz "[verificar páginas]"; o .bib tem `pages = {709--735}` |
+| P2-6 "menos de 2%" | **Corrigido de forma errada** → R2-1 | O texto diz "(Figura 1, coluna à direita)". A coluna com a % de orientação própria está na **Figura 2** (por partido); a Figura 1 é a série semestral |
+| P2-7 NOVO sem U | **Resolvido** | "…NOVO votam quase sempre com a liderança, e os três primeiros, também com os colegas (NOVO não tem U)" |
+| P2-8 generalizações | **Resolvido no Resumo, no Abstract e no §9; resíduo no §8** → R2-4 | Resumo: "cai em quatro partidos de centro (PSD, MDB, PP e União)", e o Abstract diz o mesmo (os dois continuam equivalentes). §9: "no período do megabloco de 2025, quase sempre nada" (199/227 ✓). O §8 ainda diz "uma disciplina 'medida' que sobe justamente quando **a unidade dos partidos de centro cai**" |
+| P2-9 heterogeneidade | **Resolvido** | "uma hipótese, que não testamos, é que essa heterogeneidade permita…" |
+| P2-10 Apêndice A | **Parcial** → R2-8 | O tempo a frio agora tem fonte. Continuam "cada número do texto é uma referência a `resultados.json`" e a lista de entradas sem `discursos.parquet` e `validacao_falas.csv` |
+| P2-11 detalhes do Método | **Não tratado** → R2-9 | IC geral de D só por votações; λ_d = 4; penalizações e estimação em duas etapas de M2b |
+| P2-12 "ao longo do ano anterior" | **Não tratado** → R2-5 | §5.7 sem alteração |
+| P2-13 megabloco "para a eleição da Mesa" | **Resolvido** | "formado em fevereiro de 2025, no início do biênio da nova Mesa": a data é coerente com os dados (`megabloco_data_ini` = 2025-02-11), e a frase não afirma mais a finalidade do bloco |
+| P2-14 controles da coorte | **Não tratado** → R2-10 | 4 deputados com troca só antes de 01/04/2023 continuam entre os "nunca trocaram" (efeito desprezível) |
+
+## R2.3 Procura de problemas introduzidos pelas mudanças
+
+- **Referências cruzadas de figuras:** conferi as 13 menções "Figura n" e os 7 blocos de imagem. Há um erro: §5.1, "(Figura 1, coluna à direita)" (R2-1). Os demais estão certos: §5.1 → Fig. 1 (cobertura de D); §5.2 → Tabela 2 e Fig. 2; Figs. 3–7.
+- **Definição nova de disciplina (§2):** "distinguimos *unidade* (votar junto) de *disciplina* (votar com o líder contra a própria preferência)". A medida D, chamada "disciplina à liderança" em todo o artigo, é a adesão à orientação **independentemente** da preferência (§4.1). Com a nova definição, D passa a medir algo diferente do conceito que leva o mesmo nome. Só o excesso de lealdade da §5.8 se aproxima do componente "contra a preferência" (R2-3).
+- **Resumo × Abstract:** continuam equivalentes frase a frase, inclusive a nova lista de quatro partidos.
+- **Números:** nenhum marcador foi acrescentado ou retirado de forma que mude valores. Renderizei de novo os marcadores com o `resultados.json` de `1da626c`, e o resultado é idêntico ao `artigo.md` versionado.
+- **Bibliografia:** a remoção de `poole1997` e `kam2009` não deixou citação pendente: "McCarty, Poole e Rosenthal (2001)" aponta para `mccarty2001`.
+
+## R2.4 Checklist dos 7 modos (rodada 2)
+
+| Modo | Resultado | Evidência | Bloqueia? |
+|---|---|---|---|
+| 1 | CLEAR | Reprodução idêntica (R2.1); o diff do código só troca nomes de arquivos | não |
+| 2 | CLEAR | As 31 obras existem; as atribuições a Carey e a Krehbiel estão dentro do verificado; Nokken retirado | não |
+| 3 | CLEAR | Marcadores e reexecução idênticos | não |
+| 4 | CLEAR | Sem mudança | não |
+| 5 | CLEAR | Sem mudança | não |
+| 6 | **CLEAR** (antes SUSPECTED) | O §3 declara que as duas codificações foram feitas pelo assistente de IA, sem segundo codificador. O "codificação manual" que sobra no Apêndice A é um resíduo de redação (R2-2), não uma descrição falsa do procedimento no Método | não |
+| 7 | CLEAR | Sem mudança | não |
+
+## R2.5 Lista de problemas (rodada 2)
+
+| ID | Origem | Local | Problema | Correção sugerida |
+|---|---|---|---|---|
+| R2-1 | **novo** | §5.1, 1º parágrafo | "menos de 2%… (Figura 1, coluna à direita)": a coluna está na Figura 2 | "(Figura 2, coluna à direita)" |
+| R2-2 | resíduo de P1-1 | Apêndice A, lista de entradas | "a codificação manual dos tipos de votação" | "a codificação dos tipos de votação pelo assistente de IA (`dados_aux/validacao_tipo_votacao.csv`) e a conferência das falas (`dados_aux/validacao_falas.csv`)" |
+| R2-3 | **novo** | §2, "Disciplina, coesão e agenda" | A definição de disciplina como "votar com o líder contra a própria preferência" não é o que D mede | Acrescentar: "D mede a adesão à orientação, sem separar disciplina de concordância; o componente contra a preferência só é aproximado pelo excesso de lealdade (§5.8)". Ou definir disciplina como adesão à orientação e atribuir a Krehbiel apenas a ressalva |
+| R2-4 | resíduo de P2-8 | §8, 1º parágrafo | "a unidade dos partidos de centro cai" | "a unidade de quatro partidos de centro cai" |
+| R2-5 | P2-12 | §5.7, "Antes da troca" | "sobem 3,1 pontos ao longo do ano anterior à troca" | "entre a janela de 13 meses ou mais antes da troca e os três meses anteriores, as estimativas pontuais sobem 3,1 pontos" |
+| R2-6 | resíduo de P2-2 | Fig. 2; `fig_disciplina` | IC de D do PSDB cortado em 76 | `ax.set_xlim(74, 100.5)` |
+| R2-7 | P2-5 | Referências: Nicolau (2000) | A lista não tem páginas; o .bib tem 709–735 | Harmonizar (remover `pages` do .bib, ou "p. 709–735 [verificar]" na lista) |
+| R2-8 | P2-10 | Apêndice A | "cada número do texto é uma referência a `resultados.json`" (há números escritos à mão); entradas omitidas | "cada resultado do texto…"; acrescentar `discursos.parquet` e `validacao_falas.csv` |
+| R2-9 | P2-11 | §4.1–§4.3 | O IC geral de D é só por votações, sem dizer; λ_d = 4; M2b estimado em duas etapas (λ_r = 1, λ_s = 0,04) | Uma frase em cada ponto |
+| R2-10 | P2-14 | §4.4 (coorte de 2026) | 4 deputados com troca antes de 01/04/2023 entre os "nunca trocaram" | "que não trocaram desde abril de 2023", ou excluí-los |
+
+## R2.6 Marcas `[verificar]` e afirmações sem marca
+
+- **Notas abertas, mantidas por instrução do usuário:** páginas e DOI de Nicolau (2000); lista completa dos instrumentos em Figueiredo e Limongi (1999); datas finas da base ministerial.
+- **Afirmações não verificadas sem marca:** as da rodada 1 foram resolvidas (Carey, Nokken, finalidade do megabloco, tempo a frio). Não encontrei outra afirmação não verificada sem marca no texto alterado. A nova frase sobre Krehbiel está dentro do argumento verificado, mas tem o problema conceitual de R2-3.

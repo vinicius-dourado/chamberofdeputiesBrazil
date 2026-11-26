@@ -21,7 +21,7 @@ A contribuição de estrutura é um teste fora da amostra. Comparamos uma sequê
 
 ## 2. Literatura e expectativas
 
-**Disciplina, coesão e agenda.** O índice de Rice (Rice, 1925) mede a coesão de um grupo numa votação. Ele é inflado em grupos pequenos (Desposato, 2005) e confunde coesão com consenso, o que leva a restringir a análise a votações disputadas ou a ponderar pela disputa. Carey (2007; 2009) mostra que a unidade de voto é menor onde "principais concorrentes" — eleitores, governadores, o presidente — disputam a lealdade do legislador; seguindo Krehbiel (1993), distinguimos *unidade* (votar junto) de *disciplina* (votar com o líder contra a própria preferência). No Brasil, Figueiredo e Limongi (1999) atribuem a disciplina à centralização dos trabalhos no Colégio de Líderes combinada aos poderes de agenda do Executivo, como medidas provisórias e pedidos de urgência (resumo de fontes secundárias; a lista completa dos instrumentos no original fica [verificar]). Amorim Neto, Cox e McCubbins (2003) analisam o poder de agenda das coalizões na Câmara. Pereira e Mueller (2004) ligam o voto com o Governo à execução de emendas orçamentárias. Cheibub, Figueiredo e Limongi (2009) discutem partidos e governadores como determinantes do comportamento legislativo. Nicolau (2000) documenta a disciplina no primeiro governo Fernando Henrique. A coesão observada é também produto da agenda (Cox e McCubbins, 2005) e da seleção de quais votações são nominais (Carrubba, Gabel e Hug, 2008): só 16,5% das 6.855 votações de Plenário da legislatura tiveram votos nominais.
+**Disciplina, coesão e agenda.** O índice de Rice (Rice, 1925) mede a coesão de um grupo numa votação. Ele é inflado em grupos pequenos (Desposato, 2005) e confunde coesão com consenso, o que leva a restringir a análise a votações disputadas ou a ponderar pela disputa. Carey (2007; 2009) mostra que a unidade de voto é menor onde "principais concorrentes" — eleitores, governadores, o presidente — disputam a lealdade do legislador; seguindo Krehbiel (1993), distinguimos *unidade* (votar junto) de *disciplina* no sentido estrito (votar com o líder contra a própria preferência). A medida D adiante é adesão à orientação; só o excesso de lealdade da seção 5.8 aproxima o componente contra a preferência. No Brasil, Figueiredo e Limongi (1999) atribuem a disciplina à centralização dos trabalhos no Colégio de Líderes combinada aos poderes de agenda do Executivo, como medidas provisórias e pedidos de urgência (resumo de fontes secundárias; a lista completa dos instrumentos no original fica [verificar]). Amorim Neto, Cox e McCubbins (2003) analisam o poder de agenda das coalizões na Câmara. Pereira e Mueller (2004) ligam o voto com o Governo à execução de emendas orçamentárias. Cheibub, Figueiredo e Limongi (2009) discutem partidos e governadores como determinantes do comportamento legislativo. Nicolau (2000) documenta a disciplina no primeiro governo Fernando Henrique. A coesão observada é também produto da agenda (Cox e McCubbins, 2005) e da seleção de quais votações são nominais (Carrubba, Gabel e Hug, 2008): só 16,5% das 6.855 votações de Plenário da legislatura tiveram votos nominais.
 
 **Preferência ou partido.** Krehbiel (1993) argumenta que coesão não prova influência do partido. Snyder e Groseclose (2000) comparam votações disputadas e lopsided para estimar a pressão partidária, e McCarty, Poole e Rosenthal (2001) modelam linhas de corte por partido. Clinton, Jackman e Rivers (2004) formalizam a estimação de pontos ideais; Bafumi et al. (2005) e Lauderdale (2010) tratam de identificação e de votantes imprevisíveis. Zucco (2009) e Zucco e Lauderdale (2011) mostram que o comportamento dos deputados brasileiros responde a influências do Executivo além da ideologia; Power e Zucco (2009) fornecem âncoras de ideologia partidária. Minozzi e Volden (2013) estudam quem atende ao chamado do partido. Sobre trocas de partido, Desposato (2006) explica as migrações na Câmara por ambição e ideologia, Heller e Mershon (2005) as estudam na Itália, e Nokken (2000) estuda a dinâmica da lealdade e da defecção de legisladores no Congresso americano, inclusive dos que trocam de partido. Black (1948) e Krehbiel (1998) justificam olhar o mediano e os pivôs de maioria qualificada.
 
@@ -86,7 +86,7 @@ Usamos o estimador de pontos ideais do projeto (regressão logística bilinear p
 
 $$\Pr(y_{ij}=1)=\sigma\big(a_j + g_{pj} + \mathbf{b}_j^\top \mathbf{x}_{r}\big),\qquad \mathbf{x}_r=\mathbf{u}_{i}+\boldsymbol{\delta}_r,$$
 
-com penalidades gaussianas e excluídas as votações com minoria abaixo de 2,5%. O modelo **global** omite $g$. O **intrapartidário** inclui o efeito fixo partido×votação $g_{pj}$, que absorve a posição do partido em cada votação, e centra os pontos dentro de cada partido. A amostra tem 417.832 votos, 1.039 votações, 828 períodos deputado×partido e 20.759 células partido×votação, com mediana de 11,0 votantes por célula e 27% delas com menos de cinco.
+com penalidades gaussianas (as do estimador do projeto; $\lambda_d = 4$ para os desvios por período) e excluídas as votações com minoria abaixo de 2,5%. O modelo **global** omite $g$. O **intrapartidário** inclui o efeito fixo partido×votação $g_{pj}$, que absorve a posição do partido em cada votação, e centra os pontos dentro de cada partido. A amostra tem 417.832 votos, 1.039 votações, 828 períodos deputado×partido e 20.759 células partido×votação, com mediana de 11,0 votantes por célula e 27% delas com menos de cinco.
 
 ### 4.3 Ruído ou estrutura
 
@@ -95,7 +95,7 @@ Os modelos abaixo são comparados na previsão de votos retirados: validação c
 - **M0**: a regra "segue a orientação" (sem orientação, a maioria de treino do partido ou da votação), com probabilidade calibrada pelo acerto no treino; **M0c** calibra por partido e fonte.
 - **M1**: só $a_j+g_{pj}$, a posição coletiva do partido em cada votação, estimada com os votos dos colegas na mesma votação.
 - **M2**: M1 mais uma lealdade individual sem direção, $\sigma(z^{M1}+\rho_i d_{pj})$, com $d_{pj}=\pm1$ conforme a maioria de treino da célula.
-- **M2b**: lealdade por período com escala por votação, $\sigma(z^{M1}+s_j\rho_r d_{pj})$. Tem a mesma estrutura de parâmetros de M3, mas a direção do desvio é fixada como "contra a maioria do próprio partido".
+- **M2b**: lealdade por período com escala por votação, $\sigma(z^{M1}+s_j\rho_r d_{pj})$, com penalidades $\lambda_\rho = 1$ e $\lambda_s = 0{,}04$. Tem a mesma estrutura de parâmetros de M3, mas a direção do desvio é fixada como "contra a maioria do próprio partido".
 - **M3** e **M4**: o modelo intrapartidário com uma e duas dimensões. **M3L** acrescenta a M3 o termo $\rho_i d_{pj}$.
 - **M5**: o modelo global de duas dimensões, sem partido.
 
@@ -124,7 +124,7 @@ Os erros-padrão (EP) são agrupados por deputado e por votação (Cameron, Gelb
 
 ### 5.1 O que a orientação registrada mede
 
-A disciplina é de 94,9% sob orientação própria, 87,2% sob bloco e 88,0% sob bloco inferido. Para União, PP, PSD, MDB, REPUBLICANOS, PODE e PSDB, menos de 2% dos votos estão sob orientação do próprio partido (Figura 1, coluna à direita): o que se chama de disciplina partidária, nesses partidos, é disciplina ao líder do bloco.
+A disciplina é de 94,9% sob orientação própria, 87,2% sob bloco e 88,0% sob bloco inferido. Para União, PP, PSD, MDB, REPUBLICANOS, PODE e PSDB, menos de 2% dos votos estão sob orientação do próprio partido (Figura 2, coluna à direita): o que se chama de disciplina partidária, nesses partidos, é disciplina ao líder do bloco.
 
 O registro de 2025 é o caso extremo. Em D, a disciplina sobe para 92,9% em 2025, contra 90,1% em 2023, mas a cobertura de D cai a 32%, contra 89% (Figura 1). Nas votações do megabloco, o registro sempre traz as linhas de Governo, Maioria, Minoria e Oposição (227 linhas de Oposição em 227 votações), mas nenhuma linha própria do PL ou da federação do PT. As transcrições, porém, mostram esses partidos orientando: as orientações faladas cobrem 138 das 227 votações do megabloco. Orientação vazia, portanto, nem sempre quer dizer que a liderança não orientou; pode ser um limite do registro.
 
@@ -145,7 +145,7 @@ PL (90,3% em 2025, contra 88,7%), PT e REPUBLICANOS ficam estáveis. Fixando a c
 
 ### 5.2 Quanta disciplina
 
-A disciplina à liderança no Plenário é de 90,9% (IC 95%: 90,4–91,3), e a unidade, de 89,5% (Tabela 2, Figura 2).
+A disciplina à liderança no Plenário é de 90,9% (IC 95% por bootstrap de votações: 90,4–91,3), e a unidade, de 89,5% (Tabela 2, Figura 2).
 
 - **Extremo mais coeso:** PT, PSOL, PCdoB e NOVO votam quase sempre com a liderança, e os três primeiros, também com os colegas (NOVO não tem U) (U de 98,3% no PT e 97,9% no PSOL).
 - **Extremo menos coeso:** União (U 80,5%) e PSDB (84,1%).
@@ -357,9 +357,9 @@ A variância das taxas brutas de desvio entre deputados é quase toda sinal: o r
 
 A Figura 6 mostra o estudo de evento para 173 deputados com troca individual.
 
-- **Antes da troca:** na janela de referência, os futuros trocadores contrariam a maioria dos colegas em 20,6% dos votos. Nenhum coeficiente anterior se distingue de zero individualmente (−1,7, −0,9 e 1,4 pontos), mas o teste conjunto é limítrofe (p = 0,10). As estimativas pontuais sobem 3,1 pontos ao longo do ano anterior à troca: há uma pré-tendência fraca, compatível com saída anunciada.
+- **Antes da troca:** na janela de referência, os futuros trocadores contrariam a maioria dos colegas em 20,6% dos votos. Nenhum coeficiente anterior se distingue de zero individualmente (−1,7, −0,9 e 1,4 pontos), mas o teste conjunto é limítrofe (p = 0,10). A estimativa de −3 a −1 meses fica 3,1 pontos acima da de 13 meses ou mais antes: há uma pré-tendência fraca, compatível com saída anunciada.
 - **Depois da troca:** o desvio em relação à maioria dos novos colegas cai 11,1 pontos nos primeiros três meses (IC 6,5–15,6) na versão com todas as trocas.
-- **Só a coorte da janela de 2026** (129 deputados, com controles que nunca trocaram): a queda é de 6,5 pontos (IC 2,4–10,5), com teste conjunto de pré-tendência também limítrofe (p = 0,10). É a estimativa preferível, porque evita usar trocadores antigos como controles; a da versão completa é maior. Em D, nessa coorte, a queda (3,1 pontos) não se distingue de zero.
+- **Só a coorte da janela de 2026** (129 deputados, com controles que nunca trocaram): a queda é de 6,5 pontos (IC 2,4–10,6), com teste conjunto de pré-tendência também limítrofe (p = 0,11). É a estimativa preferível, porque evita usar trocadores antigos como controles; a da versão completa é maior. Em D, nessa coorte, a queda (3,1 pontos) não se distingue de zero.
 - **Fusões:** não servem de placebo. Em U, as bancadas pré-fusão nunca reuniam cinco colegas votando, e os coeficientes não são identificados.
 
 **Seleção ou ajuste?** Estes números vêm dos 145 deputados com pontos nos dois partidos:
@@ -425,7 +425,7 @@ A Tabela 8 refaz a disciplina sob sete variantes de medida. Sem as orientações
 
 ## 8. Discussão
 
-O primeiro achado é de medida. Na Câmara de 2023–2026, a orientação aplicável à maioria dos deputados do centro é a do bloco, e o registro da Câmara não guarda as orientações que os partidos dão em Plenário quando a bancada formal é um bloco. Em 2025, o resultado foi um registro quase vazio para a maior parte da Casa e uma disciplina "medida" que sobe justamente quando a unidade dos partidos de centro cai. Quem usa os dados públicos deve, por isso, estratificar pela fonte da orientação, reportar a cobertura e complementar o registro com uma medida que não dependa dele. Para a própria Câmara, registrar as orientações partidárias dentro dos blocos, que os líderes anunciam em Plenário, tornaria os dados abertos mais fiéis ao processo que pretendem descrever.
+O primeiro achado é de medida. Na Câmara de 2023–2026, a orientação aplicável à maioria dos deputados do centro é a do bloco, e o registro da Câmara não guarda as orientações que os partidos dão em Plenário quando a bancada formal é um bloco. Em 2025, o resultado foi um registro quase vazio para a maior parte da Casa e uma disciplina "medida" que sobe justamente quando a unidade de quatro partidos de centro cai. Quem usa os dados públicos deve, por isso, estratificar pela fonte da orientação, reportar a cobertura e complementar o registro com uma medida que não dependa dele. Para a própria Câmara, registrar as orientações partidárias dentro dos blocos, que os líderes anunciam em Plenário, tornaria os dados abertos mais fiéis ao processo que pretendem descrever.
 
 O segundo achado é que a indisciplina tem estrutura, mas pouca. A posição do partido em cada votação é de longe a melhor informação sobre o voto, e a propensão individual a desviar acrescenta mais do que a direção do desvio. A direção, porém, conta: prevê o voto fora da amostra além da propensão a desviar. Ela coincide com o eixo governo–oposição que separa os partidos entre si. Por isso os partidos do centro são, ao mesmo tempo, os mais heterogêneos e os pivôs da Casa: uma hipótese, que não testamos, é que essa heterogeneidade permita ao Governo construir maiorias votação a votação com parte de suas bancadas. A influência do partido além das preferências existe, porque o excesso de lealdade nas divergências com o Governo é positivo nos dois contrafactuais; sua magnitude, porém, depende de como se mede a preferência. A troca de partido mostra sinais tanto de seleção quanto de ajuste aos novos colegas.
 
@@ -486,7 +486,7 @@ McCARTY, Nolan; POOLE, Keith T.; ROSENTHAL, Howard. The Hunt for Party Disciplin
 
 MINOZZI, William; VOLDEN, Craig. Who Heeds the Call of the Party in Congress? *The Journal of Politics*, v. 75, n. 3, p. 787–802, 2013.
 
-NICOLAU, Jairo. Disciplina partidária e base parlamentar na Câmara dos Deputados no primeiro governo Fernando Henrique Cardoso (1995-1998). *Dados*, v. 43, n. 4, 2000. [verificar páginas]
+NICOLAU, Jairo. Disciplina partidária e base parlamentar na Câmara dos Deputados no primeiro governo Fernando Henrique Cardoso (1995-1998). *Dados*, v. 43, n. 4, p. 709–735, 2000. [verificar páginas]
 
 NOKKEN, Timothy P. Dynamics of Congressional Loyalty: Party Defection and Roll-Call Behavior, 1947–97. *Legislative Studies Quarterly*, v. 25, n. 3, p. 417–444, 2000.
 
@@ -511,9 +511,9 @@ Rodado da raiz do repositório, `python artigos/02-disciplina-intrapartidaria/an
 - `dados/leg57/*.parquet`;
 - os embeddings do projeto, usados só para a reconciliação do Apêndice C;
 - o cache de temas da API (`dados_aux/temas_proposicoes_votadas.csv`);
-- a codificação manual dos tipos de votação (`dados_aux/validacao_tipo_votacao.csv`).
+- as codificações feitas pelo assistente de IA para validar o classificador de tipo de votação (`dados_aux/validacao_tipo_votacao.csv`) e as associações fala→votação (`dados_aux/validacao_falas.csv`).
 
-Com isso, grava `resultados.json` (2.146 números), `tabelas/*.md` e `figuras/*.png`, e monta este `artigo.md` a partir de `artigo_fonte.md`: cada número do texto é uma referência a `resultados.json`. Os ajustes de pontos ideais ficam em cache em `dados_aux/cache/`, fora do git. Sem cache, a execução levou cerca de 11 minutos em 4 núcleos numa reexecução de verificação (Stage 2.5); com cache, 183 segundos. As sementes são fixas. Versões usadas: Python 3.13.18; numpy 2.5.3; pandas 3.0.5; scipy 1.18.1; scikit-learn 1.9.1; matplotlib 3.11.2.
+Com isso, grava `resultados.json` (2.146 números), `tabelas/*.md` e `figuras/*.png`, e monta este `artigo.md` a partir de `artigo_fonte.md`: cada número calculado no texto é uma referência a `resultados.json`; os poucos números escritos à mão (limiares, parâmetros de método) estão definidos no próprio texto ou no código. Os ajustes de pontos ideais ficam em cache em `dados_aux/cache/`, fora do git. Sem cache, a execução levou cerca de 11 minutos em 4 núcleos numa reexecução de verificação (Stage 2.5); com cache, 174 segundos. As sementes são fixas. Versões usadas: Python 3.13.18; numpy 2.5.3; pandas 3.0.5; scipy 1.18.1; scikit-learn 1.9.1; matplotlib 3.11.2.
 
 Dados e código estão no repositório do projeto. Este artigo é um de sete trabalhos do mesmo projeto sobre a 57ª Legislatura; os demais tratam de outras dimensões dos deputados (temas, frentes, discursos, trajetórias). O plano de análise está em `pipeline/stage1_blueprint.md`, a verificação de integridade em `pipeline/stage2_5_integridade.md` e a revisão por pares em `pipeline/stage3_revisao.md`.
 
