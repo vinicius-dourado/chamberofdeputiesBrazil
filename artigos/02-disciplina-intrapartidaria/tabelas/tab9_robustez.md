@@ -1,4 +1,4 @@
-**Tabela 9 – Robustez da disciplina (D) a decisões de medida, Plenário**
+**Tabela 11 – Robustez da disciplina (D) a decisões de medida, Plenário**
 
 | Variante | Geral | Cobertura | ρ (ranking) | PSOL | PT | PCdoB | PV | PSB | PDT | MDB | PSD | AVANTE | PODE | UNIÃO | PP | REPUBLICANOS | PSDB | PL | NOVO |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|

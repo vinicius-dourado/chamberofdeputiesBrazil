@@ -1,45 +1,41 @@
 <!-- Arquivo gerado por analise.py a partir de artigo_fonte.md; não edite à mão. -->
 # Disciplina à liderança, unidade partidária e dissidência estruturada na Câmara dos Deputados (57ª Legislatura, 2023–2026)
 
-**Resumo.** Quanta disciplina partidária há na Câmara dos Deputados da 57ª Legislatura, onde ela falha e se a indisciplina é ruído ou tem estrutura? Analisamos os 454.829 votos nominais dados em 1.126 votações do Plenário entre 14/03/2023 e 14/10/2026, cruzados com a orientação das lideranças. Mostramos primeiro um problema de medida: a "orientação do partido" publicada pela Câmara é, na maior parte dos votos do centro e da centro-direita, orientação de **bloco**, e em 2025 um megabloco de Mesa que reunia o PL e a federação do PT quase não orientou, de modo que a disciplina medida em 2025 sobe sobre uma amostra pequena e selecionada de votações. Por isso distinguimos a disciplina à liderança (D: voto na direção da orientação aplicável) da unidade partidária (U: voto com a maioria dos demais colegas). A disciplina é alta, 90,9% (U: 89,5%), quase total em PSOL, PT, PCdoB e NOVO e mais baixa em União e PSDB; em U, a variação entre anos é de 1,6 ponto. Em validação cruzada de 5 dobras, um modelo de pontos ideais intrapartidário reduz a log-loss fora da amostra em relação a um modelo só com a posição do partido e a um modelo com propensão individual de desvio sem direção; o ganho é pequeno, mas o intervalo exclui zero. A dimensão de dissidência é o governismo relativo dentro do partido, e a posição intrapartidária anterior a 2026 antecipa a direção de 62% das 110 trocas classificáveis na janela de 2026. A distância ideológica ao partido, medida no outro biênio, domina os correlatos do desvio; suplência, sexo, idade e tamanho da bancada estadual não se associam a ele. Depois de uma troca individual de partido, o desvio em relação à maioria dos novos colegas cai cerca de 11,1 pontos percentuais, sem pré-tendência estatisticamente distinguível; as posições estimadas indicam tanto seleção (o deputado já estava do lado do destino) quanto ajuste aos novos colegas. Quando o partido da base e o Governo orientam em sentidos opostos, 89,4% dos votos seguem o partido, entre 3,8 e 16,5 pontos acima do que as preferências espaciais estimadas preveem, conforme o contrafactual.
+**Resumo.** Analisamos 454.829 votos nominais em 1.126 votações do Plenário da Câmara dos Deputados (14/03/2023 a 14/10/2026) para medir a disciplina partidária e testar se a indisciplina tem estrutura. Primeiro, mostramos um problema de medida: para os partidos de centro, a orientação registrada é a do bloco, e em 2025 o registro de um megabloco que reunia o PL e a federação do PT ficou quase sempre vazio, embora as notas taquigráficas mostrem os partidos orientando em Plenário. A disciplina à liderança medida pelo registro sobe em 2025 por artefato; medida pelas orientações faladas, cai. Por isso usamos, ao lado dela (D, 90,9%), a unidade com a maioria dos colegas (U, 89,5%), que não depende do registro. Segundo, em validação cruzada, a direção individual da dissidência melhora a previsão do voto além de uma propensão individual de desvio com a mesma estrutura de parâmetros; o ganho é pequeno, mas o intervalo exclui zero. A dimensão de dissidência é o eixo governo–oposição recortado dentro de cada partido. A distância espacial ao partido domina os correlatos do desvio; depois de trocar de partido, o deputado passa a votar mais com os novos colegas; e, quando partido e Governo divergem, a base segue o partido além do que preveem as preferências estimadas.
 
-**Palavras-chave:** disciplina partidária; orientação de bancada; pontos ideais; Câmara dos Deputados; presidencialismo de coalizão; votações nominais.
+**Palavras-chave:** disciplina partidária; orientação de bancada; blocos parlamentares; pontos ideais; Câmara dos Deputados; votações nominais.
 
-**Abstract.** How much party discipline is there in the 57th Legislature of the Brazilian Chamber of Deputies, where does it break down, and is indiscipline noise or structure? We analyze 454,829 roll-call votes cast in 1,126 floor votes (14 March 2023 to 14 October 2026) matched to leadership vote recommendations. We first document a measurement problem: for most centrist and centre-right deputies the recorded "party" recommendation is a **bloc** recommendation, and in 2025 a heterogeneous bloc formed for the Speaker's election (joining PL and the PT federation) hardly issued recommendations, so measured discipline in 2025 rests on a small, selected set of votes. We therefore separate discipline to the leadership (D) from party unity (U: voting with the majority of one's other party colleagues). Discipline is high (90.9%; U 89.5%), nearly complete in PSOL, PT, PCdoB and NOVO and lowest in União and PSDB; year-to-year change in U is 1.6 percentage points. In 5-fold cross-validation, an intra-party ideal-point model lowers out-of-sample log-loss relative to a party-position-only model and to a model with a non-directional individual propensity to defect; the gain is small but its interval excludes zero. The dissent dimension is relative pro-government voting within the party, and pre-2026 intra-party positions anticipate the direction of 62% of the 110 classifiable party switches in the 2026 switching window. Ideological distance from the party, measured in the other half of the term, dominates the correlates of defection, while alternate status, sex, age and state delegation size do not. Defection from the majority of one's new colleagues drops by about 11.1 percentage points after an individual party switch, with no statistically distinguishable pre-trend; estimated positions point to both selection (deputies already leaned towards the destination party) and adjustment to the new colleagues. When a coalition party and the government recommend opposite votes, 89.4% of votes follow the party, between 3.8 and 16.5 points more than estimated spatial preferences predict, depending on the counterfactual.
+**Abstract.** We analyse 454,829 roll-call votes in 1,126 floor votes of the Brazilian Chamber of Deputies (14 March 2023 to 14 October 2026) to measure party discipline and test whether indiscipline is structured. First, we document a measurement problem: for centrist parties the recorded recommendation is the bloc's, and in 2025 the record of a mega-bloc joining PL and the PT federation was almost always empty, although the floor transcripts show the parties issuing recommendations. Discipline measured from the record rises in 2025 as an artefact; measured from spoken recommendations, it falls. We therefore report, next to discipline to the leadership (D, 90.9%), unity with the majority of one's colleagues (U, 89.5%), which does not depend on the record. Second, in cross-validation, the individual direction of dissent improves vote prediction beyond an individual propensity to defect with the same parameter structure; the gain is small but its interval excludes zero. The dissent dimension is the government–opposition axis within each party. Spatial distance from the party dominates the correlates of defection; after switching parties, deputies vote more with their new colleagues; and when party and government disagree, coalition deputies follow the party beyond what estimated preferences predict.
 
-**Keywords:** party discipline; party leadership recommendations; ideal points; Brazilian Chamber of Deputies; coalitional presidentialism; roll-call votes.
+**Keywords:** party discipline; party recommendations; legislative blocs; ideal points; Brazilian Chamber of Deputies; roll-call votes.
 
 ---
 
 ## 1. Introdução
 
-A disciplina partidária na Câmara dos Deputados é um dos temas mais estudados da ciência política brasileira desde que Figueiredo e Limongi (1999) mostraram, contra a expectativa de partidos fracos e deputados individualistas (Mainwaring, 1999; Ames, 2001), que os deputados votam, em regra, com a orientação dos seus líderes. Este artigo revisita a pergunta na 57ª Legislatura (2023–2027), sob o terceiro governo Lula, com uma estratégia que combina medidas descritivas de disciplina e coesão com modelos de pontos ideais avaliados fora da amostra. As perguntas são quatro: (P1) quanta disciplina há e onde ela falha — por partido, ano, tipo de orientação, tipo de votação e tema; (P2) a indisciplina é ruído ou tem estrutura, isto é, existe uma dimensão intrapartidária de baixa dimensão e interpretável; (P3) quem são os dissidentes sistemáticos e que características se associam ao desvio; e (P4) o que o voto individual acrescenta à orientação do líder — inclusive quando a orientação do partido diverge da do Governo.
+Desde Figueiredo e Limongi (1999), sabe-se que os deputados brasileiros votam, em regra, com a orientação de seus líderes, contra a expectativa de partidos fracos e deputados individualistas (Mainwaring, 1999; Ames, 2001). Este artigo revisita a questão na 57ª Legislatura (2023–2027), sob o terceiro governo Lula, com duas perguntas. A primeira é de **medida**: quanta disciplina há, e o que a orientação registrada pela Câmara de fato mede? A segunda é de **estrutura**: a indisciplina é ruído ou tem uma direção individual estável e interpretável, que acrescenta algo à posição coletiva do partido? Duas perguntas derivadas completam a análise: quem desvia e o que acontece quando o partido e o Governo orientam em sentidos opostos.
 
-O artigo faz quatro contribuições. A primeira é de **medida**. A Câmara publica a orientação de cada bancada — partido, federação ou bloco — e a prática corrente é tratar a orientação aplicável ao deputado como "orientação do partido". Mostramos que, na 57ª Legislatura, a bancada que orienta é o próprio partido ou federação em só 33,9% dos votos do Plenário; no restante, é um bloco (36,8%), de blocos atribuídos por inferência porque a Câmara trunca seus nomes (11,2%) ou de um bloco heterogêneo formado em 2025 para a eleição da Mesa, que reunia o PL e a federação do PT (18,1%). Esse megabloco orientou em apenas 19 das 227 votações em que foi a bancada aplicável, e a orientação vazia chegou a 59,5% dos votos em 2025. A consequência é que a série temporal da disciplina "à orientação" é, em 2025, dominada por um artefato de cobertura, composição e seleção das votações orientadas. Propomos medir lado a lado a disciplina à liderança (D), estratificada pela fonte da orientação, e a unidade partidária (U), definida pela maioria dos demais colegas, que não depende de registros de orientação.
+A contribuição de medida parte de uma constatação sobre o registro. A Câmara publica a orientação de cada bancada — partido, federação ou bloco —, e a prática é tratar a orientação aplicável ao deputado como "orientação do partido". Na 57ª Legislatura, a bancada aplicável é o próprio partido ou federação em só 33,9% dos votos; nos demais, é um bloco. Entre fevereiro e agosto de 2025, a bancada aplicável à maioria dos deputados foi um megabloco formado para a eleição da Mesa, que reunia o PL e a federação do PT. A linha desse bloco no registro ficou vazia em 199 das 227 votações, e não houve nenhuma linha própria do PL ou da federação do PT (0 linhas). As notas taquigráficas, porém, mostram os partidos orientando ("o PL orienta 'sim'"). Reconstruímos essas orientações faladas e mostramos que a disciplina medida pelo registro sobe em 2025 por artefato, enquanto a medida pelas falas cai. Propomos reportar lado a lado a disciplina à liderança (D), estratificada pela fonte da orientação e acompanhada da cobertura, e a unidade partidária (U), definida pela maioria dos demais colegas, que não depende do registro.
 
-A segunda contribuição é um **teste explícito de "ruído versus estrutura"** para a indisciplina. Estratégias para separar preferência e pressão partidária em votações nominais já foram propostas — comparando votações lopsided e disputadas (Snyder e Groseclose, 2000), linhas de corte específicas por partido (McCarty, Poole e Rosenthal, 2001) ou âncoras externas de ideologia (Zucco e Lauderdale, 2011), mas a pergunta sobre se o que sobra dentro do partido tem estrutura raramente é posta como um problema de previsão fora da amostra contra linhas de base adequadas. Comparamos uma sequência hierarquizada de modelos, da regra "segue a orientação" a um modelo intrapartidário de duas dimensões, e isolamos o valor de uma propensão individual de desvio sem direção (lealdade) do valor da direção espacial da dissidência.
+A contribuição de estrutura é um teste fora da amostra. Comparamos uma sequência de modelos, da regra "segue a orientação" a modelos de pontos ideais intrapartidários, e isolamos o valor da **direção** individual da dissidência do valor de uma **propensão** individual a desviar com a mesma estrutura de parâmetros. Interpretamos a dimensão resultante pelas votações que mais a carregam e por uma validação externa: as trocas de partido de 2026. Tratamos a troca de partido como estudo de evento e a divergência entre partido e Governo com contrafactuais dados pelas preferências estimadas. Este artigo é um de sete trabalhos de um mesmo projeto sobre a 57ª Legislatura; os demais tratam de outras dimensões dos deputados (temas, frentes, discursos, trajetórias) e são citados aqui só como trabalhos relacionados.
 
-A terceira é **interpretar** a dimensão intrapartidária pelas votações que mais a carregam, por correlatos externos (alinhamento ao Governo, frentes parlamentares) e por uma validação preditiva: se a posição de um deputado dentro do partido for substantiva, ela deve antecipar quem trocará de partido na janela de 2026 e em que direção. A quarta é tratar a **troca de partido** como estudo de evento com efeitos fixos de deputado e de partido×votação, e a **divergência entre partido e Governo** com duas linhas de base contrafactuais dadas pelas preferências estimadas.
+## 2. Literatura e expectativas
 
-Os resultados sustentam uma leitura de disciplina alta, mas não de deputados indistinguíveis: a maior parte da previsibilidade do voto está na posição coletiva do partido em cada votação, a indisciplina restante não é ruído puro, e sua estrutura é a do eixo governo × oposição recortado dentro de cada partido. O plano de análise foi escrito depois de uma análise descritiva preliminar e antes das análises de P2 a P4; o Apêndice B lista os desvios em relação a ele. Este artigo é um de sete trabalhos irmãos de um mesmo projeto sobre a 57ª Legislatura; os demais tratam de outros blocos (representações dos deputados por temas, frentes e discursos, trajetórias partidárias, entre outros) e são citados aqui apenas como trabalhos relacionados do projeto.
+**Disciplina, coesão e agenda.** O índice de Rice (Rice, 1925) mede a coesão de um grupo numa votação. Ele é inflado em grupos pequenos (Desposato, 2005) e confunde coesão com consenso, o que leva a restringir a análise a votações disputadas ou a ponderar pela disputa (Carey, 2007; 2009). Carey distingue *unidade* de *disciplina* e mostra que a unidade é menor onde "principais concorrentes" — eleitores, governadores, o presidente — disputam a lealdade do legislador. No Brasil, Figueiredo e Limongi (1999) atribuem a disciplina à centralização dos trabalhos no Colégio de Líderes combinada aos poderes de agenda do Executivo, como medidas provisórias e pedidos de urgência (resumo de fontes secundárias; a lista completa dos instrumentos no original fica [verificar]). Amorim Neto, Cox e McCubbins (2003) analisam o poder de agenda das coalizões na Câmara. Pereira e Mueller (2004) ligam o voto com o Governo à execução de emendas orçamentárias. Cheibub, Figueiredo e Limongi (2009) mostram que partidos, e não governadores, organizam o comportamento legislativo. Nicolau (2000) documenta a disciplina no primeiro governo Fernando Henrique. A coesão observada é também produto da agenda (Cox e McCubbins, 2005) e da seleção de quais votações são nominais (Carrubba, Gabel e Hug, 2008): só 16,5% das 6.855 votações de Plenário da legislatura tiveram votos nominais.
 
-## 2. Duas tradições
+**Preferência ou partido.** Krehbiel (1993) argumenta que coesão não prova influência do partido. Snyder e Groseclose (2000) comparam votações disputadas e lopsided para estimar a pressão partidária, e McCarty, Poole e Rosenthal (2001) modelam linhas de corte por partido. Clinton, Jackman e Rivers (2004) formalizam a estimação de pontos ideais; Bafumi et al. (2005) e Lauderdale (2010) tratam de identificação e de votantes imprevisíveis. Zucco (2009) e Zucco e Lauderdale (2011) mostram que o comportamento dos deputados brasileiros responde a influências do Executivo além da ideologia; Power e Zucco (2009) fornecem âncoras de ideologia partidária. Minozzi e Volden (2013) estudam quem atende ao chamado do partido. Sobre trocas de partido, Desposato (2006) explica as migrações na Câmara por ambição e ideologia, Heller e Mershon (2005) as estudam na Itália, e Nokken (2000) mostra que, no Congresso americano, legisladores que trocam de partido mudam de comportamento de voto. Black (1948) e Krehbiel (1998) justificam olhar o mediano e os pivôs de maioria qualificada.
 
-### 2.1 Disciplina e coesão no presidencialismo de coalizão
+**Expectativas e critérios de falha.** O plano de análise foi escrito depois da análise descritiva preliminar. Por isso E1 e E2 são leituras descritivas, e E3 a E5 foram especificadas antes das análises que as testam (Apêndice B).
 
-A medida clássica de coesão de um grupo legislativo é o índice de Rice (Rice, 1925), a diferença absoluta entre as proporções de votos Sim e Não do grupo numa votação. O índice tem dois problemas conhecidos. Ele é inflado em grupos pequenos, porque a variabilidade amostral de proporções em bancadas de poucos membros produz valores altos mesmo sem coesão real; Desposato (2005) propõe padronizar o índice pelo valor esperado numa subamostra de tamanho fixo. E ele confunde coesão com consenso: em votações quase unânimes, todo partido parece coeso. Por isso a literatura comparada restringe a análise a votações disputadas ou pondera pela disputa (na linha de Carey, 2007; 2009). Carey também distingue *unidade* (votar junto) de *disciplina* (votar com o líder contra a própria preferência), e mostra que a unidade é menor onde há "principais concorrentes" — eleitores, governadores, o presidente — que disputam a lealdade do legislador.
-
-No Brasil, Figueiredo e Limongi (1999) mostraram que a disciplina é alta e previsível e que a orientação do líder é o melhor preditor do voto; o mecanismo usualmente associado ao livro é a centralização dos trabalhos nos líderes combinada aos poderes de agenda do Executivo [verificar no original]. A leitura oposta (Mainwaring, 1999; Ames, 2001) enfatizava lista aberta, federalismo e patronagem como fontes de indisciplina. Nicolau (2000) documentou disciplina e base parlamentar no primeiro governo Fernando Henrique a partir das votações nominais. Zucco (2009) e Zucco e Lauderdale (2011) mostraram que o comportamento dos deputados brasileiros responde a influências do Executivo além da ideologia, e Power e Zucco (2009) forneceram âncoras de ideologia partidária. Kam (2009) e Cox e McCubbins (2005) lembram duas cautelas: a dissidência responde ao desalinhamento entre preferência e partido, e a coesão observada é em parte produto do controle de agenda, que evita votações que dividiriam a bancada. Carrubba, Gabel e Hug (2008) acrescentam que votações nominais não são amostra aleatória das decisões, o que vale com força para a Câmara: só 16,5% das 6.855 votações de Plenário da legislatura tiveram votos nominais.
-
-### 2.2 Modelos espaciais: preferência ou partido?
-
-A segunda tradição estima posições latentes dos legisladores a partir das votações (Poole e Rosenthal, 1997; Clinton, Jackman e Rivers, 2004). Krehbiel (1993) argumenta que coesão partidária não prova influência do partido: legisladores com preferências parecidas votam juntos sem pressão alguma. Snyder e Groseclose (2000) propuseram identificar a pressão partidária comparando votações em que ela atuaria com votações lopsided, e McCarty, Poole e Rosenthal (2001) modelaram linhas de corte específicas por partido, concluindo que a segunda linha melhora pouco o ajuste. Black (1948) e Krehbiel (1998) dão a razão para olhar o legislador mediano e os pivôs de maioria qualificada: são eles que decidem o resultado sob regras de maioria. Bafumi et al. (2005) e Lauderdale (2010) discutem identificação e votantes imprevisíveis em modelos de pontos ideais, ponto relevante quando o objeto é justamente o desvio.
-
-Das duas tradições derivamos expectativas e o que as contrariaria. **E1** (Figueiredo e Limongi): disciplina alta (em torno de 90%) e estável; contrariada por variação temporal grande em U. **E2** (Desposato; Carey): o ranking de coesão entre partidos é estável a correções de tamanho e de disputa; contrariada por inversões. **E3** (Krehbiel; Clinton, Jackman e Rivers): se a dissidência for preferência individual estruturada, um modelo com direção espacial intrapartidária prevê melhor que um modelo de lealdade sem direção; contrariada por ganho nulo fora da amostra. **E4** (Zucco): a direção da dissidência é o governismo relativo; contrariada por cargas sem padrão. **E5** (Carey, principais concorrentes): na divergência entre partido e Governo, o partido prevalece além das preferências; contrariada por "excesso de lealdade" nulo.
+- **E1** (Figueiredo e Limongi): disciplina alta e estável. *Falha* se a diferença entre o ano de maior e o de menor unidade (U) passar de 3 pontos percentuais.
+- **E2** (Desposato; Carey): o ordenamento dos partidos por coesão não depende de tamanho nem de disputa. *Falha* se a correlação de postos entre o Rice bruto e o padronizado, ou entre limiares de disputa, ficar abaixo de 0,8.
+- **E3** (Krehbiel; Clinton, Jackman e Rivers): se a dissidência é preferência individual estruturada, a direção individual prevê melhor que uma propensão a desviar com a mesma estrutura de parâmetros. *Falha* se o IC da redução de log-loss de M2b para M3 incluir zero.
+- **E4** (Zucco): a dimensão de dissidência é o eixo governo–oposição. *Falha* se a correlação entre a carga das votações e a orientação do Governo ficar abaixo de 0,5.
+- **E5** (Figueiredo e Limongi contra Carey): quando partido e Governo divergem, a liderança do partido prevalece além das preferências (excesso de lealdade positivo); os principais concorrentes de Carey preveem excesso menor onde a orientação vem do bloco. *Falha* se o IC do excesso incluir zero nos dois contrafactuais.
 
 ## 3. Dados
 
-Os dados são os Dados Abertos da Câmara dos Deputados para a 57ª Legislatura, coletados até 11/11/2026 pelos scripts do projeto (`baixar_legislatura.py`). A base de votos tem 471.314 votos válidos em 1.602 votações nominais (Plenário e comissões), dos quais 454.829 em 1.126 votações do Plenário, dadas por 644 deputados (titulares e suplentes), em média 403,9 votantes por votação. A análise principal usa só o Plenário; comissões entram como robustez. Excluímos os 1.045 registros "Artigo 17" (o presidente da sessão não vota), votos sem registro e deputados sem partido. A Tabela 1 distribui as votações por tipo — classificado por regras sobre o texto da votação — e ano.
+Os dados são os Dados Abertos da Câmara para a 57ª Legislatura, coletados até 11/11/2026: 471.314 votos válidos em 1.602 votações nominais, dos quais 454.829 em 1.126 votações do Plenário, de 644 deputados (titulares e suplentes). Excluímos os 1.045 registros "Artigo 17" (o presidente da sessão não vota), votos sem registro e deputados sem partido. Usamos o partido do deputado **na data** de cada votação. O cadastro "atual" reflete a janela partidária de 2026: entre março e maio de 2026 ocorreram 139 das 191 trocas individuais de partido. Das 210 transições registradas, 19 são fusões ou incorporações (PSC→PODE, PATRIOTA→PRD, PTB→PRD, PROS→SOLIDARIEDADE), tratadas à parte. A Tabela 1 distribui as votações por tipo e ano. O tipo é atribuído por regras sobre o texto da votação; numa amostra estratificada de 119 votações codificadas manualmente, as regras acertam 94,1%, e os erros se concentram em recursos e emendas de redação.
 
 **Tabela 1 – Votações nominais do Plenário por tipo e ano (57ª Legislatura, 14/03/2023 a 14/10/2026)**
 
@@ -55,124 +51,139 @@ Os dados são os Dados Abertos da Câmara dos Deputados para a 57ª Legislatura,
 
 *Tipo atribuído por regras sobre o texto de votacoes.descricao (ver Método).*
 
-**Partido na data.** Usamos o partido do deputado na data de cada votação. O partido "atual" do cadastro reflete as trocas da janela partidária de 2026: entre março e maio de 2026 ocorreram 139 das 191 trocas individuais de partido da legislatura; usá-lo atribuiria a 2023 filiações de 2026. Das 210 transições registradas, 19 são fusões ou incorporações (PSC→PODE, PATRIOTA→PRD, PTB→PRD, PROS→SOLIDARIEDADE), não decisões individuais, e são tratadas à parte.
+**Orientações registradas.** Para cada voto, associamos a orientação da bancada aplicável ao partido do deputado na data — o próprio partido; senão, a federação; senão, o bloco — e as orientações do Governo, da Maioria, da Minoria e da Oposição. Como a Câmara publica nomes de blocos truncados, partidos sem orientação própria são atribuídos ao bloco por inferência (cerca de 18% de todos os votos). Classificamos cada voto em camadas, com as parcelas dos votos do Plenário:
 
-**Orientações.** Para cada voto, o projeto associa a orientação da bancada aplicável ao partido do deputado na data — o próprio partido; senão, a federação; senão, o bloco — e as orientações de Governo, Maioria, Minoria e Oposição. Como a Câmara publica nomes de blocos abreviados e truncados, partidos sem orientação própria são atribuídos ao bloco truncado por inferência (cerca de 18% de todos os votos, Plenário e comissões; no Plenário, depois de separar o bloco heterogêneo, que também é em parte atribuído por inferência, a camada "bloco inferido" responde por 11,2% dos votos). Classificamos cada voto em quatro camadas: orientação **própria** (partido ou federação), **bloco** explícito, **bloco inferido** e **bloco heterogêneo** — o bloco que reuniu o PL e a federação PT-PCdoB-PV entre 11/02/2025 e 19/08/2025, um bloco de Mesa e não de coordenação de voto. Orientações desse bloco não contam como orientação do partido. A orientação "Liberado" e a orientação vazia (a liderança não orientou) ficam fora da medida de disciplina.
+- **própria** (partido ou federação): 33,9%;
+- **bloco**: 36,8%;
+- **bloco inferido**: 11,2%;
+- **bloco heterogêneo**: 18,1%. É o megabloco de 11/02/2025 a 19/08/2025, que não conta como orientação do partido.
 
-**Exercício do mandato.** A partir do histórico de situação dos deputados reconstruímos os períodos de exercício e a condição (titular ou suplente) em cada data. O painel valida bem: em média há 513,2 deputados em exercício nas 242 datas com votação nominal, e em 99,2% delas o total fica a no máximo cinco de 513. Isso permite marcar a suplência como variável no tempo, aproximar o motivo do afastamento do titular (ministro, secretário de estado ou de capital, outro) e computar pivôs entre os deputados efetivamente em exercício.
+"Liberado" e orientação vazia ficam fora da medida de disciplina.
+
+**Orientações faladas.** Extraímos das transcrições dos discursos as orientações anunciadas em Plenário ("o PL orienta 'sim'") e associamos cada uma à primeira votação nominal registrada até 45 minutos depois. Foram 939 orientações associadas a votações. Onde há registro oficial da orientação do próprio partido (563 casos), fala e registro coincidem em 94,3%.
+
+**Exercício do mandato.** A partir do histórico de situação dos deputados, reconstruímos os períodos de exercício e a condição (titular ou suplente) em cada data. Nas 242 datas com votação nominal há em média 513,2 deputados em exercício, e em 99,2% delas o total fica a no máximo cinco de 513.
 
 ## 4. Método
 
 ### 4.1 Disciplina, unidade e coesão
 
-Seja $v_{ij}$ o voto do deputado $i$ na votação $j$, com direção $s(v_{ij})=1$ para Sim e $0$ para Não ou Obstrução (a obstrução é um instrumento de quórum da bancada: um Não de quem recebeu ordem de obstruir não é dissidência quanto ao mérito). Seja $o_{p j}$ a orientação diretiva (Sim, Não ou Obstrução) da bancada aplicável ao partido $p$ do deputado. A **disciplina à liderança** é
+Seja $s(v_{ij})=1$ para Sim e $0$ para Não ou Obstrução no voto do deputado $i$ na votação $j$, e $o_{pj}$ a orientação diretiva da bancada aplicável ao partido $p$. A obstrução é um instrumento de quórum: um Não de quem recebeu ordem de obstruir não é dissidência quanto ao mérito. A **disciplina à liderança** é
 
-$$D = \frac{\sum_{(i,j)\in\mathcal{O}} \mathbf{1}[s(v_{ij}) = s(o_{p(i)j})]}{|\mathcal{O}|},$$
+$$D = \frac{1}{|\mathcal{O}|}\sum_{(i,j)\in\mathcal{O}} \mathbf{1}[s(v_{ij}) = s(o_{p(i)j})],$$
 
-em que $\mathcal{O}$ é o conjunto de votos (Sim, Não, Obstrução ou Abstenção) com orientação diretiva nas camadas própria, bloco ou bloco inferido. Abstenção conta como desvio; a versão estrita (Obstrução ≠ Não) e a versão sem abstenções são robustez. Toda taxa é reportada com sua **cobertura**, $|\mathcal{O}|$ dividido pelos votos válidos.
+em que $\mathcal{O}$ reúne os votos (Sim, Não, Obstrução ou Abstenção) com orientação diretiva nas camadas própria, bloco ou bloco inferido. Abstenção conta como desvio, e toda taxa vem com sua **cobertura** ($|\mathcal{O}|$ dividido pelos votos válidos). A **unidade partidária** compara o deputado à maioria dos demais colegas presentes:
 
-A **unidade partidária** compara o deputado à maioria dos demais colegas presentes:
+$$U = \frac{1}{|\mathcal{U}|}\sum_{(i,j)\in\mathcal{U}} \mathbf{1}[s(v_{ij}) = m_{-i,j}],\qquad m_{-i,j}=\mathbf{1}\Big[\textstyle\sum_{k\in p(i),k\neq i} s(v_{kj}) > \tfrac{1}{2}n_{-i,j}\Big],$$
 
-$$U = \frac{1}{|\mathcal{U}|}\sum_{(i,j)\in\mathcal{U}} \mathbf{1}\big[s(v_{ij}) = m_{-i,j}\big],\qquad m_{-i,j}=\mathbf{1}\Big[\textstyle\sum_{k\in p(i),k\neq i} s(v_{kj}) > \tfrac{1}{2}n_{-i,j}\Big],$$
+definida quando há pelo menos cinco colegas votando e não há empate; a abstenção do deputado conta como desvio. U cobre 94,6% dos votos; D, 66,7%.
 
-definida quando há pelo menos cinco colegas votando Sim, Não ou Obstrução e não há empate; a abstenção do próprio deputado conta como desvio, como em D. U não depende do registro de orientação e cobre 94,6% dos votos (D cobre 66,7%).
+O índice de Rice, $R_{pj}=|S_{pj}-N_{pj}|/(S_{pj}+N_{pj})$, é calculado em células com pelo menos três votantes. Para corrigir a inflação em bancadas pequenas, usamos o valor esperado numa subamostra sem reposição de $m$ membros (Desposato, 2005), calculado exatamente pela distribuição hipergeométrica, com $m = 3$ (todos os partidos) e $m = 10$. A linha de base é o Rice de votantes independentes. As médias se restringem às 894 votações **disputadas** (minoria do Plenário ≥ 10%). Os intervalos das taxas por partido vêm de bootstrap em duas vias (votações e deputados).
 
-A **coesão** de um partido numa votação é o índice de Rice, $R_{pj}=|S_{pj}-N_{pj}|/(S_{pj}+N_{pj})$, calculado em células com pelo menos três votantes. Para corrigir a inflação em bancadas pequenas, usamos o valor esperado do índice numa subamostra sem reposição de $m$ membros (Desposato, 2005), calculado exatamente pela distribuição hipergeométrica:
+### 4.2 Pontos ideais
 
-$$\tilde R_{pj}(m)=\sum_{k=0}^{m}\frac{\binom{S}{k}\binom{N}{m-k}}{\binom{S+N}{m}}\,\frac{|2k-m|}{m},$$
+Usamos o estimador de pontos ideais do projeto (regressão logística bilinear penalizada; Clinton, Jackman e Rivers, 2004), sem modificá-lo. Para o voto Sim ($y_{ij}=1$) ou Não/Obstrução ($y_{ij}=0$) do deputado $i$, no período $r$ de filiação a um partido $p$:
 
-com $m=10$ (principal) e $m=5$; partidos com mediana de votantes abaixo de $m$ não recebem o índice padronizado. A linha de base "sem partido" é o Rice esperado de $m$ votantes independentes que votam Sim com a probabilidade do Plenário naquela votação. Restringimos a média a votações **disputadas** (minoria do Plenário ≥ 10%; 894 votações) e, como robustez, a ≥ 20% e ao Rice ponderado pela disputa, $w_j = 1-|2q_j-1|$, inspirado em Carey (2007) [verificar a fórmula exata do autor].
+$$\Pr(y_{ij}=1)=\sigma\big(a_j + g_{pj} + \mathbf{b}_j^\top \mathbf{x}_{r}\big),\qquad \mathbf{x}_r=\mathbf{u}_{i}+\boldsymbol{\delta}_r,$$
 
-Comparações por tipo de votação, tipo de proposição e tema (temas oficiais da Câmara, multirrótulo com peso $1/k$; cobertura de 82% das proposições votadas) são feitas em médias brutas; para tipo de votação e de proposição, também em médias ajustadas por efeitos fixos de partido×ano, porque a composição partidária das votações difere entre categorias. Para tema, a votação herda os temas da primeira proposição afetada.
+com penalidades gaussianas e excluídas as votações com minoria abaixo de 2,5%. O modelo **global** omite $g$. O **intrapartidário** inclui o efeito fixo partido×votação $g_{pj}$, que absorve a posição do partido em cada votação, e centra os pontos dentro de cada partido. A amostra tem 417.832 votos, 1.039 votações, 828 períodos deputado×partido e 20.759 células partido×votação, com mediana de 11,0 votantes por célula e 27% delas com menos de cinco.
 
-### 4.2 Pontos ideais: global e intrapartidário
+### 4.3 Ruído ou estrutura
 
-Usamos o estimador de pontos ideais do projeto (regressão logística bilinear penalizada, da família IDEAL/NOMINATE; Clinton, Jackman e Rivers, 2004), sem modificá-lo. Para o voto Sim ($y_{ij}=1$) ou Não/Obstrução ($y_{ij}=0$) do deputado $i$, no período $r(i)$ de filiação a um partido $p$, na votação $j$:
+Os modelos abaixo são comparados na previsão de votos retirados: validação cruzada em cinco dobras sobre células deputado×votação, estratificada por votação, isto é, um exercício de **imputação** de votos.
 
-$$\Pr(y_{ij}=1)=\sigma\big(a_j + g_{p j} + \mathbf{b}_j^\top \mathbf{x}_{r}\big),\qquad \mathbf{x}_r=\mathbf{u}_{i}+\boldsymbol{\delta}_r,$$
+- **M0**: a regra "segue a orientação" (sem orientação, a maioria de treino do partido ou da votação), com probabilidade calibrada pelo acerto no treino; **M0c** calibra por partido e fonte.
+- **M1**: só $a_j+g_{pj}$, a posição coletiva do partido em cada votação, estimada com os votos dos colegas na mesma votação.
+- **M2**: M1 mais uma lealdade individual sem direção, $\sigma(z^{M1}+\rho_i d_{pj})$, com $d_{pj}=\pm1$ conforme a maioria de treino da célula.
+- **M2b**: lealdade por período com escala por votação, $\sigma(z^{M1}+s_j\rho_r d_{pj})$. Tem a mesma estrutura de parâmetros de M3, mas a direção do desvio é fixada como "contra a maioria do próprio partido".
+- **M3** e **M4**: o modelo intrapartidário com uma e duas dimensões. **M3L** acrescenta a M3 o termo $\rho_i d_{pj}$; **M3emb** é M3 com as posições embaralhadas entre os períodos do mesmo partido.
+- **M5**: o modelo global de duas dimensões, sem partido.
 
-com penalidades gaussianas (priors) em todos os parâmetros, estimação por máxima verossimilhança penalizada (L-BFGS) e votações com minoria abaixo de 2,5% excluídas. O modelo **global** omite $g$; o **intrapartidário** inclui o efeito fixo partido×votação $g_{pj}$, que absorve a posição do partido em cada votação, e centra os pontos $\mathbf{x}_r$ dentro de cada partido, de modo que sobra só a variação individual. A amostra do modelo tem 417.832 votos, 1.039 votações, 828 períodos deputado×partido e 20.759 células partido×votação (mediana de 11,0 votantes por célula; 27% com menos de cinco).
+A comparação central de E3 é M2b→M3. A métrica principal é a log-loss nas **células com divisão interna**: partido×votação com pelo menos cinco colegas no treino e pelo menos um voto contra a maioria do partido no treino. São definidas só com o treino e cobrem 64% dos votos. Reportamos também Brier, acurácia e AUC-PR para os votos contra a maioria. Os intervalos das diferenças vêm de bootstrap de deputados sobre as perdas de teste.
 
-### 4.3 Ruído ou estrutura: modelos comparados fora da amostra
+### 4.4 Correlatos, troca de partido e divergência com o Governo
 
-Comparamos, nas mesmas dobras, oito modelos hierarquizados:
+**Quem desvia.** Um modelo de probabilidade linear (MPL) ao nível do voto, $\text{desvio}_{ij}=\boldsymbol\beta^\top\mathbf z_i(t)+\gamma_{p(i,t)j}+\varepsilon_{ij}$, com efeito fixo partido×votação, compara deputados do mesmo partido na mesma votação. As covariáveis são:
 
-- **M0** — a regra "segue a orientação": a orientação diretiva aplicável; na ausência, a maioria de treino do partido na votação; na ausência, a maioria de treino da votação. A probabilidade é calibrada pela taxa de acerto da regra no treino; em **M0c**, a calibração é feita separadamente por partido e fonte da regra (camada da orientação ou maioria).
-- **M1** — só $a_j+g_{pj}$: a posição coletiva do partido em cada votação (o modelo intrapartidário com variância individual levada a zero por penalidade alta, para manter a mesma penalização de $g$).
-- **M2** — M1 mais uma **lealdade individual sem direção**: $\sigma(z^{M1}_{ij}+\rho_i\,d_{pj})$, com $d_{pj}=+1$ se a maioria de treino da célula votou Não e $-1$ se votou Sim; $\rho_i\in\mathbb{R}$ é a propensão de votar contra a maioria do próprio partido, em qualquer direção (positiva: desvia mais que o previsto; negativa: menos). M2 contém M1.
-- **M3** e **M4** — o modelo intrapartidário com uma e duas dimensões; **M3L** acrescenta a M3 a mesma lealdade $\rho_i$ (contém M3).
-- **M5** — o modelo global de duas dimensões, sem partido.
+- suplência em exercício, por motivo do afastamento do titular (pareado por UF e data);
+- sexo e idade;
+- log das cadeiras da unidade da federação (UF);
+- troca individual de partido, antes e depois da troca;
+- a distância à mediana do partido no eixo governo–oposição, estimada com as votações do **outro biênio** e expressa em desvios-padrão da dimensão.
 
-M1→M2 mede o valor da lealdade; M2→M3L, o valor da **direção** da dissidência além da lealdade (M2 e M3 não são aninhados; a comparação M2→M3 é reportada como complemento); M3→M4, o de uma segunda dimensão; M5→M4, o do partido além das preferências espaciais (também não aninhados). O filtro de votações com minoria ≥ 2,5% é aplicado antes da divisão em dobras, igualmente para todos os modelos. A validação cruzada é em cinco dobras sobre células deputado×votação, estratificada por votação (cada votação contribui com cerca de 20% dos seus votos para cada dobra, o que mantém $a_j$, $\mathbf{b}_j$ e $g_{pj}$ estimáveis). A métrica principal é a log-loss; reportamos também Brier, acurácia e a precisão média (AUC-PR) ao ranquear os votos contra a maioria de treino da célula. A acurácia é pouco informativa quando a taxa-base de seguir o partido passa de 88%. Avaliamos em todas as células e nas **células com divisão interna**: partido×votação com pelo menos cinco colegas no treino e pelo menos um voto contra a maioria do partido no treino (definidas só com informação de treino, para não selecionar pela variável dependente). Os intervalos das diferenças de log-loss vêm de bootstrap de deputados (1.000 réplicas) sobre as perdas de teste.
+Os erros-padrão (EP) são agrupados por deputado e por votação (Cameron, Gelbach e Miller, 2011).
 
-### 4.4 Correlatos do desvio, troca de partido e divergência com o Governo
+**Troca de partido.** Estudo de evento com efeitos fixos de deputado e de partido×votação e janelas em meses relativos à primeira troca individual (≤ −13, −12 a −7 [referência], −6 a −4, −3 a −1, 0 a 3, ≥ 4). Como as trocas ocorrem em datas diferentes, estimamos também a versão só com a coorte da janela de 2026, com os deputados que nunca trocaram como controles (Sun e Abraham, 2021; Callaway e Sant'Anna, 2021). A pré-tendência é testada em conjunto. Para separar seleção de ajuste, comparamos a posição do deputado antes da troca com as medianas de origem e destino.
 
-**Quem desvia.** Ao nível do voto, estimamos um modelo de probabilidade linear
+**Partido × Governo.** Selecionamos os votos em que a orientação diretiva do partido e a do Governo são opostas, entre os partidos com ministério em ao menos parte do governo: PT, PCdoB, PSB, PDT, PSOL, REDE, MDB, PSD, União, PP e REPUBLICANOS (Apêndice C). O **excesso de lealdade** é o observado menos o previsto pelo modelo global sem partido, de duas formas:
 
-$$\text{desvio}_{ij} = \boldsymbol{\beta}^\top \mathbf{z}_{i}(t) + \gamma_{p(i,t)\,j} + \varepsilon_{ij},$$
-
-em que $\gamma_{pj}$ (efeito fixo partido×votação) absorve a orientação, o conteúdo da votação, o momento e o grau de racha do partido, de modo que $\boldsymbol\beta$ compara deputados do mesmo partido na mesma votação. As covariáveis são suplência em exercício (por motivo do afastamento do titular), sexo, idade, log das cadeiras legais da UF, um indicador de troca individual de partido na legislatura e a distância à mediana do partido na dimensão governo × oposição **estimada com as votações do outro biênio** (2023–24 para votos de 2025–26 e vice-versa), para não usar o desfecho na medida de preferência. Os erros-padrão são agrupados em duas vias, por deputado e por votação (V = V<sub>dep</sub> + V<sub>vot</sub> − V<sub>dep∩vot</sub>; Cameron, Gelbach e Miller, 2011). O efeito da UF é testado conjuntamente (Wald, 26 g.l.). Decompomos ainda a variância das taxas brutas de desvio entre deputados (com ≥ 50 votos) em sinal e ruído binomial e na parte entre partidos; o "sinal" das taxas brutas inclui diferenças na agenda de votações de cada deputado, e por isso reportamos também a parcela de ruído na versão ajustada pela média da célula partido×votação.
-
-**Troca de partido.** Estimamos um estudo de evento com todos os deputados (os que nunca trocaram de partido ajudam a estimar os efeitos fixos), usando a primeira troca individual de cada deputado (12 deputados trocaram mais de uma vez):
-
-$$\text{desvio}_{ij}=\alpha_i+\gamma_{p(i,t)j}+\sum_{k\neq k_0}\theta_k\,\mathbf{1}[t_j-T_i\in k]+\varepsilon_{ij},$$
-
-com janelas em meses relativos à troca (≤ −13, −12 a −7 [referência], −6 a −4, −3 a −1, 0 a 3, ≥ 4). O efeito fixo de deputado retira a propensão individual, e o de partido×votação retira a tendência geral e o fato de o grupo de referência mudar com a troca. As fusões entram com indicadores próprios, como grupo placebo (troca sem escolha). O desfecho principal é o desvio de U, definido dos dois lados da troca. Coeficientes que se tornam colineares com os efeitos fixos são detectados e não reportados. Para separar seleção de adaptação, comparamos ainda, para quem tem pontos nos dois partidos, a posição do deputado antes da troca com as medianas do partido de origem e de destino.
-
-**Partido × Governo.** Selecionamos os votos em que a orientação diretiva do partido e a do Governo são opostas, separando os partidos da base dos de oposição permanente (PL e NOVO). Como os líderes escolhem onde divergir, a taxa de "segue o partido" mede ao mesmo tempo autoridade do líder e acompanhamento da bancada. Comparamos então o observado com a probabilidade de seguir o partido prevista pelo modelo global sem partido, de duas formas: (i) as previsões de validação cruzada de M5, em que pontos e cargas das votações foram estimados com os demais votos — inclusive cerca de 80% da mesma votação, já disciplinados, o que faz desse contrafactual um **limite inferior** do excesso; e (ii) M5 reestimado sem os votos dos partidos da base nas células partido×votação divergentes, de modo que as cargas dessas votações vêm dos outros partidos e os pontos dos deputados, das outras votações. O **excesso de lealdade** é a diferença entre o observado e o previsto. Dentro de cada partido×votação, um modelo de probabilidade linear indica quem segue o Governo contra o partido.
-
-### 4.5 Incerteza e reprodutibilidade
-
-Taxas e excessos têm intervalos por bootstrap de votações (1.000 réplicas). Dispersões, pivôs e dissidentes usam bootstrap de votações com reajuste do modelo global (100 réplicas), com cada réplica alinhada ao ajuste completo por rotação de Procrustes; para os desvios-padrão, que a reamostragem infla, usamos o intervalo bootstrap básico (2θ̂ menos os quantis). Todos os números, tabelas e figuras são gerados por `analise.py` a partir de `dados/leg57`; o próprio manuscrito é montado a partir de um modelo em que cada número é uma referência a `resultados.json`.
+- (i) previsões de validação cruzada de M5. Como seus parâmetros já usam votos disciplinados da mesma votação, dão um **limite inferior**;
+- (ii) M5 reestimado sem os votos desses partidos nas células divergentes. Tende a **superestimar** o excesso, porque as cargas dessas votações passam a vir só dos outros partidos.
 
 ## 5. Resultados
 
-### 5.1 Quanta disciplina
+### 5.1 O que a orientação registrada mede
 
-A disciplina à liderança no Plenário é de 90,9% (IC 95%: 90,4–91,3), e a unidade partidária, de 89,5%. A Tabela 2 e a Figura 1 mostram a distribuição por partido. PT (98,7%), PSOL (98,3%), PCdoB (97,6%) e NOVO (99,4%) votam quase sempre com a liderança; União (82,4%) e PSDB (82,3%) estão no outro extremo; PP, PSD, MDB, PODE e AVANTE ficam entre 88% e 90%, REPUBLICANOS em 92,8% e o PL em 90,5%. Esses números reproduzem a ordem de grandeza das taxas de alinhamento ao partido já calculadas no projeto (`alinhamento.parquet`, que inclui comissões e agrupa pelo partido atual): 98,4% no PT, 97,2% no PSOL e 97,0% no NOVO, e de 86,3% (PP) a 89,7% (REPUBLICANOS) nos partidos do centro.
+A disciplina é de 94,9% sob orientação própria, 87,2% sob bloco e 88,0% sob bloco inferido. Para União, PP, PSD, MDB, REPUBLICANOS, PODE e PSDB, menos de 2% dos votos estão sob orientação do próprio partido (Tabela 2): o que se chama de disciplina partidária, nesses partidos, é disciplina ao líder do bloco.
 
-**Tabela 2 – Disciplina à liderança (D), unidade (U) e coesão (Rice) por partido, Plenário**
+O registro de 2025 é o caso extremo. Em D, a disciplina sobe para 92,9% em 2025, contra 90,1% em 2023, mas a cobertura de D cai a 32%, contra 89% (Figura 2). Nas votações do megabloco, o registro sempre traz as linhas de Governo, Maioria, Minoria e Oposição (227 linhas de Oposição em 227 votações), mas nenhuma linha própria do PL ou da federação do PT. Nas transcrições, porém, esses partidos aparecem orientando. As orientações faladas cobrem 138 das 227 votações do megabloco (9.663 votos). Nelas, a disciplina é de 81,8%: 80,5% no PL, em 57 votações, e 91,2% no PT, em 16.
 
-| Partido | D (IC 95%) | Cob. D | D própria (n) | U (IC 95%) | U 2023 | U 2024 | U 2025 | U 2026 | Rice disp. | Rice m=10 | % racha |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| PSOL | 98,3 [97,8; 98,7] | 86 | 98,3 (10.267) | 97,9 [97,5; 98,3] | 97,3 | 97,1 | 98,5 | 99,3 | 0,98 | 0,98 | 1 |
-| PT | 98,7 [98,4; 98,9] | 79 | 98,7 (49.972) | 98,3 [98,0; 98,6] | 97,9 | 98,6 | 98,2 | 99,2 | 0,97 | 0,97 | 1 |
-| PCdoB | 97,6 [96,7; 98,3] | 77 | 97,6 (6.104) | 98,7 [98,3; 99,0] | 98,7 | 98,9 | 98,9 | 97,7 | 0,98 | – | 1 |
-| PV | 96,7 [96,1; 97,4] | 80 | 96,7 (3.582) | 96,0 [92,6; 98,4] | 95,8 | 95,2 | – | 97,1 | 0,93 | – | 5 |
-| PSB | 91,0 [89,4; 92,6] | 56 | 95,1 (4.522) | 92,9 [92,2; 93,7] | 93,4 | 95,5 | 90,7 | 94,0 | 0,85 | 0,85 | 9 |
-| PDT | 90,2 [88,6; 91,9] | 61 | 96,4 (2.218) | 94,6 [94,0; 95,2] | 95,2 | 94,2 | 93,8 | 97,0 | 0,88 | 0,89 | 8 |
-| MDB | 89,0 [88,3; 89,7] | 60 | 94,1 (34) | 84,9 [84,1; 85,7] | 87,4 | 87,2 | 82,0 | 83,8 | 0,64 | 0,65 | 24 |
-| PSD | 89,5 [88,5; 90,4] | 60 | 90,2 (41) | 87,3 [86,5; 88,1] | 91,0 | 87,8 | 84,3 | 88,2 | 0,70 | 0,71 | 18 |
-| AVANTE | 88,6 [87,3; 90,1] | 55 | 92,7 (55) | 87,0 [85,8; 88,3] | 84,6 | 91,0 | 86,6 | 85,9 | 0,74 | – | 19 |
-| PODE | 88,3 [87,3; 89,4] | 60 | 92,3 (13) | 87,9 [87,1; 88,7] | 87,0 | 88,5 | 88,1 | 87,8 | 0,72 | 0,73 | 14 |
-| UNIÃO | 82,4 [81,3; 83,7] | 64 | 90,1 (587) | 80,5 [79,5; 81,4] | 82,5 | 80,2 | 78,9 | 82,2 | 0,54 | 0,56 | 48 |
-| PP | 88,3 [87,4; 89,2] | 64 | 94,9 (396) | 86,0 [85,3; 86,7] | 88,2 | 87,1 | 84,1 | 84,5 | 0,66 | 0,67 | 22 |
-| REPUBLICANOS | 92,8 [92,1; 93,6] | 59 | 100,0 (39) | 92,4 [91,8; 92,9] | 91,5 | 93,8 | 92,5 | 90,5 | 0,82 | 0,82 | 5 |
-| PSDB | 82,3 [80,8; 84,0] | 64 | 89,4 (113) | 84,1 [83,0; 85,1] | 83,3 | 86,7 | 81,5 | 88,4 | 0,65 | 0,65 | 26 |
-| PL | 90,5 [89,6; 91,3] | 71 | 90,3 (57.403) | 89,3 [88,5; 90,1] | 87,1 | 89,9 | 90,3 | 89,9 | 0,77 | 0,78 | 14 |
-| NOVO | 99,4 [99,1; 99,7] | 96 | 99,4 (3.996) | – | – | – | – | – | 0,98 | – | 1 |
+Para calibrar essa medida, comparamos fala e registro fora do megabloco, nos mesmos votos: pela fala, a disciplina é de 87,4%; pelo registro, 91,4%. A associação fala–votação introduz, portanto, um ruído de 4,1 pontos. Mesmo descontado esse ruído, a disciplina no período do megabloco foi **menor**, e não maior, que no resto da legislatura.
 
-*D: voto na direção da orientação diretiva da bancada (Não = Obstrução; Abstenção = desvio), camadas própria, bloco e bloco inferido, sem o bloco heterogêneo de 2025. Cob. D: % dos votos do partido com orientação diretiva aplicável. U: voto na direção da maioria dos demais colegas (≥ 5). Rice em votações com minoria ≥ 10%; m = 10: padronização de Desposato; '% racha': votações disputadas com Rice < 0,5. IC por bootstrap de votações (1.000 réplicas).*
-
-![Figura 1](figuras/fig1_disciplina_unidade.png)
-
-*Figura 1 – Disciplina à liderança (D) e unidade (U) por partido, com IC 95% por bootstrap de votações. À direita, a parcela dos votos do partido sob orientação própria (partido ou federação); para os partidos do centro, a orientação é quase toda de bloco. NOVO não tem U porque a bancada nunca reúne cinco colegas votando.*
-
-A fonte da orientação importa. A disciplina é de 94,9% quando a orientação é do próprio partido ou federação, 87,2% sob orientação de bloco e 88,0% sob bloco inferido. A orientação própria é a regra só em PSOL, PT, PCdoB, PV, PL e NOVO (e em parte de PSB e PDT); em União, PP, PSD, MDB, REPUBLICANOS, PODE e PSDB, menos de 2% dos votos estão sob orientação do próprio partido. Para esses partidos, o que se chama de disciplina partidária é, na prática, **disciplina ao líder do bloco**. Quando se restringe D à orientação própria, os poucos votos desses partidos sob orientação do próprio partido mostram taxas maiores (por exemplo, PP 94,9%, MDB 94,1%), coerentes com a ideia de que o partido orienta quando está unido.
-
-A Figura 2 mostra a série semestral. Em D, a disciplina sobe para 92,9% em 2025 contra 90,1% em 2023. Mas a cobertura de D cai a 32% em 2025 (contra 89% em 2023), porque a liderança aplicável — sobretudo o megabloco — deixou de orientar. Em U, que não depende do registro, 2025 é o ano de **menor** unidade (88,7%, contra 89,8% em 2023 e 90,0% em 2026). Fixando a composição partidária, D em 2025 fica em 92,0%, contra 90,5% em 2023: cerca de metade da alta vem da composição partidária dos votos com orientação, e o restante de quais votações tiveram orientação — as poucas que o megabloco e as demais lideranças orientaram em 2025. A alta de 2025 em D é compatível com um artefato de cobertura, composição e seleção das votações orientadas. Em U, a diferença entre o ano de maior e o de menor unidade é de 1,6 ponto percentual (entre semestres, até 5,0 pontos), compatível com E1.
+U, que não depende do registro, confirma: 2025 é o ano de menor unidade (88,7%, contra 89,8% em 2023 e 90,0% em 2026). Fixando a composição partidária, D em 2025 ainda fica em 92,0%, contra 90,5% em 2023. Cerca de metade da alta registrada vem da composição dos votos com orientação, e o restante, de quais votações tiveram orientação registrada. Orientação vazia, portanto, nem sempre quer dizer que a liderança não orientou: pode ser um limite do registro. Para comparar partidos, usamos U como medida comparável e D sempre com sua cobertura.
 
 ![Figura 2](figuras/fig2_serie_semestral.png)
 
-*Figura 2 – Disciplina (D, todas as camadas e só orientação própria) e unidade (U) por semestre; abaixo, a cobertura de D (parcela dos votos com orientação diretiva aplicável).*
+*Figura 2 – Disciplina (D, todas as camadas e só orientação própria) e unidade (U) por semestre; D é omitido onde a cobertura é inferior a 20%. Abaixo, a cobertura de D.*
 
-### 5.2 Onde a disciplina falha
+### 5.2 Quanta disciplina
 
-**Tipo de orientação.** A disciplina é maior quando a orientação é Sim (91,7%) do que quando é Não (89,5%). Sob orientação de Obstrução, a adesão literal é de 75,0%: dos que não obstruíram, a maioria votou Não (13,6% dos votos) — mesma direção, sem aderir à tática — e só 10,4% votaram Sim, contra a bancada. Na medida direcional, a disciplina sob obstrução é de 88,6%.
+A disciplina à liderança no Plenário é de 90,9% (IC 95%: 90,4–91,3), e a unidade, de 89,5% (Tabela 2, Figura 1).
 
-**Liberação.** Quando o partido libera a bancada, a unidade cai de 91,6% (votações orientadas) para 79,4%, e isso ocorre em 16 dos 16 partidos analisados. A liberação sinaliza racha, mas não o produz sozinha: mesmo liberados, cerca de quatro em cada cinco deputados votam com a maioria dos colegas.
+- **Extremo mais coeso:** PT, PSOL, PCdoB e NOVO votam quase sempre com a liderança e com os colegas (U de 98,3% no PT e 97,9% no PSOL).
+- **Extremo menos coeso:** União (U 80,5%) e PSDB (84,1%).
+- **Meio:** MDB (84,9%), PP (86,0%), PSD (87,3%) e PODE (87,9%).
 
-**Tipo de votação e de proposição.** A Tabela 3 mostra que a disciplina é maior em PECs (94,3% no mérito) e no mérito de projetos (92,5%) do que em destaques (89,5%), emendas (88,9%) e requerimentos procedimentais (90,4%). O ajuste por partido×ano quase não altera os números. Entre tipos de proposição, os projetos de decreto legislativo (PDL) são os mais disciplinados (93,9%). Na PEC, porém, a ausência é uma forma de desvio, porque a aprovação exige 308 votos Sim. Contando como desvio os membros em exercício ausentes nas 28 votações de mérito de PEC com orientação Sim do partido, a disciplina cai de 94,9% para 83,8% (11,6% dos membros em exercício estavam ausentes).
+Tomando a federação como grupo, a unidade é de 98,1% na PT-PCdoB-PV, 97,5% na PSOL-REDE e 82,1% na PSDB-CIDADANIA. Em U, o ano de maior e o de menor unidade diferem em 1,6 ponto percentual (entre semestres, até 5,0). E1 se sustenta.
+
+**Tabela 2 – Disciplina à liderança (D), unidade (U) e coesão (Rice) por partido, Plenário**
+
+| Partido | D (IC 95%) | D própria (n) | U (IC 95%) | U 2023 | U 2024 | U 2025 | U 2026 | Cob. D | Rice disp. | Rice m=3 | Rice m=10 | % racha |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| PSOL | 98,3 [97,1; 99,3] | 98,3 (10.267) | 97,9 [96,7; 98,9] | 97,3 | 97,1 | 98,5 | 99,3 | 86 | 0,98 | 0,98 | 0,98 | 1 |
+| PT | 98,7 [98,3; 99,0] | 98,7 (49.972) | 98,3 [98,0; 98,7] | 97,9 | 98,6 | 98,2 | 99,2 | 79 | 0,97 | 0,97 | 0,97 | 1 |
+| PCdoB | 97,6 [96,4; 98,6] | 97,6 (6.104) | 98,7 [97,8; 99,3] | 98,7 | 98,9 | 98,9 | 97,7 | 77 | 0,98 | 0,98 | – | 1 |
+| PV | 96,7 [94,5; 98,3] | 96,7 (3.582) | 96,0 [91,9; 99,0] | 95,8 | 95,2 | – | 97,1 | 80 | 0,93 | 0,93 | – | 5 |
+| PSB | 91,0 [88,6; 93,2] | 95,1 (4.522) | 92,9 [90,2; 94,9] | 93,4 | 95,5 | 90,7 | 94,0 | 56 | 0,85 | 0,88 | 0,85 | 9 |
+| PDT | 90,2 [87,5; 92,4] | 96,4 (2.218) | 94,6 [92,6; 96,2] | 95,2 | 94,2 | 93,8 | 97,0 | 61 | 0,88 | 0,90 | 0,89 | 8 |
+| MDB | 89,0 [84,3; 93,0] | 94,1 (34) | 84,9 [80,1; 88,9] | 87,4 | 87,2 | 82,0 | 83,8 | 60 | 0,64 | 0,73 | 0,65 | 24 |
+| PSD | 89,5 [85,9; 92,4] | 90,2 (41) | 87,3 [83,5; 90,5] | 91,0 | 87,8 | 84,3 | 88,2 | 60 | 0,70 | 0,77 | 0,71 | 18 |
+| AVANTE | 88,6 [83,8; 93,9] | 92,7 (55) | 87,0 [80,2; 93,8] | 84,6 | 91,0 | 86,6 | 85,9 | 55 | 0,74 | 0,77 | – | 19 |
+| PODE | 88,3 [81,4; 93,1] | 92,3 (13) | 87,9 [80,7; 92,9] | 87,0 | 88,5 | 88,1 | 87,8 | 60 | 0,72 | 0,76 | 0,73 | 14 |
+| UNIÃO | 82,4 [78,3; 86,3] | 90,1 (587) | 80,5 [76,7; 84,4] | 82,5 | 80,2 | 78,9 | 82,2 | 64 | 0,54 | 0,68 | 0,56 | 48 |
+| PP | 88,3 [84,2; 92,4] | 94,9 (396) | 86,0 [81,5; 90,0] | 88,2 | 87,1 | 84,1 | 84,5 | 64 | 0,66 | 0,74 | 0,67 | 22 |
+| REPUBLICANOS | 92,8 [89,5; 95,6] | 100,0 (39) | 92,4 [89,1; 95,1] | 91,5 | 93,8 | 92,5 | 90,5 | 59 | 0,82 | 0,84 | 0,82 | 5 |
+| PSDB | 82,3 [75,8; 88,6] | 89,4 (113) | 84,1 [77,1; 91,0] | 83,3 | 86,7 | 81,5 | 88,4 | 64 | 0,65 | 0,72 | 0,65 | 26 |
+| PL | 90,5 [88,7; 92,0] | 90,3 (57.403) | 89,3 [87,3; 91,0] | 87,1 | 89,9 | 90,3 | 89,9 | 71 | 0,77 | 0,82 | 0,78 | 14 |
+| NOVO | 99,4 [98,8; 99,8] | 99,4 (3.996) | – | – | – | – | – | 96 | 0,98 | 0,99 | – | 1 |
+
+*D: voto na direção da orientação diretiva da bancada (Não = Obstrução; Abstenção = desvio), camadas própria, bloco e bloco inferido, sem o bloco heterogêneo de 2025. Cob. D: % dos votos do partido com orientação diretiva aplicável. U: voto na direção da maioria dos demais colegas (≥ 5). Rice em votações com minoria ≥ 10%; m = 3 e m = 10: padronização de Desposato; '% racha': votações disputadas com Rice < 0,5. IC por bootstrap em duas vias (votações e deputados, 500 réplicas). D própria: só votos sob orientação do próprio partido ou federação (n = votos).*
+
+![Figura 1](figuras/fig1_disciplina_unidade.png)
+
+*Figura 1 – Disciplina à liderança (D) e unidade (U) por partido, com IC 95% por bootstrap de votações. À direita, a parcela dos votos do partido sob orientação própria. NOVO não tem U porque a bancada nunca reúne cinco colegas votando.*
+
+**Ausências.** O voto nominal registra só quem votou. No pior caso de ausência não ignorável, toda ausência de membro em exercício do partido, nas votações com orientação diretiva, conta como desvio. Nesse caso, D cai de 90,9% para 73,1%, já que 19,6% dos membros em exercício não votaram. O ordenamento dos partidos se mantém (correlação de postos de 0,91). O caso da PEC é mais nítido, porque a aprovação exige 308 votos Sim e a ausência equivale a voto contra. Nas 28 votações de mérito de PEC com orientação Sim, a disciplina vai de 94,9% para 83,8%.
+
+### 5.3 Onde a disciplina falha
+
+**Obstrução.** Sob orientação de Obstrução, a adesão literal é de 75,0%. A maioria dos que não obstruíram votou Não (13,6% dos votos), na mesma direção; só 10,4% votaram Sim.
+
+**Liberação.** Quando o partido libera a bancada, a unidade cai de 91,6% para 79,4%, o que ocorre em 16 dos 16 partidos.
+
+**Tipo de votação.** A disciplina é maior no mérito de PECs (94,3%) e de projetos (92,5%) do que em destaques (89,5%), emendas (88,9%) e requerimentos procedimentais (90,4%). O ajuste por partido×ano quase não muda os números (Tabela 3).
+
+**Tema.** A unidade vai de 84,4% (homenagens) e 86,1% (política, partidos e eleições) a 93,9% (agricultura) e 94,6% (estrutura fundiária) (Tabela 4).
 
 **Tabela 3 – Disciplina (D) e unidade (U) por tipo de votação e de proposição, Plenário**
 
@@ -190,9 +201,7 @@ A Figura 2 mostra a série semestral. Em D, a disciplina sobe para 92,9% em 2025
 | Tipo de proposição | PL | 703 | 90,9 | 89,2 | 90,8 | 89,2 |
 | Tipo de proposição | PLP | 170 | 90,8 | 90,1 | 90,9 | 90,0 |
 
-*'Ajust.': média prevista de cada categoria com efeitos fixos de partido×ano (composição partidária da amostra toda).*
-
-**Tema.** A Tabela 4 mostra que a unidade varia de 84,4% (homenagens e datas comemorativas, votações de baixo custo para o desvio) e 86,1% (política, partidos e eleições, em que interesses eleitorais individuais estão em jogo) a 93,9% (agricultura) e 94,6% (estrutura fundiária). Uma leitura possível é que nos temas de maior unidade a linha de divisão coincide com a fronteira entre partidos (governo × oposição na questão fundiária e agrícola), enquanto nos de menor unidade há interesses que cortam as bancadas; a análise não testa esse mecanismo.
+*'Ajust.': média prevista de cada categoria com efeitos fixos de partido×ano (composição partidária da amostra toda). Votações: só as que têm orientação diretiva aplicável (por isso as contagens diferem das da Tabela 1).*
 
 **Tabela 4 – Disciplina (D) e unidade (U) por tema da proposição votada (ordem crescente de U)**
 
@@ -231,69 +240,78 @@ A Figura 2 mostra a série semestral. Em D, a disciplina sobe para 92,9% em 2025
 
 *Temas oficiais da Câmara (multi-rótulo, peso 1/k); temas com < 15 votações em 'Outros temas'.*
 
-### 5.3 Coesão corrigida
-
-Nas 894 votações disputadas, o Rice médio é de 0,78, contra 0,47 esperados de dez votantes independentes (Figura 3). A correção de Desposato muda pouco os valores e o ordenamento: a correlação de postos entre o Rice bruto e o padronizado (m = 10) é 0,99, e entre m = 10 e m = 5, 1,00; entre os limiares de disputa de 10% e 20%, 1,00; entre o Rice em disputadas e o ponderado por disputa, 1,00. A expectativa E2 se sustenta. O União é o caso extremo: Rice de 0,54 nas disputadas, com a bancada rachada (menos de 75% num lado) em 48% delas; PSDB (26%), MDB (24%) e PP (22%) vêm em seguida, enquanto PT e PSOL racham em cerca de 1%.
+**Coesão.** Nas votações disputadas, o Rice médio é de 0,78, contra 0,47 esperados de dez votantes independentes (Figura 3). A correção de Desposato com m = 3, que inclui todos os 16 partidos da Tabela 2, preserva o ordenamento do Rice bruto (correlação de postos de 0,99). Entre m = 3 e m = 10 a correlação é de 0,99, e entre os limiares de disputa de 10% e 20%, de 1,00. E2 se sustenta. O União tem Rice de 0,54 e racha (menos de 75% num lado) em 48% das votações disputadas; vêm em seguida PSDB (26%), MDB (24%) e PP (22%). PT e PSOL racham em cerca de 1%.
 
 ![Figura 3](figuras/fig3_rice.png)
 
-*Figura 3 – Rice médio nas votações disputadas, bruto e padronizado (m = 10; partidos com mediana de votantes menor que 10 sem valor), e a linha de base de voto aleatório.*
+*Figura 3 – Rice médio nas votações disputadas, bruto e padronizado (m = 10), e a linha de base de voto aleatório.*
 
 ### 5.4 Ruído ou estrutura
 
-A Tabela 5 e a Figura 4 resumem a validação cruzada. Em todas as células, a regra "segue a orientação" (M0) acerta 88,2% dos votos; a posição coletiva do partido em cada votação (M1) acerta 91,4%; o modelo intrapartidário de duas dimensões (M4), 92,8% — valor próximo dos 92,9% obtidos antes no projeto com Plenário e comissões. Em log-loss, nas células com divisão interna, onde a taxa de desvio da maioria é de 15,2%:
+A Tabela 5 e a Figura 4 resumem a validação cruzada nas células com divisão interna, em que 15,2% dos votos contrariam a maioria do partido. A posição do partido em cada votação (M1) reduz a log-loss da regra calibrada (M0c) em 0,146 (IC 0,128–0,164). Esse ganho reflete o uso dos votos dos colegas na mesma votação, e não só a orientação registrada.
 
-- **M0→M1** reduz a log-loss em 0,164 (IC 0,141–0,189). Parte disso vem da calibração única de M0: calibrada por partido e fonte (M0c), a regra melhora 0,018, e a distância para M1 fica em 0,146 (IC 0,128–0,164). A posição do partido em cada votação, estimada com os votos dos colegas, contém muito mais do que a orientação registrada, inclusive onde não há orientação.
-- **M1→M2** (lealdade individual sem direção) reduz em 0,020 (IC 0,017–0,023). Alguns deputados desviam sistematicamente mais do que outros.
-- **M2→M3L** (direção da dissidência além da lealdade) reduz em 0,015 (IC 0,012–0,018); a comparação não aninhada M2→M3 dá 0,012 (IC 0,008–0,015), e a lealdade ainda acrescenta 0,003 a M3. Saber *para que lado* o deputado costuma desviar acrescenta informação além de saber *quanto* ele desvia.
-- **M3→M4** (segunda dimensão) acrescenta 0,008 (IC 0,006–0,010).
-- **M5→M4** — o modelo global sem partido prevê pior que o intrapartidário em 0,021 (IC 0,017–0,024). Isso é compatível com a existência de um componente partidário além das preferências espaciais, mas não o prova, porque $g_{pj}$ também absorve preferências partidárias específicas de cada votação.
+- **Propensão a desviar (M1→M2b):** 0,025 (IC 0,022–0,029). Alguns deputados desviam sistematicamente mais que outros.
+- **Direção da dissidência além da propensão, com a mesma estrutura de parâmetros (M2b→M3):** 0,006 (IC 0,003–0,009).
+- **Lealdade somada a M3 (M2→M3L):** 0,015 (IC 0,012–0,018).
+- **Segunda dimensão (M3→M4):** 0,008 (IC 0,006–0,010).
+- **Posições embaralhadas:** quando as posições são permutadas dentro de cada partido, M3 perde 0,42. A direção individual estimada não é intercambiável entre colegas.
 
-A indisciplina, portanto, não é ruído puro (E3 se sustenta no teste aninhado M2→M3L), mas a estrutura é modesta em comparação com o que a posição do partido explica. Os ganhos não dependem de bancadas pequenas: nas células com 50 ou mais votantes no treino, em que $g_{pj}$ não está saturado, a log-loss cai de 0,2509 (M1) para 0,2368 (M2), 0,2171 (M3) e 0,2129 (M4). A exceção são as células com menos de cinco votantes no treino, em que M3 não melhora M2 (0,4759 contra 0,4752). São insensíveis à penalização dos pontos individuais: com $\lambda_d$ de 1 ou 16, em vez de 4, a log-loss de M3 na dobra 0 vai a 0,2493 e 0,2491, contra 0,2491. Com penalização forte do efeito fixo partido×votação ($\lambda_g=1$), M1 piora muito (0,3945, contra 0,2811) e M3 menos (0,2559): os pontos individuais compensam parte da informação partidária retirada, de modo que a vantagem de M3 sobre M1 não depende de efeitos fixos irrestritos.
+E3 se sustenta: a indisciplina não é ruído puro. Mas a parte atribuível à direção individual é pequena perto da posição do partido e da propensão a desviar.
 
-**Tabela 5 – Desempenho fora da amostra (validação cruzada em 5 dobras de células deputado×votação)**
+O resultado resiste a três checagens:
 
-| Amostra | Modelo | Log-loss | Brier | Acurácia | AUC-PR (desvio) |
-|---|---|---|---|---|---|
-| todas as células | M0 orientação do líder | 0,3627 | 0,1040 | 88,22 | 0,132 |
-| todas as células | M0c orientação, calibrada por partido e fonte | 0,3359 | 0,0991 | 88,14 | 0,214 |
-| todas as células | M1 só partido×votação | 0,2381 | 0,0666 | 91,37 | 0,631 |
-| todas as células | M2 = M1 + lealdade individual | 0,2218 | 0,0628 | 91,72 | 0,653 |
-| todas as células | M3 intra 1D | 0,2083 | 0,0573 | 92,54 | 0,699 |
-| todas as células | M3L = M3 + lealdade individual | 0,2053 | 0,0570 | 92,50 | 0,702 |
-| todas as células | M4 intra 2D | 0,1999 | 0,0550 | 92,79 | 0,718 |
-| todas as células | M5 global 2D (sem partido) | 0,2094 | 0,0606 | 91,87 | 0,681 |
-| células com divisão interna | M0 orientação do líder | 0,4475 | 0,1359 | 84,08 | 0,167 |
-| células com divisão interna | M0c orientação, calibrada por partido e fonte | 0,4298 | 0,1312 | 84,05 | 0,228 |
-| células com divisão interna | M1 só partido×votação | 0,2838 | 0,0831 | 88,94 | 0,677 |
-| células com divisão interna | M2 = M1 + lealdade individual | 0,2641 | 0,0780 | 89,46 | 0,695 |
-| células com divisão interna | M3 intra 1D | 0,2525 | 0,0730 | 90,31 | 0,723 |
-| células com divisão interna | M3L = M3 + lealdade individual | 0,2491 | 0,0727 | 90,24 | 0,725 |
-| células com divisão interna | M4 intra 2D | 0,2447 | 0,0707 | 90,56 | 0,738 |
-| células com divisão interna | M5 global 2D (sem partido) | 0,2655 | 0,0792 | 89,21 | 0,695 |
+- **Células grandes.** Os ganhos aparecem também nas células com 50 ou mais votantes no treino, em que $g_{pj}$ não está saturado: log-loss de 0,2509 em M1 e 0,2171 em M3.
+- **Minoria interna.** Nas células com minoria interna de treino de pelo menos 10% (37% dos votos), a ordem é a mesma: M2b 0,333, M3 0,322 e M4 0,312.
+- **Penalização.** Com $\lambda_d$ de 1 ou 16, a log-loss de M3 na dobra 0 vai a 0,2493 e 0,2491, contra 0,2491.
+
+O modelo global sem partido (M5) prevê pior que o intrapartidário de duas dimensões, em 0,021. Isso não prova um efeito do partido, porque os dois modelos não são aninhados e $g_{pj}$ também absorve preferências partidárias específicas de cada votação.
+
+**Tabela 5 – Desempenho fora da amostra nas células com divisão interna (validação cruzada em 5 dobras de células deputado×votação)**
+
+| Modelo | Log-loss | Brier | Acurácia | AUC-PR (desvio) |
+|---|---|---|---|---|
+| M0 orientação do líder | 0,4475 | 0,1359 | 84,08 | 0,167 |
+| M0c orientação, calibrada por partido e fonte | 0,4298 | 0,1312 | 84,05 | 0,228 |
+| M1 só partido×votação | 0,2838 | 0,0831 | 88,94 | 0,677 |
+| M2 = M1 + lealdade individual | 0,2641 | 0,0780 | 89,46 | 0,695 |
+| M2b = M1 + lealdade por período × escala por votação | 0,2583 | 0,0765 | 89,68 | 0,703 |
+| M3 intra 1D | 0,2525 | 0,0730 | 90,31 | 0,723 |
+| M3L = M3 + lealdade individual | 0,2491 | 0,0727 | 90,24 | 0,725 |
+| M3 com posições embaralhadas no partido | 0,6736 | 0,1696 | 78,96 | 0,212 |
+| M4 intra 2D | 0,2447 | 0,0707 | 90,56 | 0,738 |
+| M5 global 2D (sem partido) | 0,2655 | 0,0792 | 89,21 | 0,695 |
 
 *Células com divisão interna: partido×votação com ≥ 5 colegas no treino e ao menos um voto contra a maioria do partido no treino. AUC-PR: precisão média ao ranquear os votos contra a maioria de treino da célula.*
 
 ![Figura 4](figuras/fig4_validacao_cruzada.png)
 
-*Figura 4 – Redução da log-loss fora da amostra (por voto) ao acrescentar cada componente, nas células partido×votação com divisão interna. IC 95% por bootstrap de deputados.*
+*Figura 4 – Redução da log-loss fora da amostra (por voto) ao acrescentar cada componente, nas células com divisão interna. IC 95% por bootstrap de deputados.*
 
 ### 5.5 O que é a dimensão intrapartidária
 
-A dimensão intrapartidária de um modelo de 1D é o **governismo relativo**. O sinal da dimensão foi fixado de modo que valores positivos indiquem deputados que votam mais com o Governo; a interpretação vem das cargas. Entre as votações em que o Governo orientou (77% do total), a correlação entre a carga e a orientação do Governo (Sim = +1, Não = −1) é 0,90, e entre as 100 de maior carga o sinal coincide com o da orientação do Governo em 100%. A posição intrapartidária dos deputados correlaciona 0,94 com a sua posição relativa à mediana do partido na dimensão global e 0,92 com a taxa de voto com o Governo descontada a média do partido. As votações que mais carregam a dimensão (Tabela 11) não são de um tema só. No polo positivo estão votações em que o Governo orientou Sim: a medida provisória sobre a Agência Nacional de Proteção de Dados, a autorização para o Banco do Nordeste criar subsidiárias, a depreciação acelerada e a manutenção do texto em destaques. No polo negativo estão requerimentos procedimentais com orientação Não do Governo, uma emenda ao regime de transição da desoneração da folha e o projeto sobre "invasores de propriedades". A dissidência intrapartidária é o eixo governo × oposição recortado dentro de cada partido, o que confirma E4 (Zucco, 2009). Requerimentos procedimentais são 38% das 100 votações de maior carga, contra 31% do total.
+A dimensão intrapartidária do modelo de 1D é o **eixo governo–oposição recortado dentro de cada partido**. O sinal foi fixado de modo que valores positivos indiquem quem vota mais com o Governo; a interpretação vem das cargas. Nas votações em que o Governo orientou (77% do total), a correlação entre a carga e a orientação do Governo é de 0,90. Entre as 100 votações de maior carga, o sinal coincide com o da orientação do Governo em 100%. E4 se sustenta, no sentido de compatibilidade. Sob um governo de esquerda, porém, o eixo governo–oposição não se separa de um eixo esquerda–direita, e o rótulo deve ser lido com essa ressalva.
 
-**Tabela 11 – Votações com maior carga na dimensão intrapartidária (modelo intra 1D)**
+A dimensão é quase a posição relativa do deputado no eixo global: as duas correlacionam 0,94. A estrutura intrapartidária é, portanto, o eixo que separa os partidos, visto de dentro. O que vai além dele é pequeno. A segunda dimensão acrescenta 0,008 de log-loss, e suas cargas quase não se associam à orientação do Governo (0,10) nem à filiação a frentes parlamentares (no máximo 0,13 em módulo).
+
+As votações de maior carga (Tabela 6) ilustram isso:
+
+- **Polo positivo:** votações em que o Governo orientou Sim, como a medida provisória da Agência Nacional de Proteção de Dados, a autorização para o Banco do Nordeste criar subsidiárias, a depreciação acelerada e textos mantidos em destaques.
+- **Polo negativo:** requerimentos procedimentais com orientação Não do Governo e o projeto sobre "invasores de propriedades".
+
+Requerimentos procedimentais são 38% das 100 votações de maior carga, contra 31% do total.
+
+**Tabela 6 – Votações com maior carga na dimensão intrapartidária (modelo intra 1D)**
 
 | Sinal | Data | Proposição | Tipo | Ementa | Gov. | Resultado | Carga |
 |---|---|---|---|---|---|---|---|
 | + (governistas relativos votam Sim) | 2026-02-09 | MPV 1317/2025 | Mérito (texto principal) | Altera a Lei nº 13.709, de 14 de agosto de 2018, para tratar da Agência Nacional de Proteção de Dados, a Lei nº 10.87... | Sim | aprovada | 6,57 |
-| + (governistas relativos votam Sim) | 2025-11-05 | PL 2809/2024 | Destaque (texto) | Altera a Lei nº 7.797, de 10 de julho de 1989, a Lei nº 9.795, de 27 de abril de 1999, e a Lei nº 12.187, de 29 de de... | Sim | – | 6,53 |
-| + (governistas relativos votam Sim) | 2025-04-29 | PL 3469/2024 | Destaque (texto) | Altera a Lei nº 7.565, de 19 de dezembro de 1986 – Código Brasileiro de Aeronáutica, e a Lei nº 7.957, de 20 de dezem... | Sim | – | 6,49 |
+| + (governistas relativos votam Sim) | 2025-11-05 | PL 2809/2024 | Destaque (texto) | Altera a Lei nº 7.797, de 10 de julho de 1989, a Lei nº 9.795, de 27 de abril de 1999, e a Lei nº 12.187, de 29 de de... | Sim | texto mantido | 6,53 |
+| + (governistas relativos votam Sim) | 2025-04-29 | PL 3469/2024 | Destaque (texto) | Altera a Lei nº 7.565, de 19 de dezembro de 1986 – Código Brasileiro de Aeronáutica, e a Lei nº 7.957, de 20 de dezem... | Sim | texto mantido | 6,49 |
 | + (governistas relativos votam Sim) | 2025-05-26 | PL 1708/2025 | Mérito (texto principal) | Autoriza o Banco do Nordeste do Brasil S.A. a constituir subsidiárias integrais ou controladas. | Sim | aprovada | 5,88 |
 | + (governistas relativos votam Sim) | 2024-12-17 | PL 3802/2024 | Urgência | Altera a Lei nº 14.467, de 16 de novembro de 2022, que dispõe sobre o tratamento tributário aplicável às perdas incor... | Sim | rejeitada | 5,84 |
-| + (governistas relativos votam Sim) | 2025-08-19 | PL 3181/2025 | Destaque (texto) | Dispõe sobre a criação de funções comissionadas no Quadro de Pessoal do Superior Tribunal de Justiça. | Sim | – | 5,65 |
-| + (governistas relativos votam Sim) | 2024-03-19 | PL 2/2024 | Destaque (texto) | Autoriza a concessão de quotas diferenciadas de depreciação acelerada para máquinas, equipamentos, aparelhos e instru... | Sim | – | 5,51 |
-| + (governistas relativos votam Sim) | 2025-06-25 | PL 3118/2024 | Destaque (texto) | Altera a Lei nº 12.858, de 9 de setembro de 2013, para incluir as políticas de assistência aos estudantes da educação... | Sim | – | 5,47 |
+| + (governistas relativos votam Sim) | 2025-08-19 | PL 3181/2025 | Destaque (texto) | Dispõe sobre a criação de funções comissionadas no Quadro de Pessoal do Superior Tribunal de Justiça. | Sim | texto mantido | 5,65 |
+| + (governistas relativos votam Sim) | 2024-03-19 | PL 2/2024 | Destaque (texto) | Autoriza a concessão de quotas diferenciadas de depreciação acelerada para máquinas, equipamentos, aparelhos e instru... | Sim | texto mantido | 5,51 |
+| + (governistas relativos votam Sim) | 2025-06-25 | PL 3118/2024 | Destaque (texto) | Altera a Lei nº 12.858, de 9 de setembro de 2013, para incluir as políticas de assistência aos estudantes da educação... | Sim | texto mantido | 5,47 |
 | − (governistas relativos votam Não) | 2025-05-26 | PL 1708/2025 | Requerimento procedimental | Autoriza o Banco do Nordeste do Brasil S.A. a constituir subsidiárias integrais ou controladas. | Não | rejeitada | −5,90 |
 | − (governistas relativos votam Não) | 2025-04-29 | PL 3469/2024 | Requerimento procedimental | Altera a Lei nº 7.565, de 19 de dezembro de 1986 – Código Brasileiro de Aeronáutica, e a Lei nº 7.957, de 20 de dezem... | Não | rejeitada | −5,72 |
 | − (governistas relativos votam Não) | 2025-04-28 | PL 363/2025 | Requerimento procedimental | Altera a Lei nº 14.399, de 8 de julho de 2022, que institui a Política Nacional Aldir Blanc de Fomento à Cultura. | Não | rejeitada | −5,67 |
@@ -305,86 +323,88 @@ A dimensão intrapartidária de um modelo de 1D é o **governismo relativo**. O 
 
 *Carga positiva: os deputados mais governistas que o próprio partido tendem a votar Sim.*
 
-A segunda dimensão do modelo 2D não tem leitura clara: a correlação das suas cargas com a orientação do Governo é 0,10 (em módulo), e a associação com a filiação a frentes parlamentares é fraca (por exemplo, 0,11 com a frente agropecuária e −0,13 com a ambientalista). As correlações com frentes são fracas nas duas dimensões. Na primeira, dentro do partido, os membros das frentes evangélica (−0,23), agropecuária (−0,18) e de segurança pública (−0,13) são menos governistas, e os da ambientalista, mais (0,19).
-
-**Validação preditiva.** Ajustamos o modelo intrapartidário só com as votações anteriores a 2026 e perguntamos se a posição de cada deputado antecipa a janela de março–maio de 2026. A magnitude da posição (distância ao centro do partido) prevê *quem* troca com AUC de 0,59 (IC 0,54–0,65; 129 trocas entre 525 deputados), um poder discriminante modesto. O sinal da posição prevê a **direção** da troca — para um partido mais governista ou mais oposicionista que o de origem, segundo as medianas pré-2026 — em 61,8% dos 110 casos (teste binomial, p = 0,017), percentual semelhante ao da posição relativa no modelo global (64,5%). A dimensão intrapartidária carrega informação sobre decisões futuras de filiação, mas não além do que a posição global relativa já contém. A direção só é classificável para as 110 das 129 trocas em que o deputado ficou no mesmo partido até o fim de 2025 e as medianas de origem e destino diferem.
+**Validação externa.** Com o modelo ajustado só com votações anteriores a 2026, a distância ao centro do partido prevê *quem* troca de partido na janela, com AUC de 0,59 (IC 0,54–0,65; 129 trocas entre 525 deputados). O sinal da posição prevê a **direção** da troca em 61,8% das 110 trocas classificáveis (teste binomial, p = 0,017), contra 64,5% da posição relativa no modelo global. A direção é definida pelas medianas pré-2026 do próprio modelo global. É evidência modesta, que não vai além do que o eixo global já contém.
 
 ### 5.6 Quem desvia
 
-A Tabela 10 traz os correlatos do desvio dentro do mesmo partido e da mesma votação. A distância ideológica à mediana do partido, medida no outro biênio, domina: cada unidade de distância na dimensão governo × oposição está associada a 25,7 pontos percentuais a mais de desvio da orientação (IC 22,3–29,0). Os deputados que trocaram de partido individualmente desviam 1,8 ponto a mais da maioria dos colegas (IC 0,4–3,2). Suplência — inclusive a de titulares nomeados ministros —, sexo, idade e o tamanho da bancada estadual não têm associação distinguível de zero ao nível de 5% (o intervalo dos suplentes de secretários toca o zero). As UFs, em conjunto, importam (χ² = 73,5, 26 g.l.), o que é compatível com principais estaduais concorrentes (Carey, 2009), mas os dados não permitem identificar o mecanismo. A expectativa krehbieliana de que a preferência domina se confirma. Não podemos dizer que a disciplina seja só preferência nem o contrário: as demais covariáveis institucionais que observamos são fracas, e o efeito conjunto das UFs fica sem mecanismo identificado.
+A Tabela 7 traz os correlatos do desvio dentro do mesmo partido e da mesma votação.
 
-**Tabela 10 – Correlatos do desvio individual: MPL com efeitos fixos partido×votação**
+- **Distância espacial ao partido:** é o correlato dominante. Cada desvio-padrão de distância, medida no outro biênio, está associado a 22,1 pontos percentuais a mais de desvio da orientação (IC 19,2–25,0) e a 24,5 pontos a mais de desvio da maioria dos colegas. Chamamos essa medida de distância espacial, e não de preferência, porque ela vem do próprio comportamento de voto, ainda que de outro período.
+- **Troca de partido:** os deputados que trocariam de partido desviam mais antes da troca (2,1 ponto em U; IC 0,6–3,7), mas não depois (−0,3; IC −3,1 a 2,5).
+- **Sem associação distinguível de zero ao nível de 5%:** suplência (inclusive a de titulares ministros), sexo, idade e tamanho da bancada estadual.
+- **UFs:** em conjunto, importam (χ² = 73,2, 26 g.l.). Isso é compatível com principais estaduais concorrentes (Carey, 2009), mas o mecanismo não é identificado.
+
+**Tabela 7 – Correlatos do desvio individual: MPL com efeitos fixos partido×votação**
 
 | Variável | Desvio de D (p.p.) | Desvio de U (p.p.) |
 |---|---|---|
-| Suplente (titular ministro) | −0,72 [−2,19; 0,75] | −0,26 [−3,07; 2,54] |
-| Suplente (titular secretário) | 1,77 [−0,01; 3,55] | 1,87 [−0,29; 4,02] |
-| Suplente (outro motivo) | −0,40 [−2,73; 1,93] | −0,06 [−2,22; 2,11] |
-| Mulher | −0,36 [−1,88; 1,17] | −0,43 [−1,94; 1,07] |
-| Idade (décadas) | −0,24 [−0,66; 0,18] | −0,03 [−0,43; 0,38] |
-| log cadeiras da UF | 0,22 [−0,59; 1,02] | 0,17 [−0,56; 0,90] |
-| Trocou de partido (individual) | 1,53 [0,04; 3,02] | 1,77 [0,37; 3,16] |
-| Distância à mediana do partido (outro biênio) | 25,67 [22,33; 29,00] | 28,55 [25,70; 31,39] |
-| UF (Wald, 26 g.l.) | χ² = 73,5; p = 0,000 | χ² = 76,6; p = 0,000 |
+| Suplente (titular ministro) | −0,74 [−2,21; 0,72] | −0,32 [−3,13; 2,49] |
+| Suplente (titular secretário) | 1,75 [−0,04; 3,54] | 1,82 [−0,35; 4,00] |
+| Suplente (outro motivo) | −0,42 [−2,72; 1,88] | −0,12 [−2,23; 1,99] |
+| Mulher | −0,36 [−1,89; 1,17] | −0,47 [−1,97; 1,04] |
+| Idade (décadas) | −0,23 [−0,65; 0,19] | −0,02 [−0,42; 0,39] |
+| log cadeiras da UF | 0,23 [−0,58; 1,04] | 0,20 [−0,54; 0,93] |
+| Trocará de partido (votos antes da troca) | 1,69 [0,04; 3,34] | 2,14 [0,62; 3,65] |
+| Trocou de partido (votos depois da troca) | 0,54 [−1,99; 3,08] | −0,31 [−3,10; 2,49] |
+| Distância espacial à mediana do partido (outro biênio, em DP) | 22,10 [19,22; 24,99] | 24,52 [22,05; 26,99] |
+| UF (Wald, 26 g.l.) | χ² = 73,2; p = 0,000 | χ² = 76,5; p = 0,000 |
 | N votos (deputados) | 275.452 (528) | 395.806 (520) |
 
 *Coeficientes em pontos percentuais (IC 95%, EP agrupados por deputado e por votação). Distância medida na dim1 global estimada com as votações do outro biênio.*
 
-A variância das taxas brutas de desvio entre deputados é quase toda sinal — o ruído binomial responde por apenas 1% dela (na versão ajustada pela célula partido×votação, 1%) — e 80% desse sinal está **dentro** dos partidos (81% para D). Parte do sinal reflete agendas diferentes (suplentes votam em períodos distintos). Os partidos diferem na disciplina média, mas a maior parte da heterogeneidade está entre colegas de partido.
+A variância das taxas brutas de desvio entre deputados é quase toda sinal: o ruído binomial responde por 1% dela (1% na versão ajustada pela célula partido×votação). Desse sinal, 80% está **dentro** dos partidos. Parte dele reflete agendas diferentes; suplentes, por exemplo, votam em períodos distintos.
 
-**Dispersão e dissidentes.** No eixo governo × oposição (Tabela 6, Figura 6), PDT (0,17), PSB (0,20), PSOL (0,21) e PT (0,23) são compactos; MDB (0,57), União (0,54), PP (0,54), PODE (0,50) e PL (0,48) são dispersos. Os valores diferem dos números prévios do projeto (PDT 0,17, PT 0,20, PSOL 0,25, PL 0,38, MDB 0,50, PODE 0,55), que reproduzimos exatamente: aqueles agrupavam os deputados pelo partido **atual**, posterior à janela de 2026, e incluíam comissões. Com o partido na data, o PL fica mais disperso do que se pensava: dos 20 períodos no PL mais de um desvio-padrão acima da mediana do partido (mais governistas), 11 são de deputados que já não estão no PL (55%, contra 11% dos demais). A reamostragem infla os desvios-padrão (viés mediano de 0,008); por isso a Tabela 6 traz o intervalo bootstrap básico, que corrige esse deslocamento.
+**Dispersão e dissidentes.** No eixo governo–oposição (Tabela 8, Figura 5), PDT (0,17), PSB (0,20), PSOL (0,21) e PT (0,23) são compactos. MDB (0,57), União (0,54), PP (0,54), PODE (0,50) e PL (0,48) são dispersos. Entre os 595 períodos com pelo menos 100 votos, 32 estão a pelo menos dois desvios-padrão da mediana do partido, com IC que a exclui. Os mais extremos estão na Tabela 9. No PL, há deputados mais governistas que o partido: João Carlos Bacelar, Junior Lourenço e Tiririca. No sentido oposto estão Sargento Fahur (PSD), Zucco (REPUBLICANOS), Mauricio Marcon (PODE), Evair Vieira de Melo (PP) e Pezenti (MDB).
 
-**Tabela 6 – Dispersão interna dos partidos no eixo governo × oposição (dim1 global, Plenário)**
+**Tabela 8 – Dispersão interna dos partidos no eixo governo × oposição (dim1 global, Plenário)**
 
-| Partido | Períodos | DP dim1 (IC 95%) | IIQ dim1 |
-|---|---|---|---|
-| PSOL | 14 | 0,21 [0,10; 0,25] | 0,19 |
-| PT | 70 | 0,23 [0,12; 0,23] | 0,36 |
-| PCdoB | 9 | 0,24 [0,06; 0,30] | 0,29 |
-| PV | 6 | 0,35 [0,23; 0,42] | 0,46 |
-| PSB | 17 | 0,20 [0,15; 0,22] | 0,26 |
-| PDT | 20 | 0,17 [0,12; 0,19] | 0,22 |
-| MDB | 48 | 0,57 [0,53; 0,60] | 0,63 |
-| PSD | 56 | 0,44 [0,40; 0,47] | 0,49 |
-| AVANTE | 8 | 0,56 [0,51; 0,60] | 0,44 |
-| PODE | 19 | 0,50 [0,46; 0,53] | 0,30 |
-| UNIÃO | 69 | 0,54 [0,51; 0,56] | 0,79 |
-| PP | 58 | 0,54 [0,50; 0,56] | 0,65 |
-| REPUBLICANOS | 53 | 0,42 [0,37; 0,46] | 0,31 |
-| PSDB | 15 | 0,47 [0,42; 0,51] | 0,32 |
-| PL | 108 | 0,48 [0,45; 0,50] | 0,52 |
-| NOVO | 5 | 0,08 [0,00; 0,12] | 0,11 |
+| Partido | Períodos | DP dim1 (EP) | Viés bootstrap | IIQ dim1 |
+|---|---|---|---|---|
+| PSOL | 14 | 0,21 (0,04) | 0,034 | 0,19 |
+| PT | 70 | 0,23 (0,03) | 0,047 | 0,36 |
+| PCdoB | 9 | 0,24 (0,06) | 0,030 | 0,29 |
+| PV | 6 | 0,35 (0,05) | 0,017 | 0,46 |
+| PSB | 17 | 0,20 (0,02) | 0,010 | 0,26 |
+| PDT | 20 | 0,17 (0,02) | 0,012 | 0,22 |
+| MDB | 48 | 0,57 (0,02) | 0,005 | 0,63 |
+| PSD | 56 | 0,44 (0,02) | 0,003 | 0,49 |
+| AVANTE | 8 | 0,56 (0,03) | 0,006 | 0,44 |
+| PODE | 19 | 0,50 (0,02) | 0,007 | 0,30 |
+| UNIÃO | 69 | 0,54 (0,01) | 0,004 | 0,79 |
+| PP | 58 | 0,54 (0,02) | 0,004 | 0,65 |
+| REPUBLICANOS | 53 | 0,42 (0,02) | 0,008 | 0,31 |
+| PSDB | 15 | 0,47 (0,02) | 0,003 | 0,32 |
+| PL | 108 | 0,48 (0,01) | 0,006 | 0,52 |
+| NOVO | 5 | 0,08 (0,04) | 0,023 | 0,11 |
 
-*Períodos deputado×partido com ≥ 100 votos; partidos com ≥ 5 períodos. IC bootstrap básico (2θ̂ menos os quantis; bootstrap de votações com reajuste e Procrustes), truncado em 0.*
+*Períodos deputado×partido com ≥ 100 votos; partidos com ≥ 5 períodos. EP e viés por bootstrap de votações com reajuste e alinhamento de Procrustes; o viés (média bootstrap menos estimativa) mostra quanto a reamostragem infla a dispersão, sobretudo em bancadas pequenas.*
 
-![Figura 6](figuras/fig6_pontos_ideais.png)
+![Figura 5](figuras/fig5_pontos_ideais.png)
 
-*Figura 6 – Pontos ideais na dimensão governo × oposição por partido (períodos deputado×partido com ≥ 100 votos no Plenário), com a mediana de cada partido, a mediana geral e os quantis de 40% e 60%.*
+*Figura 5 – Pontos ideais no eixo governo–oposição por partido (períodos deputado×partido com ≥ 100 votos), com a mediana de cada partido, a mediana geral e os quantis de 40% e 60%.*
 
-Entre os 595 períodos com pelo menos 100 votos, 383 têm posição cujo IC exclui a mediana do próprio partido — critério frouxo, porque os pontos são estimados com precisão. Chamamos de dissidentes sistemáticos os 32 que, além disso, estão a pelo menos dois desvios-padrão do partido. Os mais distantes estão na Tabela 7. No PL, João Carlos Bacelar, Junior Lourenço, Tiririca, Robinson Faria e Júnior Mano são mais governistas que o partido. No sentido oposto estão Sargento Fahur (PSD), Zucco e Messias Donato (REPUBLICANOS), Mauricio Marcon (PODE), Evair Vieira de Melo (PP) e Pezenti (MDB). O painel do projeto (`emb_votos`, com comissões e partido atual) destacava no PL João Carlos Bacelar, Henrique Júnior, Bosco Costa; João Carlos Bacelar se confirma. No sentido oposto, Evair Vieira de Melo e Pezenti, mencionados na descrição dos resultados prévios que orientou este artigo (enunciado do bloco, não versionado no repositório), também se confirmam. Bosco Costa, Henrique Júnior e Daniel José são suplentes com 67, 86 e 57 votos no Plenário, abaixo do nosso limiar de 100. Classificar alguém como dissidente com tão poucos votos seria temerário.
+**Tabela 9 – Dissidentes sistemáticos: maiores distâncias à mediana do próprio partido (dim1 global)**
 
-**Tabela 7 – Dissidentes sistemáticos: maiores distâncias à mediana do próprio partido (dim1 global)**
-
-| Sentido | Deputado | Partido | Votos | Posição relativa (DP do partido) | IC 95% (dim1) |
+| Sentido | Deputado | Partido | Votos | Posição relativa (DP do partido) | IC 95% (DP do partido) |
 |---|---|---|---|---|---|
-| mais governista que o partido | João Carlos Bacelar | PL | 560 | 4,2 | [1,86; 2,18] |
-| mais governista que o partido | Junior Lourenço | PL | 514 | 3,4 | [1,53; 1,76] |
-| mais governista que o partido | Tiririca | PL | 664 | 3,4 | [1,51; 1,77] |
-| mais governista que o partido | Robinson Faria | PL | 631 | 2,7 | [1,19; 1,44] |
-| mais governista que o partido | Júnior Mano | PL | 194 | 2,7 | [1,12; 1,50] |
-| mais governista que o partido | Florentino Neto | PT | 867 | 2,6 | [0,39; 0,83] |
-| mais oposicionista que o partido | Sargento Fahur | PSD | 947 | −4,6 | [−2,39; −1,78] |
-| mais oposicionista que o partido | Zucco | REPUBLICANOS | 278 | −3,8 | [−2,01; −1,33] |
-| mais oposicionista que o partido | Mauricio Marcon | PODE | 839 | −3,8 | [−2,14; −1,74] |
-| mais oposicionista que o partido | Evair Vieira de Melo | PP | 817 | −3,5 | [−2,13; −1,64] |
-| mais oposicionista que o partido | Messias Donato | REPUBLICANOS | 910 | −3,1 | [−1,41; −1,14] |
-| mais oposicionista que o partido | Pezenti | MDB | 944 | −2,9 | [−1,84; −1,50] |
+| mais governista que o partido | João Carlos Bacelar | PL | 560 | 4,2 | [3,9; 4,5] |
+| mais governista que o partido | Junior Lourenço | PL | 514 | 3,4 | [3,2; 3,7] |
+| mais governista que o partido | Tiririca | PL | 664 | 3,4 | [3,1; 3,7] |
+| mais governista que o partido | Robinson Faria | PL | 631 | 2,7 | [2,5; 3,0] |
+| mais governista que o partido | Júnior Mano | PL | 194 | 2,7 | [2,3; 3,1] |
+| mais governista que o partido | Florentino Neto | PT | 867 | 2,6 | [1,7; 3,6] |
+| mais oposicionista que o partido | Sargento Fahur | PSD | 947 | −4,6 | [−5,4; −4,1] |
+| mais oposicionista que o partido | Zucco | REPUBLICANOS | 278 | −3,8 | [−4,8; −3,1] |
+| mais oposicionista que o partido | Mauricio Marcon | PODE | 839 | −3,8 | [−4,3; −3,5] |
+| mais oposicionista que o partido | Evair Vieira de Melo | PP | 817 | −3,5 | [−4,0; −3,1] |
+| mais oposicionista que o partido | Messias Donato | REPUBLICANOS | 910 | −3,1 | [−3,3; −2,7] |
+| mais oposicionista que o partido | Pezenti | MDB | 944 | −2,9 | [−3,2; −2,6] |
 
 *Períodos deputado×partido com ≥ 100 votos, a pelo menos 2 desvios-padrão da mediana do partido e com IC 95% (bootstrap de votações, 100 réplicas, Procrustes) que exclui essa mediana.*
 
-**Pivôs.** Na legislatura inteira, os cinco deputados mais próximos da mediana são José Rocha, Marx Beltrão, Julio Arcoverde, Gutemberg Reis, Márcio Marinho. Dos cinco mais próximos no painel do projeto (Luiz Carlos Hauly, João Leão, Luiz Gastão, José Rocha, Marx Beltrão), José Rocha e Marx Beltrão também estão entre os mais próximos aqui (1º e 2º); Luiz Gastão e João Leão, em 6º e 8º; Luiz Carlos Hauly, só em 42º. A identidade do mediano é instável: nas réplicas bootstrap, nenhum deputado está entre os cinco mais próximos em mais de 20% das vezes (Yandra Moura (20%); Luiz Gastão (15%); Pauderney Avelino (14%); Zé Silva (13%); Gutemberg Reis (13%); Duda Ramos (12%); Marx Beltrão (12%); Douglas Viegas (11%)). O que é estável é o **partido** do pivô. Calculados entre os deputados em exercício em cada semestre (Tabela 8), o mediano e os pivôs de 3/5 estão sempre em partidos do centro — REPUBLICANOS, PSD, PP, MDB, PODE, União, PSDB ou SOLIDARIEDADE. Os votos decisivos sob maioria simples e sob quórum de emenda constitucional estão no centro, não nos partidos da base programática do Governo (Black, 1948; Krehbiel, 1998).
+**Pivôs.** A identidade do deputado mediano é instável: nas réplicas bootstrap, nenhum deputado está entre os cinco mais próximos da mediana em mais de 20% das vezes. O que é estável é o partido. Calculados entre os deputados em exercício em cada semestre (Tabela 10), o mediano e os pivôs de 3/5 estão sempre em partidos do centro: REPUBLICANOS, PSD, PP, MDB, PODE, União, PSDB ou SOLIDARIEDADE.
 
-**Tabela 8 – Deputado mediano e pivôs de 3/5 por semestre (dim1 global)**
+**Tabela 10 – Deputado mediano e pivôs de 3/5 por semestre (dim1 global)**
 
 | Semestre | Em exercício | Com ponto ideal | Mediano | Pivô 40% | Pivô 60% |
 |---|---|---|---|---|---|
@@ -401,31 +421,48 @@ Entre os 595 períodos com pelo menos 100 votos, 383 têm posição cujo IC excl
 
 ### 5.7 Troca de partido
 
-A Figura 5 mostra o estudo de evento para 173 deputados com troca individual. Antes da troca, nenhum coeficiente se distingue de zero: −1,7 p.p. (IC −3,5 a 0,1) para 13 meses ou mais antes, −0,9 p.p. de −6 a −4 meses e 1,4 p.p. de −3 a −1 meses. As estimativas pontuais sobem cerca de três pontos ao longo do ano anterior à troca — um sinal fraco e impreciso de "saída anunciada", pequeno diante da queda posterior. Depois da troca, o desvio da maioria dos colegas cai 11,1 pontos nos primeiros três meses (IC 6,5–15,6) e 12,4 pontos depois (IC 6,0–18,8); em D, as quedas são de 7,2 e 10,0 pontos. Há duas leituras: seleção (o deputado vai para um partido mais próximo de como já votava) ou adaptação (passa a votar como os novos colegas). Os pontos por período, para os 145 deputados com pontos nos dois partidos, mostram sinais dos dois mecanismos. A favor da seleção: 67,6% já estavam, antes da troca, do lado do partido de origem voltado para o destino. A favor da adaptação: 69,7% se moveram em direção ao destino entre os dois períodos (deslocamento mediano de 0,13 nessa direção). Contra a seleção pura: a mediana do destino estava mais perto da posição anterior do deputado do que a da origem em só 44,8% dos casos. As mudanças individuais de posição são ruidosas, e o desenho não separa adaptação sincera de comportamento estratégico; os dados são compatíveis com os dois mecanismos, e não sustentam a ideia de que a troca apenas corrige a filiação.
+A Figura 6 mostra o estudo de evento para 173 deputados com troca individual.
 
-O grupo placebo (fusões de PSC em PODE, em 22/08/2023, e de PATRIOTA em PRD, em 07/02/2024) não serve de teste. Em U, as bancadas pré-fusão nunca reuniam cinco colegas votando, de modo que não há observações anteriores à fusão; os coeficientes das fusões em U não são identificados e não são estimados nem mostrados na Figura 5. Em D, com 9 deputados, o desvio *sobe* após a fusão (13,4 pontos; IC 1,9 a 25,0), resultado com amostra pequena que não reproduz a queda das trocas individuais. A comparação bruta antes/depois, sem controles (83,2% para 90,8% de disciplina entre 141 trocadores), superestimaria o efeito, por confundir a troca com a queda de cobertura de 2025 e a recuperação de 2026.
+- **Antes da troca:** nenhum coeficiente se distingue de zero (−1,7, −0,9 e 1,4 pontos; teste conjunto, p = 0,10). As estimativas pontuais sobem 3,1 pontos ao longo do ano anterior à troca, um sinal fraco de saída anunciada.
+- **Depois da troca:** o desvio em relação à maioria dos novos colegas cai 11,1 pontos nos primeiros três meses (IC 6,5–15,6).
+- **Só a coorte da janela de 2026** (129 deputados, com controles que nunca trocaram): a queda é de 6,5 pontos (IC 2,4–10,5), também sem pré-tendência conjunta (p = 0,10). Em D, nessa coorte, a queda (3,1 pontos) não se distingue de zero.
+- **Fusões:** não servem de placebo. Em U, as bancadas pré-fusão nunca reuniam cinco colegas votando, e os coeficientes não são identificados.
 
-![Figura 5](figuras/fig5_troca_partido.png)
+**Seleção ou ajuste?** Estes números vêm dos 145 deputados com pontos nos dois partidos:
 
-*Figura 5 – Desvio da maioria dos colegas (U) em torno da troca individual de partido, relativo à janela de −12 a −7 meses. As fusões não aparecem porque, em U, seus coeficientes não são identificados. Efeitos fixos de deputado e de partido×votação; IC 95% com erros agrupados por deputado e por votação.*
+- **Seleção:** 67,6% já estavam, antes da troca, do lado do partido de origem voltado para o destino.
+- **Ajuste:** 69,7% se moveram em direção ao destino depois da troca (deslocamento mediano de 0,13).
+- **Contra a seleção pura:** a mediana do destino estava mais perto da posição anterior do deputado do que a da origem em só 44,8% dos casos.
+
+Os dados são compatíveis com os dois mecanismos, como em Nokken (2000). O desenho não separa ajuste sincero de comportamento estratégico.
+
+![Figura 6](figuras/fig6_troca_partido.png)
+
+*Figura 6 – Desvio da maioria dos colegas (U) em torno da troca individual de partido, relativo à janela de −12 a −7 meses. Efeitos fixos de deputado e de partido×votação; IC 95% com EP agrupados por deputado e votação.*
 
 ### 5.8 Partido ou Governo?
 
-Há 50.615 votos, em 719 votações, em que a orientação do partido e a do Governo são opostas; 18.116 são de deputados de partidos que não o PL e o NOVO. Nesses votos, 89,4% seguem o partido e 10,4% o Governo (Figura 7). O padrão varia muito. União (93,7%), PP (95,8%), REPUBLICANOS (94,2%) e MDB (91,6%) quase sempre ficam com o partido. No PSB (52,4%) e no PDT (53,1%), partidos da base programática, a bancada parece dividir-se ao meio. Mas a maior parte desses votos está sob orientação de bloco **inferido** (61% no PSB e 82% no PDT), e a adesão sob essa camada é baixa (31,2% e 44,5%). Quando a orientação contrária ao Governo é do próprio partido, a adesão sobe para 85,3% no PSB (129 votos) e 92,5% no PDT (120 votos). O "racha" desses partidos diante do Governo é, em boa parte, um artefato da atribuição a blocos truncados. A camada importa: a adesão ao partido é de 94,9% quando a orientação é própria, 91,7% quando é de bloco e 81,8% quando é de bloco inferido.
+Nos partidos com ministério, há 15.404 votos em que a orientação do partido e a do Governo são opostas. Neles, 90,8% seguem o partido e 9,0% o Governo (Figura 7). Nos partidos sem ministério que não são de oposição (PSDB, PODE, AVANTE e outros), a adesão ao partido é de 81,6%.
 
-Na amostra com previsão disponível (18.066 votos), o observado é 89,6%. As previsões de validação cruzada de M5 indicam 85,8%: um **excesso de lealdade** de 3,8 pontos (IC 3,0–4,9). Esse é um limite inferior, porque os pontos e as cargas de M5 já foram estimados com votos disciplinados, inclusive na mesma votação. Reestimando M5 sem os votos dos partidos da base nas células divergentes, a previsão cai para 73,2% e o excesso sobe para 16,5 pontos (IC 14,3–19,0). Este contrafactual, por sua vez, tende a superestimar o excesso, porque as cargas dessas votações passam a ser estimadas só com os outros partidos, o que o torna pouco crível para os partidos de esquerda (para o PSOL, prevê que só 34% dos votos seguiriam o partido). O partido prevalece além das preferências, o que confirma E5; a magnitude fica entre os dois valores. Pelo contrafactual (i), o excesso é maior no PSB (17,8 pontos), no PDT (12,8) e no PSOL (12,1) — no PSB e no PDT, com a ressalva de atribuição feita acima; no PSOL, cuja orientação é sempre da própria federação, a bancada acompanha o partido mesmo onde as preferências estimadas indicariam alguns votos com o Governo. Nos demais partidos da base, o excesso é pequeno: MDB 3,7, PSD 3,9, PP 4,3, PSDB 4,3, PT 5,7, União 1,9, AVANTE 1,0, PODE −1,4 e REPUBLICANOS −1,2 pontos. Quando o partido libera a bancada, os deputados da base seguem o Governo em 54,1% dos votos.
+A fonte da orientação importa, como Carey prevê. A adesão é de 95,6% quando a orientação é própria, 92,8% quando é de bloco e 81,6% quando é de bloco inferido. No PSB e no PDT a bancada parece dividida (52,4% e 53,1% de adesão), mas sob orientação própria a adesão é de 85,3% e 92,5%. O "racha", portanto, é em boa parte artefato da atribuição a blocos inferidos. O PT diverge do Governo em só 9 votações.
 
-Dentro do mesmo partido e da mesma votação, quem é mais governista que o partido no outro biênio segue mais o Governo contra o partido: 13,3 pontos por unidade de posição relativa (IC 9,2–17,4). Suplentes de titulares ministros não seguem mais o Governo (1,6 pontos; IC −3,8 a 7,0), contra a hipótese de que o ministro "empresta" ao Governo o voto do seu suplente. Seguem mais o Governo os suplentes por outros motivos de afastamento (16,1 pontos; IC 9,8 a 22,4) e as deputadas (4,7; IC 0,6 a 8,8), e menos os de bancadas estaduais grandes (−2,4 por unidade de log; IC −4,2 a −0,6). São associações em 15.773 votos, sem desenho para interpretação causal.
+O excesso de lealdade fica entre os dois contrafactuais:
+
+- **(i), limite inferior:** 4,2 pontos (IC 3,2–5,3);
+- **(ii):** 17,1 pontos (IC 14,8–19,6);
+- **sem os partidos de esquerda**, para os quais o contrafactual (ii) é pouco crível: de 2,6 a 11,2 pontos.
+
+Os intervalos excluem zero nos dois contrafactuais, e E5 se sustenta. Dentro do mesmo partido e da mesma votação, quem é mais governista que o partido no outro biênio segue mais o Governo: 8,5 pontos por desvio-padrão (IC 5,3–11,7). Suplentes de titulares ministros não seguem mais o Governo (1,1 pontos; IC −4,3 a 6,6).
 
 ![Figura 7](figuras/fig7_partido_governo.png)
 
-*Figura 7 – Partidos da base: parcela dos votos que segue o partido e o Governo quando as orientações são opostas, e parcela que seguiria o partido segundo as preferências espaciais estimadas fora da amostra (M5). À direita, número de votos.*
+*Figura 7 – Partidos com ministério: parcela dos votos que segue o partido e o Governo quando as orientações são opostas, e parcela que seguiria o partido segundo as preferências estimadas fora da amostra (M5). À direita, número de votos.*
 
 ## 6. Robustez
 
-A Tabela 9 refaz a disciplina sob sete variantes de medida. Sem as orientações inferidas de blocos, a disciplina geral passa de 90,9% para 91,3%, e a correlação de postos entre partidos é 0,97. As maiores mudanças estão em PSB e PDT (de 91,0% para 95,1% e de 90,2% para 96,4%), cuja orientação inferida vinha de blocos de que não eram o eixo, e no AVANTE (de 88,6% para 83,7%). O ranking só se altera de forma relevante quando se restringe a medida à orientação própria (ρ = 0,85), que cobre 34% dos votos e deixa os partidos do centro com amostras pequenas e selecionadas. Incluir o bloco heterogêneo, excluir fevereiro–outubro de 2025, usar a definição estrita, excluir abstenções ou incluir comissões muda a disciplina geral em menos de meio ponto, com ρ ≥ 0,98.
+A Tabela 11 refaz a disciplina sob sete variantes de medida. Sem as orientações inferidas de blocos, a disciplina geral vai de 90,9% para 91,3%, e a correlação de postos entre partidos é de 0,97. As maiores mudanças estão no PSB (91,0% para 95,1%) e no PDT (90,2% para 96,4%). O ordenamento só muda de forma relevante quando a medida se restringe à orientação própria (ρ = 0,85), que cobre poucos votos dos partidos do centro. As demais variantes mudam a disciplina geral em menos de meio ponto. Sem orientações inferidas, a adesão ao partido nas divergências com o Governo vai de 90,8% para 93,3%.
 
-**Tabela 9 – Robustez da disciplina (D) a decisões de medida, Plenário**
+**Tabela 11 – Robustez da disciplina (D) a decisões de medida, Plenário**
 
 | Variante | Geral | Cobertura | ρ (ranking) | PSOL | PT | PCdoB | PV | PSB | PDT | MDB | PSD | AVANTE | PODE | UNIÃO | PP | REPUBLICANOS | PSDB | PL | NOVO |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
@@ -440,43 +477,46 @@ A Tabela 9 refaz a disciplina sob sete variantes de medida. Sem as orientações
 
 *ρ: correlação de Spearman entre o ranking dos partidos na variante e na medida principal.*
 
-Na análise partido × Governo, sem orientações inferidas, a adesão ao partido nos partidos da base vai de 89,4% para 92,3%. A correção de Desposato deixa sem índice padronizado 4 dos partidos da Tabela 2 com m = 10; entre os demais, a correlação de postos com o Rice bruto é 0,99. O Rice é estável a m, ao limiar de disputa e à ponderação (seção 5.3), e a validação cruzada, à penalização (seção 5.4). Os pontos ideais globais estimados só com o Plenário correlacionam 0,998 com os do projeto, que incluíam comissões.
-
 ## 7. Limitações
 
-**Só votações nominais.** Só 16,5% das votações do Plenário foram nominais, e a escolha de quais votações são nominais é estratégica (Carrubba, Gabel e Hug, 2008): votações simbólicas em que a bancada estava unida, ou em que o líder preferiu não expor a divisão, ficam fora. Nossas taxas valem para o universo nominal.
+**Votações nominais e registro.** Só 16,5% das votações do Plenário foram nominais, e a escolha delas é estratégica (Carrubba, Gabel e Hug, 2008). O registro de orientações tem lacunas. A reconstrução pelas falas cobre parte delas, com 6% de discordância com o registro onde os dois existem.
 
-**Ausências.** O voto nominal registra só quem votou. O painel de exercício permite contar quem estava em exercício e não votou, mas não o motivo. A análise de PEC mostra que, onde a ausência tem efeito de voto, ela é relevante (11,6% dos membros em exercício). Não estimamos ausência seletiva em geral.
+**Ausências.** O limite inferior de D com ausências mostra que o nível de disciplina depende muito do tratamento da ausência; o ordenamento dos partidos, não.
 
-**Orientação registrada não é pressão.** A orientação é o sinal público do líder; negociação, sanções e recompensas (cargos, emendas) não são observadas. Para os partidos do centro, a orientação é de bloco, e a atribuição a blocos truncados é mecânica. A orientação vazia significa que a liderança não orientou. A unidade U contorna a dependência do registro, mas não distingue disciplina de coesão de preferências (Krehbiel, 1993). A distância medida no outro biênio e o contrafactual de M5 atenuam esse problema sem eliminá-lo.
+**Medidas comportamentais.** A orientação é o sinal público do líder; negociação, sanções e recompensas (cargos, emendas) não são observadas. A distância espacial vem de votos, ainda que de outro período, e U não distingue disciplina de coesão de preferências (Krehbiel, 1993).
 
-**Retrato estático.** Os pontos ideais são fixos por período deputado×partido. A posição de um deputado que não trocou de partido não pode variar ao longo de quatro anos, e o modelo intrapartidário assume um mesmo vetor de cargas para todos os partidos.
+**Modelo.** Os pontos ideais são fixos por período deputado×partido, e o modelo intrapartidário assume cargas comuns a todos os partidos. A validação é de imputação de votos, não de previsão temporal de votações futuras.
 
-**Desenho causal limitado.** O estudo de evento compara o deputado com ele mesmo e com os colegas na mesma votação, mas a decisão de trocar é endógena, e o período pós-janela tem só 66 votações, em ano eleitoral. O grupo placebo de fusões é pequeno demais para servir de teste. A associação com a suplência usa um pareamento aproximado entre suplente e titular (mesma UF, ±10 dias), porque os Dados Abertos não ligam um ao outro.
-
-**Classificação de votações.** O tipo de votação vem de regras sobre o texto da descrição, sem validação manual sistemática. Os temas cobrem 82% das proposições votadas.
+**Desenho causal.** O estudo de evento compara o deputado consigo mesmo e com os colegas na mesma votação, mas a troca é endógena. O período pós-janela tem só 66 votações, em ano eleitoral, e o pareamento entre suplente e titular é aproximado (mesma UF, ±10 dias).
 
 ## 8. Discussão
 
-O quadro que emerge é compatível com a tese de Figueiredo e Limongi: a disciplina é alta e estável, e a orientação coletiva (aqui, a posição do partido em cada votação) é de longe a melhor informação sobre o voto de um deputado. Mas dois achados qualificam essa leitura.
+O primeiro achado é de medida. Na Câmara de 2023–2026, a orientação aplicável à maioria dos deputados do centro é a do bloco, e o registro da Câmara não guarda as orientações que os partidos dão em Plenário quando a bancada formal é um bloco. Em 2025, o resultado foi um registro quase vazio para a maior parte da Casa e uma disciplina "medida" que sobe justamente quando, pelas falas e pela unidade, ela cai. Quem usa os dados públicos deve, por isso, estratificar pela fonte da orientação, reportar a cobertura e complementar o registro com uma medida que não dependa dele. Para a própria Câmara, registrar as orientações partidárias dentro dos blocos, que os líderes anunciam em Plenário, tornaria os dados abertos mais fiéis ao processo que pretendem descrever.
 
-O primeiro é de medida, com consequência substantiva. Na Câmara de 2023–2026, a orientação aplicável à maioria dos deputados do centro não é do partido, e sim do bloco. A orientação de partido é a regra só nas pontas (PT e federação, PSOL, PL, NOVO). Os partidos do centro delegam a orientação ao líder do bloco e, quando orientam por conta própria, orientam onde estão unidos. Os blocos formados para a eleição da Mesa — o de 2025 reunia governo e oposição — mostram que a "bancada" que orienta é, por vezes, uma ficção regimental. Estudos de disciplina que tomem a orientação registrada como orientação do partido, sem estratificar pela fonte e sem reportar a cobertura, arriscam medir a organização dos blocos e o calendário da Mesa, e não a disciplina.
-
-O segundo é que a indisciplina tem uma estrutura que a literatura espacial prevê. Ela tem direção e não é só ruído ou idiossincrasia: dentro de cada partido, deputados se ordenam entre mais e menos governistas, e essa ordem estimada até 2025 ainda informa decisões de 2026. Essa ordem prevê o voto fora da amostra, antecipa a direção das trocas de partido e explica quem segue o Governo contra o partido. O eixo é o mesmo que separa os partidos entre si; a dissidência intrapartidária é o eixo interpartidário visto de dentro. É isso que torna os partidos do centro ao mesmo tempo os mais heterogêneos e os pivôs da Casa. A heterogeneidade interna permite ao Governo construir maiorias votação a votação com parte de suas bancadas, e o mediano e os pivôs de 3/5 estão sempre em partidos do centro (REPUBLICANOS, PSD, PP, MDB, PODE, União, PSDB ou SOLIDARIEDADE).
-
-Os limites também são claros. O ganho preditivo da dimensão individual é pequeno perto do da posição partidária. A distância ideológica explica o desvio muito mais do que a suplência ou o estado. O "excesso de lealdade" nas divergências com o Governo depende do contrafactual: de 3,8 pontos, se as preferências já incorporam a disciplina, a 16,5, se forem estimadas sem as votações divergentes. A influência do partido além das preferências — o que Krehbiel (1993) chamaria de efeito partidário genuíno — existe, mas sua magnitude depende de como se mede a preferência. A troca de partido mostra sinais tanto de seleção quanto de ajuste aos novos colegas. Parte do alinhamento observado vem também da seleção de quais votações são nominais e de onde o líder escolhe divergir.
+O segundo achado é que a indisciplina tem estrutura, mas pouca. A posição do partido em cada votação é de longe a melhor informação sobre o voto, e a propensão individual a desviar acrescenta mais do que a direção do desvio. A direção, porém, conta: é estável, não é intercambiável entre colegas e prevê o voto fora da amostra. Ela coincide com o eixo governo–oposição que separa os partidos entre si. Por isso os partidos do centro são, ao mesmo tempo, os mais heterogêneos e os pivôs da Casa: a heterogeneidade interna permite ao Governo construir maiorias votação a votação com parte de suas bancadas. A influência do partido além das preferências existe, porque o excesso de lealdade nas divergências com o Governo é positivo nos dois contrafactuais; sua magnitude, porém, depende de como se mede a preferência. A troca de partido mostra sinais tanto de seleção quanto de ajuste aos novos colegas.
 
 ## 9. Conclusão
 
-Na 57ª Legislatura, os deputados votam com a liderança em cerca de nove de cada dez votos nominais, e a variação real ao longo do tempo é pequena. A disciplina medida pela orientação registrada, porém, depende de quem orienta: para o centro, o bloco; em 2025, quase ninguém. A unidade com os colegas é a medida estável. A indisciplina restante tem estrutura de baixa dimensão — governismo relativo dentro de cada partido —, prevê o voto fora da amostra e antecipa trocas de partido. Depois de trocar de partido, o deputado passa a votar mais com os novos colegas; parte disso é seleção (ele já pendia para o destino) e parte, aparentemente, ajuste. Quando partido e Governo divergem, os deputados da base seguem o partido além do que suas preferências estimadas preveriam, numa magnitude que depende do contrafactual. Ficam pendentes a extensão a outras legislaturas, para separar o que é próprio do terceiro governo Lula e da era dos megablocos, a incorporação de dados eleitorais e de emendas para testar os mecanismos do voto pessoal e um modelo dinâmico de pontos ideais.
+Os deputados da 57ª Legislatura votam com a liderança em cerca de nove de cada dez votos nominais, e a unidade com os colegas varia pouco no tempo. A disciplina medida pela orientação registrada, porém, depende de quem orienta e do que a Câmara registra: para o centro, o bloco; em 2025, quase nada. A indisciplina restante tem uma direção individual, o eixo governo–oposição dentro de cada partido, pequena perto da posição do partido, mas distinguível de ruído.
+
+Ficam pendentes:
+
+- a extensão a outras legislaturas, para separar o que é próprio do terceiro governo Lula e da era dos megablocos;
+- a reconstrução sistemática das orientações faladas;
+- a incorporação de dados de emendas e cargos, para testar mecanismos;
+- modelos dinâmicos de pontos ideais com validação temporal.
 
 ## Referências
 
 AMES, Barry. *The Deadlock of Democracy in Brazil*. Ann Arbor: University of Michigan Press, 2001.
 
+AMORIM NETO, Octavio; COX, Gary W.; McCUBBINS, Mathew D. Agenda Power in Brazil's Câmara dos Deputados, 1989–98. *World Politics*, v. 55, n. 4, p. 550–578, 2003.
+
 BAFUMI, Joseph; GELMAN, Andrew; PARK, David K.; KAPLAN, Noah. Practical Issues in Implementing and Understanding Bayesian Ideal Point Estimation. *Political Analysis*, v. 13, n. 2, p. 171–187, 2005.
 
 BLACK, Duncan. On the Rationale of Group Decision-making. *Journal of Political Economy*, v. 56, n. 1, p. 23–34, 1948.
+
+CALLAWAY, Brantly; SANT'ANNA, Pedro H. C. Difference-in-Differences with Multiple Time Periods. *Journal of Econometrics*, v. 225, n. 2, p. 200–230, 2021.
 
 CAMERON, A. Colin; GELBACH, Jonah B.; MILLER, Douglas L. Robust Inference with Multiway Clustering. *Journal of Business & Economic Statistics*, v. 29, n. 2, p. 238–249, 2011.
 
@@ -486,15 +526,19 @@ CAREY, John M. *Legislative Voting and Accountability*. Cambridge: Cambridge Uni
 
 CARRUBBA, Clifford J.; GABEL, Matthew; HUG, Simon. Legislative Voting Behavior, Seen and Unseen: A Theory of Roll-Call Vote Selection. *Legislative Studies Quarterly*, v. 33, n. 4, p. 543–572, 2008.
 
+CHEIBUB, José Antonio; FIGUEIREDO, Argelina; LIMONGI, Fernando. Political Parties and Governors as Determinants of Legislative Behavior in Brazil's Chamber of Deputies, 1988–2006. *Latin American Politics and Society*, v. 51, n. 1, p. 1–30, 2009.
+
 CLINTON, Joshua; JACKMAN, Simon; RIVERS, Douglas. The Statistical Analysis of Roll Call Data. *American Political Science Review*, v. 98, n. 2, p. 355–370, 2004.
 
 COX, Gary W.; McCUBBINS, Mathew D. *Setting the Agenda: Responsible Party Government in the U.S. House of Representatives*. Cambridge: Cambridge University Press, 2005.
 
 DESPOSATO, Scott W. Correcting for Small Group Inflation of Roll-Call Cohesion Scores. *British Journal of Political Science*, v. 35, n. 4, p. 731–744, 2005.
 
+DESPOSATO, Scott W. Parties for Rent? Ambition, Ideology, and Party Switching in Brazil's Chamber of Deputies. *American Journal of Political Science*, v. 50, n. 1, p. 62–80, 2006.
+
 FIGUEIREDO, Argelina Cheibub; LIMONGI, Fernando. *Executivo e Legislativo na nova ordem constitucional*. Rio de Janeiro: Editora FGV, 1999.
 
-KAM, Christopher J. *Party Discipline and Parliamentary Politics*. Cambridge: Cambridge University Press, 2009.
+HELLER, William B.; MERSHON, Carol. Party Switching in the Italian Chamber of Deputies, 1996–2001. *The Journal of Politics*, v. 67, n. 2, p. 536–559, 2005.
 
 KREHBIEL, Keith. Where's the Party? *British Journal of Political Science*, v. 23, n. 2, p. 235–266, 1993.
 
@@ -506,7 +550,13 @@ MAINWARING, Scott P. *Rethinking Party Systems in the Third Wave of Democratizat
 
 McCARTY, Nolan; POOLE, Keith T.; ROSENTHAL, Howard. The Hunt for Party Discipline in Congress. *American Political Science Review*, v. 95, n. 3, p. 673–687, 2001.
 
+MINOZZI, William; VOLDEN, Craig. Who Heeds the Call of the Party in Congress? *The Journal of Politics*, v. 75, n. 3, p. 787–802, 2013.
+
 NICOLAU, Jairo. Disciplina partidária e base parlamentar na Câmara dos Deputados no primeiro governo Fernando Henrique Cardoso (1995-1998). *Dados*, v. 43, n. 4, 2000. [verificar páginas]
+
+NOKKEN, Timothy P. Dynamics of Congressional Loyalty: Party Defection and Roll-Call Behavior, 1947–97. *Legislative Studies Quarterly*, v. 25, n. 3, p. 417–444, 2000.
+
+PEREIRA, Carlos; MUELLER, Bernardo. The Cost of Governing: Strategic Behavior of the President and Legislators in Brazil's Budgetary Process. *Comparative Political Studies*, v. 37, n. 7, p. 781–815, 2004.
 
 POOLE, Keith T.; ROSENTHAL, Howard. *Congress: A Political-Economic History of Roll Call Voting*. New York: Oxford University Press, 1997.
 
@@ -516,34 +566,58 @@ RICE, Stuart A. The Behavior of Legislative Groups: A Method of Measurement. *Po
 
 SNYDER, James M.; GROSECLOSE, Tim. Estimating Party Influence in Congressional Roll-Call Voting. *American Journal of Political Science*, v. 44, n. 2, p. 193–211, 2000.
 
+SUN, Liyang; ABRAHAM, Sarah. Estimating Dynamic Treatment Effects in Event Studies with Heterogeneous Treatment Effects. *Journal of Econometrics*, v. 225, n. 2, p. 175–199, 2021.
+
 ZUCCO, Cesar. Ideology or What? Legislative Behavior in Multiparty Presidential Settings. *The Journal of Politics*, v. 71, n. 3, p. 1076–1092, 2009.
 
 ZUCCO, Cesar; LAUDERDALE, Benjamin E. Distinguishing Between Influences on Brazilian Legislative Behavior. *Legislative Studies Quarterly*, v. 36, n. 3, p. 363–396, 2011.
 
-## Apêndice A – Reprodutibilidade
+## Apêndice A – Reprodutibilidade e disponibilidade
 
-`python artigos/02-disciplina-intrapartidaria/analise.py` (da raiz do repositório) lê `dados/leg57/*.parquet`, `dados/leg57/embeddings/` (só para conferência) e o cache de temas em `dados_aux/temas_proposicoes_votadas.csv`, baixado uma vez da API da Câmara. A partir disso grava `resultados.json` (1.585 números), `tabelas/*.md` e `figuras/*.png` e monta este `artigo.md` a partir de `artigo_fonte.md`. Os ajustes de pontos ideais ficam em cache em `dados_aux/cache/` (fora do git). A primeira execução completa, sem cache, levou cerca de 11 minutos em 4 núcleos na verificação de integridade; as seguintes, com o cache, cerca de 96 segundos. As sementes são fixas. O plano de análise (`pipeline/stage1_blueprint.md`) foi escrito depois de uma análise descritiva preliminar (P1) e antes das análises de P2 a P4, e não foi congelado formalmente; o relatório de integridade está em `pipeline/stage2_5_integridade.md`.
+Rodado da raiz do repositório, `python artigos/02-disciplina-intrapartidaria/analise.py` lê:
+
+- `dados/leg57/*.parquet`;
+- os embeddings do projeto, usados só para a reconciliação do Apêndice C;
+- o cache de temas da API (`dados_aux/temas_proposicoes_votadas.csv`);
+- a codificação manual dos tipos de votação (`dados_aux/validacao_tipo_votacao.csv`).
+
+Com isso, grava `resultados.json` (2.074 números), `tabelas/*.md` e `figuras/*.png`, e monta este `artigo.md` a partir de `artigo_fonte.md`: cada número do texto é uma referência a `resultados.json`. Os ajustes de pontos ideais ficam em cache em `dados_aux/cache/`, fora do git. Sem cache, a execução leva cerca de 11 minutos em 4 núcleos; com cache, 137 segundos. As sementes são fixas. Versões usadas: Python 3.13.18; numpy 2.5.3; pandas 3.0.5; scipy 1.18.1; scikit-learn 1.9.1; matplotlib 3.11.2.
+
+Dados e código estão no repositório do projeto. O plano de análise está em `pipeline/stage1_blueprint.md`, a verificação de integridade em `pipeline/stage2_5_integridade.md` e a revisão por pares em `pipeline/stage3_revisao.md`.
 
 ## Apêndice B – Desvios em relação ao plano de análise
 
-O plano (`pipeline/stage1_blueprint.md`) foi escrito depois da análise descritiva preliminar e antes das análises de P2 a P4. A verificação de integridade (`pipeline/stage2_5_integridade.md`) listou os desvios abaixo; os que mudam definições de medida ou de teste estão marcados com †.
+O plano (`pipeline/stage1_blueprint.md`) foi escrito depois da análise descritiva preliminar (a disciplina por partido e ano) e antes das análises de estrutura, troca de partido e partido × Governo.
 
-| Plano | O que foi feito | Motivo / consequência |
+- **Confirmatórios**, no sentido de especificados antes de executados: a comparação M1→M2→M3→M4, a interpretação pelas cargas, a validação pelas trocas de 2026, o estudo de evento e o excesso de lealdade.
+- **Exploratórios**, todos acrescentados depois da revisão por pares: as orientações faladas, M2b, M3emb, a versão por coorte e os limites com ausência.
+
+As mudanças marcadas com † foram feitas **depois** de ver resultados de validação cruzada.
+
+| Plano | O que foi feito | Motivo |
 |---|---|---|
-| D só com orientação própria como medida principal para partidos† | D com as camadas própria, bloco e bloco inferido; D própria como recorte (Tabela 2) e robustez (Tabela 9) | Para o centro, a orientação própria cobre poucos votos e selecionados; U é a medida comparável |
-| Bloco heterogêneo definido pela amplitude das medianas dos membros† | Regra pelo nome (bloco que contém PL e a federação do PT) | Regra mais simples e transparente; só o megabloco de 2025 a satisfaz |
-| Validação manual do classificador de tipo de votação (200 descrições) | Não feita | Limitação declarada (seção 7) |
-| Ausência seletiva (diagnóstico geral) e ausência em PEC e PLP | Só PEC de mérito | Limitação declarada |
-| Recortes em regressão ao nível do voto; tema também só no mérito | Médias ajustadas por partido×ano (tipo de votação e de proposição); tema só com médias brutas | Simplificação |
-| Primeiro mandato, cargos de liderança, governador; logit condicional ou misto | Não incluídos | Dados não disponíveis no repositório; MPL apenas |
-| Decomposição da variância do desvio ajustado† | Taxas brutas (principal) e parcela de ruído na versão ajustada | Ambas reportadas (seção 5.6) |
-| Estudo de evento só com a coorte de 2026 e controles nunca tratados | Não feito; acrescentada a janela ≤ −13 meses | Poder baixo no pós-janela |
-| M2 como logit de desvio com intercepto de célula† | M2 = M1 + lealdade com *offset* do logit de M1; acrescentados M0c e M3L | A forma original não continha M1 e encolhia células pequenas para 0,5 |
-| Subamostras: (b) ≥ 1 desvio ou minoria ≥ 10%; (c) ≥ 5 colegas† | "Células com divisão interna" = ≥ 1 desvio no treino **e** ≥ 5 colegas | Combina os dois cuidados numa única subamostra |
-| Penalizações em todos os modelos e dobras | Sensibilidade só na dobra 0, para M1 e M3 | Tempo de computação |
-| Log-loss restrita aos votos de desvio; modelos intra por partido (b<sub>j</sub> comum) | Não feitos (AUC-PR reportada) | Premissa de cargas comuns declarada na seção 7 |
-| Cargas: top 20, razões de chances por tema com IC; incerteza das cargas | Top 8 por sinal; composição por tipo; sem IC das cargas | Simplificação |
-| Dissidentes por \|x<sub>intra</sub>\| e desvio ajustado | Posição relativa global com IC bootstrap e limiar de 2 DP | Simplificação |
-| "Em que votações os partidos racham" (logit) | Só a parcela de votações rachadas por partido (Tabela 2) | Simplificação |
-| Contrafactual de P5: IRT sem as votações divergentes† | Dois contrafactuais: previsões de validação cruzada de M5 (limite inferior) e M5 sem as células divergentes | Votações excluídas por inteiro não teriam cargas estimáveis |
-| Dispersão ponderada por nº de votos; tabela de versões dos pacotes | Não feitas | — |
+| D só com orientação própria como medida principal | D com as camadas própria, bloco e bloco inferido; D própria como recorte; U como medida comparável | A orientação própria cobre poucos votos do centro |
+| Bloco heterogêneo pela amplitude das medianas | Regra pelo nome (contém PL e a federação do PT) | Mais simples; só o megabloco a satisfaz |
+| Validação manual do classificador (200) | Amostra estratificada de 120 (acurácia na seção 3) | Tempo |
+| Ausência seletiva em PEC e PLP | Limite inferior geral e PEC | — |
+| Recortes em regressão ao nível do voto | Médias ajustadas por partido×ano (tipos); tema só com médias brutas | Simplificação |
+| Primeiro mandato, liderança, governador; logit misto | Não incluídos | Dados indisponíveis |
+| M2 como logit do desvio com intercepto de célula† | M2 com *offset* de M1; M2b com a estrutura de M3; M0c, M3L e M3emb acrescentados | A forma original não continha M1; a revisão pediu um comparador com a mesma estrutura |
+| Subamostras (b) e (c) separadas† | Células com divisão interna (b e c combinadas) e subamostra com minoria ≥ 10% | Robustez |
+| Penalizações em todas as dobras | Sensibilidade na dobra 0 | Tempo |
+| Modelos intra por partido; log-loss só nos desvios | Não feitos | Premissa de cargas comuns declarada (seção 7) |
+| Cargas: top 20 e razões de chances por tema | Top 8 por sinal e composição por tipo | Simplificação |
+| Contrafactual sem as votações divergentes | Dois contrafactuais (validação cruzada e M5 sem as células divergentes) | Votações excluídas por inteiro não teriam cargas estimáveis |
+| Estudo de evento por coorte | Feito (coorte de 2026) | — |
+| Decomposição da variância do desvio ajustado | Taxas brutas e parcela de ruído ajustada | Ambas reportadas |
+
+## Apêndice C – Reconciliação com resultados prévios do projeto e fontes externas
+
+O projeto já havia calculado taxas de alinhamento, dispersões, pivôs e dissidentes a partir dos embeddings dos deputados (`dados/leg57/embeddings/`), com Plenário e comissões e com o partido **atual**, posterior à janela de 2026. Reproduzimos esses números exatamente e explicamos as diferenças:
+
+- **Alinhamento ao partido.** Em `alinhamento.parquet`, a taxa é de 98,4% no PT, 97,2% no PSOL e 97,0% no NOVO, e vai de 86,3% (PP) a 89,7% (REPUBLICANOS) no centro. É a mesma ordem de grandeza de D.
+- **Dispersão no eixo global.** O projeto tinha PDT 0,17, PT 0,20, PSOL 0,25, PL 0,38, MDB 0,50 e PODE 0,55; os valores atuais estão na Tabela 8. Com o partido na data, o PL fica mais disperso: dos 20 períodos no PL a mais de um desvio-padrão acima da mediana do partido, 11 são de deputados que deixaram o PL.
+- **Pivôs.** Os cinco mais próximos da mediana no painel do projeto eram Luiz Carlos Hauly, João Leão, Luiz Gastão, José Rocha, Marx Beltrão. Aqui, José Rocha e Marx Beltrão estão em 1º e 2º, Luiz Gastão e João Leão em 6º e 8º, e Luiz Carlos Hauly em 42º.
+- **Dissidentes.** O painel destacava no PL João Carlos Bacelar, Henrique Júnior, Bosco Costa. Bosco Costa e Henrique Júnior são suplentes com 67 e 86 votos no Plenário, abaixo do limiar de 100, assim como Daniel José (57).
+- **Validação.** O modelo intrapartidário do projeto acertava 92,9% dos votos fora da amostra, com Plenário e comissões; aqui, M4 acerta 92,8% em todas as células do Plenário. Os pontos globais correlacionam 0,998 com os do projeto.
+- **Base ministerial.** Em 1/1/2023, formaram o governo PT, PSB, MDB, PSD, União, PDT, PCdoB, PSOL e REDE; PP e REPUBLICANOS entraram em 13/09/2023. Houve saídas e rompimentos em 2025–2026: União e PP anunciaram a saída em setembro de 2025, e ministros deixaram os cargos em abril de 2026 para disputar eleições. Usamos a filiação em qualquer momento do período (fontes em `pipeline/stage4_bibliografia.md`; datas finas [verificar]).

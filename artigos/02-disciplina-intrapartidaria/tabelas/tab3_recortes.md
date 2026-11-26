@@ -14,4 +14,4 @@
 | Tipo de proposição | PL | 703 | 90,9 | 89,2 | 90,8 | 89,2 |
 | Tipo de proposição | PLP | 170 | 90,8 | 90,1 | 90,9 | 90,0 |
 
-*'Ajust.': média prevista de cada categoria com efeitos fixos de partido×ano (composição partidária da amostra toda).*
+*'Ajust.': média prevista de cada categoria com efeitos fixos de partido×ano (composição partidária da amostra toda). Votações: só as que têm orientação diretiva aplicável (por isso as contagens diferem das da Tabela 1).*

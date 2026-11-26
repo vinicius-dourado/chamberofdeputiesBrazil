@@ -1,4 +1,4 @@
-**Tabela 8 – Deputado mediano e pivôs de 3/5 por semestre (dim1 global)**
+**Tabela 10 – Deputado mediano e pivôs de 3/5 por semestre (dim1 global)**
 
 | Semestre | Em exercício | Com ponto ideal | Mediano | Pivô 40% | Pivô 60% |
 |---|---|---|---|---|---|
