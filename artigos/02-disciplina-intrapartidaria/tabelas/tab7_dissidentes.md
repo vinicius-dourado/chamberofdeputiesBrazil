@@ -15,4 +15,4 @@
 | mais oposicionista que o partido | Messias Donato | REPUBLICANOS | 910 | −3,1 | [−1,41; −1,14] |
 | mais oposicionista que o partido | Pezenti | MDB | 944 | −2,9 | [−1,84; −1,50] |
 
-*Períodos deputado×partido com ≥ 100 votos; só posições cujo IC 95% (bootstrap de votações, 100 réplicas, Procrustes) exclui a mediana do partido.*
+*Períodos deputado×partido com ≥ 100 votos, a pelo menos 2 desvios-padrão da mediana do partido e com IC 95% (bootstrap de votações, 100 réplicas, Procrustes) que exclui essa mediana.*

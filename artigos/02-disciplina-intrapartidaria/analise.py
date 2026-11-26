@@ -7,7 +7,7 @@ figuras (figuras/*.png) do artigo a partir de dados/leg57. O desenho segue o blu
 metodológico em pipeline/stage1_blueprint.md.
 
 Uso (da raiz do repositório):
-    python artigos/02-disciplina-intrapartidaria/analise.py            # tudo (~40-60 min em 4 CPUs na 1ª vez)
+    python artigos/02-disciplina-intrapartidaria/analise.py            # tudo (~11 min em 4 CPUs sem cache; ~2 min com cache)
     python artigos/02-disciplina-intrapartidaria/analise.py --rapido   # menos réplicas de bootstrap
     python artigos/02-disciplina-intrapartidaria/analise.py --secoes descritivo disciplina rice
 
@@ -65,7 +65,7 @@ DIR = {"Sim": 1.0, "Não": 0.0, "Obstrução": 0.0}
 
 
 # =============================================================================== util
-def num(chave, valor, nd=4):
+def num(chave, valor, nd=6):
     """Guarda um número do artigo em R (arredondado; NaN vira None)."""
     if isinstance(valor, (np.floating, float)):
         valor = None if not np.isfinite(valor) else round(float(valor), nd)
@@ -1147,6 +1147,10 @@ def estudo_evento(base, dep):
         for grupo, T in [("ind", ind), ("fus", fus)]:
             t0 = x["deputado_id"].map(T)
             meses = np.floor((x["dt"] - t0).dt.days / 30.44)
+            n_pre = int((meses < 0).sum())
+            num(f"ev_{nome}_{grupo}_n_pre", n_pre)
+            if n_pre == 0:      # sem votos antes do evento: efeitos pós-evento não identificados
+                continue
             for lo, hi, rot in janelas:
                 if rot == ref:
                     continue
@@ -1197,9 +1201,17 @@ def selecao_troca(X):
         k0, k1 = (r["deputado_id"], r["origem"]), (r["deputado_id"], r["destino"])
         if k0 in pts.index and k1 in pts.index and r["destino"] in med.index:
             x0, x1 = pts[k0], pts[k1]
+            dirv = np.sign(med[r["destino"]] - med[r["origem"]])
             linhas.append((abs(x0 - med[r["destino"]]) < abs(x0 - med[r["origem"]]), abs(x1 - x0),
-                           abs(med[r["destino"]] - med[r["origem"]])))
-    t = pd.DataFrame(linhas, columns=["destino_mais_perto", "mudanca_pos", "dist_medianas"])
+                           abs(med[r["destino"]] - med[r["origem"]]),
+                           np.sign(x0 - med[r["origem"]]) == dirv,      # já do lado do destino (seleção)
+                           np.sign(x1 - x0) == dirv,                    # moveu-se rumo ao destino (ajuste)
+                           (x1 - x0) * dirv))
+    t = pd.DataFrame(linhas, columns=["destino_mais_perto", "mudanca_pos", "dist_medianas",
+                                      "lado_destino", "moveu_rumo_destino", "mov_dir"])
+    num("sel_lado_destino", t["lado_destino"].mean())
+    num("sel_moveu_rumo_destino", t["moveu_rumo_destino"].mean())
+    num("sel_mov_dir_mediana", float(t["mov_dir"].median()))
     num("sel_n", len(t)); num("sel_destino_mais_perto", t["destino_mais_perto"].mean())
     num("sel_mudanca_pos_mediana", float(t["mudanca_pos"].median()))
     num("sel_dist_medianas_mediana", float(t["dist_medianas"].median()))
@@ -1322,7 +1334,7 @@ def dispersao_pivos(A, base_p, dep, per):
         s = Xb1[:, mk].std(axis=1, ddof=1)
         est = disp.loc[pt_, "std"]
         # IC bootstrap básico (2θ − quantis): corrige o deslocamento para cima da reamostragem
-        lo_, hi_ = 2 * est - np.percentile(s, 97.5), 2 * est - np.percentile(s, 2.5)
+        lo_, hi_ = max(0.0, 2 * est - np.percentile(s, 97.5)), 2 * est - np.percentile(s, 2.5)
         sds.append((pt_, lo_, hi_, np.mean(s) - est))
         num(f"disp_lo_{pt_}", lo_, 3); num(f"disp_hi_{pt_}", hi_, 3); num(f"disp_vies_{pt_}", np.mean(s) - est, 3)
     disp = disp.join(pd.DataFrame(sds, columns=["partido", "lo", "hi", "vies"]).set_index("partido"))
@@ -1439,7 +1451,7 @@ def interpretar_intra(A, vt, dep, glob, temas_vt):
     vv["descricao"] = vv["idVotacao"].map(info["descricao"])
     vv["proposicao"] = vv["idVotacao"].map(info["proposicao_titulo"])
     vv["ementa"] = vv["idVotacao"].map(info["proposicao_ementa"])
-    vv["aprovada"] = vv["idVotacao"].map(info["aprovacao"])
+    vv["aprovada"] = pd.to_numeric(vv["idVotacao"].map(info["aprovacao"]), errors="coerce")
     vv["data"] = vv["idVotacao"].map(info["data"])
     vv["tipo"] = vv["descricao"].map(classificar_votacao)
     og = A["df"].drop_duplicates("idVotacao").set_index("idVotacao")
@@ -1559,7 +1571,7 @@ def tabela_cargas(vv, k=8):
             d = d if len(d) <= 120 else d[:117] + "..."
             linhas.append({"Sinal": lado, "Data": str(r["data"])[:10], "Proposição": str(r["proposicao"]).split(",")[0],
                            "Tipo": r["tipo"], "Ementa": d, "Gov.": r["orientacao_governo"] or "–",
-                           "Resultado": {1: "aprovada", 0: "rejeitada", True: "aprovada", False: "rejeitada"}.get(r["aprovada"], "–"),
+                           "Resultado": "aprovada" if r["aprovada"] == 1 else ("rejeitada" if r["aprovada"] == 0 else "–"),
                            "Carga": br(r["carga"], 2)})
     return pd.DataFrame(linhas)
 
@@ -1844,6 +1856,8 @@ def fig_evento(ev, janelas):
     fig, ax = plt.subplots(figsize=(7, 3.6))
     t = ev["U"]
     for grupo, cor, mk, off, rot in [("ind", COR["s1"], "o", -0.08, "troca individual"), ("fus", COR["s2"], "s", 0.08, "fusão de partidos (placebo)")]:
+        if not any(f"{grupo}:{r}" in t.index for r in rots):
+            continue      # grupo sem coeficientes identificados (fusões em U)
         xs, ys, lo, hi = [], [], [], []
         for k, r in enumerate(rots):
             if r == "−12 a −7":
@@ -1859,7 +1873,7 @@ def fig_evento(ev, janelas):
     ax.set_xticks(range(len(rots)), [r + "\nmeses" for r in rots], fontsize=8)
     ax.set_ylabel("Δ desvio da maioria dos\ncolegas (pontos percentuais)")
     ax.legend(fontsize=8, loc="upper left")
-    ax.set_title("Desvio em torno da troca de partido (ref.: −12 a −7 meses)")
+    ax.set_title("Desvio em torno da troca individual de partido (ref.: −12 a −7 meses)")
     fig.tight_layout()
     fig.savefig(FIG / "fig5_troca_partido.png", bbox_inches="tight")
     plt.close(fig)
@@ -2006,8 +2020,8 @@ def main():
         fig_pontos(glob["X"], ps)
         diss = tabela_dissidentes(glob["X"])
         tabela_md(diss, "tab7_dissidentes", "Tabela 7 – Dissidentes sistemáticos: maiores distâncias à mediana do próprio partido (dim1 global)",
-                  nota=f"Períodos deputado×partido com ≥ 100 votos; só posições cujo IC 95% (bootstrap de votações, "
-                       f"{R['boot_B_global']} réplicas, Procrustes) exclui a mediana do partido.")
+                  nota=f"Períodos deputado×partido com ≥ 100 votos, a pelo menos 2 desvios-padrão da mediana do partido "
+                       f"e com IC 95% (bootstrap de votações, {R['boot_B_global']} réplicas, Procrustes) que exclui essa mediana.")
         piv = glob["piv"].drop(columns=["partido_mediana"]).rename(columns={
             "semestre": "Semestre", "n_em_exercicio": "Em exercício", "n_com_ponto": "Com ponto ideal",
             "mediana": "Mediano", "pivo_40": "Pivô 40%", "pivo_60": "Pivô 60%"})

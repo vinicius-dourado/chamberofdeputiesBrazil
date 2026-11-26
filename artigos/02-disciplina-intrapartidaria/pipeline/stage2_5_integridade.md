@@ -363,3 +363,119 @@ Nenhum.
 - Os modos 1 e 6 precisam ser resolvidos ou receber override justificado antes do Stage 3. O modo 4 vai para o Stage 3, com sugestão de ablações (M0 calibrado; M5 sem as votações divergentes).
 
 Fontes da verificação na web: [EconPapers – Cameron, Gelbach e Miller (2011)](https://econpapers.repec.org/RePEc:taf:jnlbes:v:29:y:2011:i:2:p:238-249); [registro da UTB](https://vufind-test.katalog.k.utb.cz/SummonRecord/FETCH-LOGICAL-c446t-6d9ae3b2dfe1cf37623a25a8be7e7017ae67fdbe9e349ddb7ec6564032463d7a3); [DOAJ – Nicolau (2000)](https://doaj.org/article/bf0c3d3b746a4658aea869e30e8fd742); [Dados/IESP – Nicolau (2000)](https://dados.iesp.uerj.br/artigos/?id=601); [OAI SciELO S0011-52582000000400004](https://sidalc.net/search/Record/oai:scielo:S0011-52582000000400004).
+
+
+---
+
+# Rodada 2 — reverificação depois das correções (commit 25ab720)
+
+**Data:** 26/11/2026. **Modo:** 1, reverificação. Seguindo o anti-padrão 6 do pipeline, esta rodada não se limita aos itens corrigidos. Reli o Resumo, o Abstract e as seções 1 a 9, os Apêndices A e B, o diff completo de `analise.py` (c78105d → HEAD), as tabelas e as figuras 4 e 5.
+
+**Execução.**
+- *Com o cache.* Uma cópia em `scratchpad/repo2` reproduz `artigo.md` e as 11 tabelas byte a byte. Das 1.590 chaves de `resultados.json`, 1.589 são idênticas (só muda o tempo de execução).
+- *Do zero.* Uma segunda cópia, `scratchpad/repo3`, rodou sem cache: levou 668 s em 4 núcleos e reproduz tudo do mesmo jeito: `artigo.md` muda só na linha do tempo de execução, as 11 tabelas são idênticas e 1.589 das 1.590 chaves são iguais. Os ajustes de IRT, portanto, se reproduzem a partir do código, e não só a partir do cache.
+
+Nenhum arquivo do artigo foi editado. Só esta seção foi acrescentada.
+
+## Veredito da rodada 2: **FAIL**
+
+São **0 P0, 3 P1 novos ou remanescentes e 18 P2**. Seis dos oito P1 da rodada 1 foram resolvidos, e um sétimo (o marcador de Nicolau) passou a nota aberta. Restam três problemas:
+- o placebo, corrigido no texto mas não na Figura 5;
+- a nova leitura da troca de partido ("adaptação"), que troca um exagero pelo exagero oposto;
+- uma afirmação falsa nova, a de que "a alta de 2025 não vem da composição".
+
+No checklist dos 7 modos, o **modo 1 continua SUSPECTED** e bloqueia. O modo 6 passou a CLEAR.
+
+## R2.1 Situação dos P1 da rodada 1
+
+| ID | Situação | Evidência |
+|---|---|---|
+| P1-1 (excesso no PSOL) | **Resolvido** | A §5.8 ordena PSB (17,8), PDT (12,8) e PSOL (12,0), o que confere com `div_cf_*_excesso`. |
+| P1-2 (placebo) | **Resolvido no texto, não na figura** → ver R2-P1-A | A §5.7 traz as datas corretas (22/08/2023 e 07/02/2024), diz que os coeficientes em U não são identificados e relata o placebo em D (+13,4 [1,9; 25,0]). A Figura 5, porém, ainda plota o placebo em U. |
+| P1-3 (pré-tendência) | **Resolvido** | Todas as defasagens são relatadas: −1,7 [−3,5; 0,1], −0,9 e +1,4. O texto diz "sem pré-tendência estatisticamente distinguível" e menciona o sinal fraco de cerca de 3 pontos. |
+| P1-4 (troca como "correção") | **Substituído por um exagero no sentido oposto** → ver R2-P1-B | |
+| P1-5 (contrafactual M5) | **Resolvido**, com uma nota P2 | Dois contrafactuais, rotulados como limite inferior (3,9 [3,0; 4,9]) e como estimativa que tende a superestimar (16,5 [14,3; 19,0]). Conferi o código: `global_sem_divergentes` é treinado sem as células divergentes da base e prevê exatamente essas células, sem vazamento. |
+| P1-6 (Método × código) | **Resolvido**, com uma nota P2 | M3L implementado (M2→M3L = 0,0151 [0,0124; 0,0180], igual ao que eu tinha estimado na rodada 1). ρ_i ∈ ℝ. A amostra completa do estudo de evento e a 1ª troca estão descritas. Tema usa só médias brutas. Resta o título da §4.3, que ainda diz "seis modelos" (R2-P2-9). |
+| P1-7 (desvios e pré-registro) | **Resolvido**, com uma nota P2 | O Apêndice B traz 17 linhas, coerentes com a seção 6 da rodada 1, e o Apêndice A foi reescrito. O Apêndice B diz que o plano foi "revisado antes das análises de P2 a P4", mas `stage1_blueprint.md` tem um único commit (6802984), e o Apêndice A diz que ele "não foi congelado formalmente" (R2-P2-10). |
+| P1-8 (Nicolau "[verificar páginas]") | **Mantido de propósito** → nota aberta (R2-P2-16) | Refiz a busca na web. A existência está confirmada (DOAJ, IESP/Dados id 601, SciELO S0011-52582000000400004), mas as páginas não: o DOAJ traz "00–00". Marcar o que não foi conferido, em vez de inventar, é a conduta certa, e não é fabricação. Fica como nota que não bloqueia no Stage 2.5. No Stage 4.5, que exige zero problemas, vai bloquear se continuar aberta. |
+
+## R2.2 Problemas P1 desta rodada
+
+| ID | Local | Problema | Correção sugerida |
+|---|---|---|---|
+| **R2-P1-A** | Figura 5; `ols_fe`/`estudo_evento`; `resultados.json` (`ev_U_fus:0 a 3_identificado = true`) | A nova verificação de posto em `ols_fe` remove `fus:≥4` por colinearidade e **mantém** `fus:0 a 3`. Para os 5 deputados de fusão sem observações antes da fusão, o coeficiente que sobra não mede a diferença em relação à janela de referência. Mede o contraste entre "0 a 3" e "≥ 4" (+0,48 p.p.). A Figura 5 o desenha como efeito relativo a −12 a −7 meses e ainda desenha um quadrado de placebo na referência, onde não há observação de fusão. O texto diz o contrário ("não são identificados"). O problema geral é que remover uma coluna colinear muda o significado das outras sem aviso. | Quando um grupo de indicadores de evento não tem observações na janela de referência, retirar o grupo inteiro em U. Desenhar na Figura 5 só o placebo em D, com a observação n = 9. Na verificação de posto, registrar como "não identificados em relação à referência" todos os coeficientes do grupo afetado, não só a coluna removida. |
+| **R2-P1-B** | Resumo, Abstract, §5.7 (2º parágrafo de "Há duas leituras"), §8, §9 | A afirmação "A comparação de posições favorece a segunda [adaptação]", com o destino que "não estava, em regra, mais perto", se apoia em duas coisas. A primeira é que o destino estava mais perto em só 44,8% dos casos. A segunda é uma mudança **absoluta, sem direção**, de 0,21, comparada à distância entre as medianas (0,22). Reproduzi o cálculo com os mesmos pontos e o bootstrap de 100 réplicas. Resultados: **(i)** 67,6% dos trocadores já estavam, antes da troca, do lado da mediana de origem voltado para o destino. Isso é seleção na direção, coerente com os 61,8% a 64,5% da validação preditiva do próprio artigo, que o argumento omite. **(ii)** 69,7% se moveram em direção ao destino, com mediana de +0,13. É evidência de adaptação, mas menor que os 0,21 citados. **(iii)** O EP bootstrap mediano da mudança é 0,13, e só 43% das mudanças passam de 1,96 EP. Os períodos depois da troca têm mediana de 49 votos. "A mudança é, se algo, subestimada" não está demonstrado, porque o ruído infla \|Δx\| na mesma medida em que o encolhimento o reduz. "Mais perto do destino do que da origem" é um critério rígido demais para medir seleção quando as medianas dos partidos ficam longe umas das outras. | Apresentar as duas evidências: seleção na direção (68% do lado do destino; 62% a 65% na validação preditiva) e ajuste posterior (70% se movem em direção ao destino, mediana de +0,13, EP de cerca de 0,13). Concluir que os dados são compatíveis com as duas coisas e não as separam. Retirar do Resumo e do Abstract "o destino não estava, em regra, mais perto" e "favorece a adaptação". Retirar da §9 "sem que o destino estivesse...". Na §8, trocar "sugere que os deputados se ajustam" por "não sustenta que a troca seja só seleção". Reportar a mudança com sinal e com IC. |
+| **R2-P1-C** | §5.1, 3º parágrafo | A frase "Mesmo fixando a composição partidária, D em 2025 fica em 92,0%, contra 90,5% em 2023: **a alta não vem da composição**" é desmentida pelos próprios números. A diferença bruta entre 2023 e 2025 é 2,8 p.p. (92,9 − 90,1). Com a composição fixa, é 1,5 p.p. (92,0 − 90,5). Cerca de **metade** da alta vem, portanto, da composição. | Escrever: "fixando a composição partidária, a diferença cai de 2,8 para 1,5 ponto; cerca de metade da alta vem da composição dos votos orientados, e o restante, de quais votações tiveram orientação". |
+
+## R2.3 Problemas P2 desta rodada
+
+| ID | Local | Problema / correção |
+|---|---|---|
+| R2-P2-1 | §5.1; Tabela 2 | **Arredondamento duplo.** `num()` arredonda para 4 casas e o formatador arredonda de novo. Por isso o texto e a tabela divergem: União tem D de 82,5% no texto e 82,4 na Tabela 2 (0,82449…); PP tem D própria de 95,0% no texto e 94,9 na tabela. Guardar o valor sem arredondar, ou formatar texto e tabelas a partir da mesma chave arredondada. |
+| R2-P2-2 | §5.8 | "Nos partidos do centro, o excesso é de 2 a 4 pontos, e no PODE é nulo (−1,4)". Os valores são União 1,9, AVANTE 1,0, MDB 3,7, PSD 3,9, PP 4,3, PSDB 4,3, **REPUBLICANOS −1,2** e PODE −1,4. Corrigir o intervalo para "de 1 a 4 pontos" e citar REPUBLICANOS ao lado do PODE. |
+| R2-P2-3 | §5.8; Resumo e Abstract ("até 16,5") | O contrafactual (ii) não é crível para partidos que divergem do Governo pela esquerda. Ele prevê que o PSOL seguiria o partido em só 34,1% das divergências (o observado é 98,6%), o PSB em 25,6% e o PDT em 29,4%. Esses partidos puxam o limite superior para cima. Reportar o (ii) também sem PSOL, PSB e PDT, ou por partido, e dizer que ele não representa bem a oposição pela esquerda. |
+| R2-P2-4 | Tabela 11; `interpretar_intra`/`tabela_cargas` | A nova coluna "Resultado" sai toda como "–". `votacoes.aprovacao` é texto ('1'/'0') e o dicionário espera números inteiros ou booleanos. Converter com `pd.to_numeric`. (O texto já não diz "rejeitados", então não há afirmação errada; a coluna é que não funciona.) |
+| R2-P2-5 | Tabela 6; §4.5 e §5.6 | O IC bootstrap básico corrige o deslocamento, mas dá limite inferior **negativo** para o DP do NOVO (−0,03) e limite superior igual ao ponto para o PT (0,23 [0,12; 0,23]). O "viés mediano de 0,008" esconde vieses grandes nos partidos pequenos e de esquerda. Truncar em 0, mostrar o viés por partido e avisar que o IC não é confiável com 5 a 14 períodos. A nota da Tabela 6 não diz que o IC é "básico". |
+| R2-P2-6 | Tabela 7 (nota) | Agora a tabela também filtra por \|z\| ≥ 2, mas a nota ainda diz só "IC exclui a mediana". Atualizar. |
+| R2-P2-7 | §5.6 | "O painel do projeto destacava no PL João Carlos Bacelar, Henrique Júnior, Bosco Costa" é rastreável (`prev_diss_pl`). Já "assim como Evair Vieira de Melo e Pezenti no sentido oposto" e a menção a Daniel José não correspondem a nenhuma chave calculada a partir do painel. Calcular os oposicionistas relativos de `emb_votos` ou retirar. |
+| R2-P2-8 | §1, 2º parágrafo | Ficou "a série temporal da disciplina 'à orientação' é, em 2025, um artefato de cobertura", afirmação categórica que a §5.1 já moderou ("compatível com"). Harmonizar. |
+| R2-P2-9 | Título da §4.3 | Diz "seis modelos", mas o texto diz "oito modelos hierarquizados". |
+| R2-P2-10 | Apêndice B, 1ª frase | "Revisado antes das análises de P2 a P4" não tem evidência no repositório (um só commit do blueprint) e contradiz o "não foi congelado formalmente" do Apêndice A. Escrever "e não foi revisado nem congelado formalmente". |
+| R2-P2-11 | Abstract | "year-to-year change in U is 1.6 point" deveria ser "1.6 percentage points". |
+| R2-P2-12 | §3, "Partido na data" | Frase truncada: "reflete a janela partidária de março–abril de 2026, e nos meses seguintes (março–maio), quando ocorreram 139...". Reescrever, por exemplo: "reflete as trocas de março–maio de 2026 (139 das 191 trocas individuais), concentradas na janela partidária". |
+| R2-P2-13 | §5.3 | "Nada o ordenamento" ainda cita como evidência o ρ entre m = 10 e m = 5. O ρ entre o Rice bruto e o de m = 10 (0,99, com 4 partidos sem índice) está na §6. Mover para a §5.3. |
+| R2-P2-14 | `resultados.json` | `ev_*_identificado = true` para `fus:0 a 3` em U é enganoso (ver R2-P1-A). |
+| R2-P2-15 | Docstring de `analise.py` × Apêndice A | A docstring ainda diz "~40-60 min" e o Apêndice diz "20 a 30 minutos". Medido do zero nesta máquina: 668 s, ou cerca de 11 min, em 4 núcleos. Corrigir os dois. |
+| R2-P2-16 | Referências e §2.1/§4.1 | Ficaram de propósito três marcadores "[verificar]": as páginas de Nicolau, o mecanismo de Figueiredo e Limongi e a fórmula de Carey. É nota aberta, sem fabricação. Tentei confirmar a fórmula do *weighted Rice* de Carey e as páginas de Nicolau na web, sem sucesso. Precisam ser resolvidos com o texto original antes do Stage 4.5, que bloqueia notas desse tipo como problemas MEDIUM. |
+| R2-P2-17 | `referencias.bib` (`cameron2011`) | O campo `note` ainda diz "conferir DOI [verificar]". O DOI foi verificado na rodada 1 (10.1198/jbes.2010.07136, via EconPapers/RePEc): acrescentar e tirar o marcador. |
+| R2-P2-18 | §5.4 | M3L "contém M3 e, na prática, M2". O segundo encaixe não é exato, porque a penalização de g e de x difere entre M1 e M3. Escrever "contém M3; M2→M3L compara lealdade com lealdade mais direção". |
+
+## R2.4 Conferências que passaram (denominadores)
+
+- **Código novo, 14 itens.**
+  - M0c usa só o treino, com suavização de Laplace e estratos de partido × fonte.
+  - M3L usa como *offset* o M3 da mesma dobra.
+  - `global_sem_divergentes` prevê fora da amostra.
+  - A verificação de posto em `ols_fe` funciona; só falha na interpretação (R2-P1-A).
+  - D com composição fixa: os pesos são a participação de cada partido em D.
+  - Amplitude de U: 1,6 p.p. entre anos e 5,0 p.p. entre semestres. Confere com o texto.
+  - Variância ajustada: ruído de 0,99% (U) e 1,47% (D). Confere com o que eu tinha calculado na rodada 1.
+  - Presença por data: 242 datas, 99,2% delas a até 5 de 513.
+  - PEC: presidente da sessão excluído das ausências (83,9%).
+  - Números prévios a partir de `alinhamento.parquet` e `emb_votos`: PT 98,4, PSOL 97,2, NOVO 97,0, PP 86,3, REPUBLICANOS 89,7. Os pivôs prévios conferem.
+  - Formatos em inglês no Abstract (454,829; 90.9%; datas por extenso).
+  - Impressão digital do cache.
+  - `selecao_troca` reproduzida (n = 145; 44,8%; 0,207; 0,219).
+  - Datas das fusões: PSC 2023-08-22, PATRIOTA 2024-02-07.
+- **Números renderizados.** A reexecução bate em 100% dos marcadores. Conferi à mão 46 valores do texto novo contra `resultados.json` e as tabelas. Divergem os dois casos de arredondamento duplo (R2-P2-1) e o intervalo "2 a 4" (R2-P2-2).
+- **Referências.** Lista com 24 entradas, 24 citadas no texto e 24 no .bib. Não há órfãs nem citações sem entrada. Cameron (2011) agora é citada na §4.4. As novas formulações de contexto (§1 sobre Snyder e Groseclose, McCarty et al. e Zucco e Lauderdale; §8 sobre Krehbiel) conferem com os resumos verificados no Stage 1.
+- **Resumo × Abstract.** Equivalentes, frase a frase. Os dois herdam R2-P1-B.
+
+## R2.5 Checklist dos 7 modos (rodada 2)
+
+| Modo | Rodada 1 → Rodada 2 | Evidência |
+|---|---|---|
+| 1. Bug de implementação | SUSPECTED → **SUSPECTED** (bloqueia) | Placebo em U desenhado com um coeficiente cujo significado mudou depois da remoção por colinearidade (R2-P1-A). Coluna "Resultado" inoperante (R2-P2-4). Arredondamento duplo (R2-P2-1). IC básico negativo (R2-P2-5). Nenhum desses muda os resultados principais. |
+| 2. Citação alucinada | CLEAR → **CLEAR** | As 24 obras existem. Restam três "[verificar]" declarados, que não são fabricação. |
+| 3. Resultado alucinado | CLEAR → **CLEAR** | 100% reproduzido com o cache. Também 100% reproduzido do zero, sem cache (668 s). Os números prévios agora são rastreáveis, exceto dois nomes (R2-P2-7). |
+| 4. Atalho | SUSPECTED → **SUSPECTED** (só sinalização) | M0c e o contrafactual (ii) foram acrescentados. Resta o (ii) para a esquerda (R2-P2-3). Para o Stage 3, sugiro também a comparação M2→M3L por partido. |
+| 5. Bug reapresentado como achado | CLEAR → **CLEAR** (com nota) | Não há bug por trás da nova leitura "adaptação, não seleção". Mas ela se apoia numa medida sem direção e ruidosa e inverte, no mesmo ciclo de revisão, a conclusão anterior, quando o P1-4 pedia moderação e não inversão. É deriva de força da afirmação, tratada como R2-P1-B. Se não for corrigida, reclassificar como SUSPECTED no Stage 4.5. |
+| 6. Fabricação de metodologia | SUSPECTED → **CLEAR** | O Método agora corresponde ao código (estudo de evento, M2/M3L, temas, ρ_i, contrafactuais). Restam erros de redação (título "seis modelos"; "revisado" no Apêndice B), que não descrevem procedimentos inexistentes. |
+| 7. Frame-lock | CLEAR → **CLEAR** | — |
+
+**Bloqueio:** o modo 1 está SUSPECTED; a correção é a de R2-P1-A. O modo 4 é só sinalização.
+
+## R2.6 Desvios do blueprint
+
+O Apêndice B cobre 17 dos 21 desvios listados na seção 6 da rodada 1. Os quatro que faltam são:
+- os correlatos da troca futura e a divergência por tipo de votação em P5 (calculada, mas não reportada);
+- a robustez com todos os λ_g e λ_d em todas as dobras (só aparece "dobra 0", sem dizer que λ_g = 0,1 foi omitido);
+- a incerteza das cargas (mencionada como "sem IC", aceitável);
+- a análise nova de seleção nas trocas (`selecao_troca`), que não estava no plano. Ela deveria ser marcada como exploratória/pós-hoc, tanto mais porque sustenta uma conclusão que vai para o Resumo. → incorporar em R2-P1-B.
+
+## R2.7 O que fazer a seguir
+
+- Corrigir R2-P1-A, R2-P1-B e R2-P1-C.
+- Rodar `analise.py` de novo.
+- Reverificar a Figura 5, a §5.7, a §5.1, o Resumo, o Abstract, a §8 e a §9.
+- Os P2 podem seguir para o Stage 3, se o usuário preferir. As três notas "[verificar]" precisam estar resolvidas até o Stage 4.5.

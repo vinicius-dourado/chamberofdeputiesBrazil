@@ -17,6 +17,6 @@
 | REPUBLICANOS | 53 | 0,42 [0,37; 0,46] | 0,31 |
 | PSDB | 15 | 0,47 [0,42; 0,51] | 0,32 |
 | PL | 108 | 0,48 [0,45; 0,50] | 0,52 |
-| NOVO | 5 | 0,08 [−0,03; 0,12] | 0,11 |
+| NOVO | 5 | 0,08 [0,00; 0,12] | 0,11 |
 
 *Períodos deputado×partido com ≥ 100 votos; partidos com ≥ 5 períodos. IC por bootstrap de votações com reajuste.*
