@@ -20,6 +20,15 @@ MERITO = {"Mérito (texto principal)", "PEC (mérito)", "Emenda / destaque de em
 N_PLACEBOS = 12
 
 
+def tentar(fn):
+    """Desfechos secundários e robustez podem não ser identificados (tratado × pós colinear com os efeitos
+    fixos). Nesse caso o resultado registra o motivo em vez de interromper a estimação."""
+    try:
+        return fn()
+    except ValueError as erro:
+        return {"nao_identificado": str(erro).strip().splitlines()[0]}
+
+
 def did(d, y="y1"):
     m = E.feols(f"{y} ~ tratado_pos | deputado_id + idVotacao", d.dropna(subset=[y]))
     return m
@@ -32,8 +41,9 @@ def estudo_evento(d, janela, y="y1"):
     for n in nomes:
         d[n] = d[n] * d["tratado"]
     m = E.feols(f"{y} ~ {' + '.join(nomes)} | deputado_id + idVotacao", d)
-    pre = [n for n in nomes if n.startswith("ev_m")]
-    teste_pre = m.wald_test(R=np.eye(len(nomes))[[nomes.index(n) for n in pre]]) if pre else None
+    est = list(m.coef().index)          # dummies sem variação (colineares) são descartadas pelo pyfixest
+    pre = [n for n in est if n.startswith("ev_m")]
+    teste_pre = m.wald_test(R=np.eye(len(est))[[est.index(n) for n in pre]]) if pre else None
     return m, nomes, teste_pre
 
 
@@ -111,12 +121,15 @@ def main():
         r = {}
         m1 = did(d, "y1")
         r["y1"] = E.coeficientes(m1, ["tratado_pos"]).to_dict("records")
-        r["y2"] = E.coeficientes(did(d, "y2"), ["tratado_pos"]).to_dict("records")
-        m3 = E.feols("y3 ~ tratado_pos | linhagem + idVotacao", dp, vcov={"CRV1": "idVotacao"})
-        r["y3"] = E.coeficientes(m3, ["tratado_pos"]).to_dict("records")
+        r["y2"] = tentar(lambda: E.coeficientes(did(d, "y2"), ["tratado_pos"]).to_dict("records"))
+        r["y2_n_votacoes_divergentes"] = (d[d["divergente"]].groupby(["tratado", "pos"])["idVotacao"].nunique()
+                                          .reset_index().to_dict("records"))
+        r["y3"] = tentar(lambda: E.coeficientes(E.feols("y3 ~ tratado_pos | linhagem + idVotacao", dp,
+                                                        vcov={"CRV1": "idVotacao"}), ["tratado_pos"]).to_dict("records"))
         me, nomes, pre = estudo_evento(d, P.EVENTOS[ev]["janela"])
         r["estudo_evento"] = E.coeficientes(me, nomes).to_dict("records")
-        r["teste_pre"] = None if pre is None else pre.to_dict()
+        r["teste_pre"] = None if pre is None else {"estatistica": float(pre.stat), "p_valor": float(pre.pvalue),
+                                                     "df1": int(pre.df1), "df2": float(pre.df2)}
         r["placebo_tempo"] = placebo_tempo(pa, ev, m1.coef()["tratado_pos"])
         if ev == "A":   # heterogeneidade PP vs Republicanos
             for part in ("PP", "REPUBLICANOS"):
