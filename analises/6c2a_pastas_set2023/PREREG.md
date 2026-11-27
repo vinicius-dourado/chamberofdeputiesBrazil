@@ -1,6 +1,6 @@
 # Pré-registro 6-c.2a: pastas compram apoio? Dois eventos ministeriais no Lula 3
 
-**Situação:** rascunho, ainda não fechado. Fechar = commitar este arquivo sem mudanças pendentes; `estimacao.py` grava o hash do commit nos resultados e se recusa a rodar antes.
+**Situação:** **fechado em 27/11/2026**, aprovado por Vinicius. Qualquer mudança daqui em diante vai para "Desvios do pré-registro", com data e motivo.
 **Desenho de origem:** `docs/desenhos-de-pesquisa-fronteiras.md`, seção 6-c.2 (a), mais o segundo evento revelado pela L5.
 **Premissa testada:** "pastas como combustível" da coalizão (Limongi 2006, p. 254).
 **Papel na pesquisa:** isolado, o desenho não testa a impositividade das emendas. Ele mede quanto o apoio responde às pastas e à filiação formal à base, e esse número serve de referência para 6-c.2b e 4-c.1.
