@@ -8,7 +8,8 @@ import pandas as pd
 import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-import paineis as P  # noqa: E402
+from analises.comum.script import modulo_irmao  # noqa: E402
+P = modulo_irmao(__file__, "paineis")
 
 from analises.comum import estimacao as E  # noqa: E402
 
@@ -54,8 +55,7 @@ def test_did_recupera_efeito_atribuido_por_partido():
     d["pos"] = (d["t"] >= 75).astype(float)
     d["tratado_pos"] = d["tratado"] * d["pos"]
     d["y1"] = (rng.uniform(size=len(d)) < (d["a"] + d["g"] + 0.08 * d["tratado_pos"]).clip(0, 1)).astype(float)
-    sys.path.insert(0, str(Path(__file__).resolve().parent))
-    import estimacao as M
+    M = modulo_irmao(__file__, "estimacao")
     m = M.did(d)
     assert abs(m.coef()["tratado_pos"] - 0.08) < 3 * m.se()["tratado_pos"]
 

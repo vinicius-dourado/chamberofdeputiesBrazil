@@ -13,7 +13,8 @@ from analises.comum import script  # noqa: E402
 
 AQUI = Path(__file__).resolve().parent
 sys.path.insert(0, str(AQUI))
-import paineis as P  # noqa: E402
+from analises.comum.script import modulo_irmao  # noqa: E402
+P = modulo_irmao(__file__, "paineis")
 
 AGENDA_SET_2025 = {"PEC 3/2021", "PL 2162/2023"}   # Blindagem e anistia (robustez 7)
 MERITO = {"Mérito (texto principal)", "PEC (mérito)", "Emenda / destaque de emenda", "Destaque (texto)"}
