@@ -1,0 +1,1102 @@
+{
+  "meta": {
+    "gerado_em": "2026-11-27T14:15:06",
+    "prereg_commit": "ed3f8f11c939027a76600060780e8746d9e15d3b"
+  },
+  "eventos": [
+    {
+      "evento": "ent_PDT_20070329",
+      "tipo": "entrada",
+      "grupo": "principal",
+      "partido": "PDT",
+      "data": "2007-03-29",
+      "janela": "2007-02-01 a 2007-09-29",
+      "controles": "AVANTE,CIDADANIA,DEM,PHS,PMN,PSC,PSDB,PSOL,PTC",
+      "votacoes_antes": 17,
+      "votacoes_depois": 54,
+      "deputados_tratados": 23,
+      "deputados_controle": 158,
+      "incluido": false
+    },
+    {
+      "evento": "ent_REPUBLICANOS_20070618",
+      "tipo": "entrada",
+      "grupo": "principal",
+      "partido": "REPUBLICANOS",
+      "data": "2007-06-18",
+      "janela": "2007-02-01 a 2007-12-18",
+      "controles": "AVANTE,CIDADANIA,DEM,PHS,PMN,PSC,PSDB,PSOL,PTC",
+      "votacoes_antes": 52,
+      "votacoes_depois": 37,
+      "deputados_tratados": 2,
+      "deputados_controle": 157,
+      "incluido": true
+    },
+    {
+      "evento": "sai_PTB_20090928",
+      "tipo": "saida",
+      "grupo": "principal",
+      "partido": "PTB",
+      "data": "2009-09-28",
+      "janela": "2009-03-28 a 2010-03-28",
+      "controles": "MDB,PCdoB,PDT,PL,PP,PSB,PT,REPUBLICANOS",
+      "votacoes_antes": 54,
+      "votacoes_depois": 62,
+      "deputados_tratados": 23,
+      "deputados_controle": 314,
+      "incluido": true
+    },
+    {
+      "evento": "sai_PL_20110706",
+      "tipo": "saida",
+      "grupo": "principal",
+      "partido": "PL",
+      "data": "2011-07-06",
+      "janela": "2011-02-01 a 2012-01-06",
+      "controles": "MDB,PDT,PP,PSB,PT",
+      "votacoes_antes": 33,
+      "votacoes_depois": 43,
+      "deputados_tratados": 35,
+      "deputados_controle": 274,
+      "incluido": true
+    },
+    {
+      "evento": "ent_REPUBLICANOS_20120302",
+      "tipo": "entrada",
+      "grupo": "principal",
+      "partido": "REPUBLICANOS",
+      "data": "2012-03-02",
+      "janela": "2011-09-02 a 2012-09-02",
+      "controles": "AVANTE,CIDADANIA,DEM,PHS,PL,PMN,PRP,PRTB,PSC,PSD,PSDB,PSL,PSOL,PTB,PTC,PV",
+      "votacoes_antes": 36,
+      "votacoes_depois": 25,
+      "deputados_tratados": 10,
+      "deputados_controle": 203,
+      "incluido": true
+    },
+    {
+      "evento": "ent_PL_20130403",
+      "tipo": "entrada",
+      "grupo": "principal",
+      "partido": "PL",
+      "data": "2013-04-03",
+      "janela": "2012-10-03 a 2013-10-03",
+      "controles": "AVANTE,CIDADANIA,DEM,PATRIOTA,PHS,PMN,PRP,PRTB,PSC,PSDB,PSL,PSOL,PTB,PTC,PV",
+      "votacoes_antes": 23,
+      "votacoes_depois": 51,
+      "deputados_tratados": 37,
+      "deputados_controle": 163,
+      "incluido": true
+    },
+    {
+      "evento": "ent_PSD_20130508",
+      "tipo": "entrada",
+      "grupo": "principal",
+      "partido": "PSD",
+      "data": "2013-05-08",
+      "janela": "2012-11-08 a 2013-11-08",
+      "controles": "AVANTE,CIDADANIA,DEM,PATRIOTA,PMN,PRP,PSC,PSDB,PSOL,PTB,PV",
+      "votacoes_antes": 23,
+      "votacoes_depois": 60,
+      "deputados_tratados": 44,
+      "deputados_controle": 137,
+      "incluido": true
+    },
+    {
+      "evento": "sai_PSB_20131003",
+      "tipo": "saida",
+      "grupo": "principal",
+      "partido": "PSB",
+      "data": "2013-10-03",
+      "janela": "2013-04-03 a 2014-04-03",
+      "controles": "MDB,PCdoB,PDT,PP,PT,REPUBLICANOS",
+      "votacoes_antes": 51,
+      "votacoes_depois": 31,
+      "deputados_tratados": 20,
+      "deputados_controle": 256,
+      "incluido": true
+    },
+    {
+      "evento": "sai_PTB_20160316",
+      "tipo": "saida",
+      "grupo": "impeachment_2016",
+      "partido": "PTB",
+      "data": "2016-03-16",
+      "janela": "2015-09-16 a 2016-05-11",
+      "controles": "PCdoB,PDT,PL,PT",
+      "votacoes_antes": 69,
+      "votacoes_depois": 10,
+      "deputados_tratados": 18,
+      "deputados_controle": 117,
+      "incluido": false
+    },
+    {
+      "evento": "sai_MDB_20160330",
+      "tipo": "saida",
+      "grupo": "impeachment_2016",
+      "partido": "MDB",
+      "data": "2016-03-30",
+      "janela": "2015-09-30 a 2016-05-11",
+      "controles": "PCdoB,PDT,PL,PT",
+      "votacoes_antes": 66,
+      "votacoes_depois": 4,
+      "deputados_tratados": 65,
+      "deputados_controle": 117,
+      "incluido": false
+    },
+    {
+      "evento": "sai_REPUBLICANOS_20160330",
+      "tipo": "saida",
+      "grupo": "impeachment_2016",
+      "partido": "REPUBLICANOS",
+      "data": "2016-03-30",
+      "janela": "2015-09-30 a 2016-05-11",
+      "controles": "PCdoB,PDT,PL,PT",
+      "votacoes_antes": 66,
+      "votacoes_depois": 4,
+      "deputados_tratados": 18,
+      "deputados_controle": 117,
+      "incluido": false
+    },
+    {
+      "evento": "sai_PP_20160413",
+      "tipo": "saida",
+      "grupo": "impeachment_2016",
+      "partido": "PP",
+      "data": "2016-04-13",
+      "janela": "2015-10-13 a 2016-05-11",
+      "controles": "PCdoB,PDT,PL,PT",
+      "votacoes_antes": 59,
+      "votacoes_depois": 4,
+      "deputados_tratados": 39,
+      "deputados_controle": 115,
+      "incluido": false
+    },
+    {
+      "evento": "sai_PSD_20160419",
+      "tipo": "saida",
+      "grupo": "impeachment_2016",
+      "partido": "PSD",
+      "data": "2016-04-19",
+      "janela": "2015-10-19 a 2016-05-11",
+      "controles": "PCdoB,PDT,PL,PT",
+      "votacoes_antes": 57,
+      "votacoes_depois": 4,
+      "deputados_tratados": 28,
+      "deputados_controle": 115,
+      "incluido": false
+    },
+    {
+      "evento": "sai_PSB_20170521",
+      "tipo": "saida",
+      "grupo": "principal",
+      "partido": "PSB",
+      "data": "2017-05-21",
+      "janela": "2016-11-21 a 2017-11-21",
+      "controles": "DEM,MDB,PL,PP,PSD,PSDB,PTB,REPUBLICANOS",
+      "votacoes_antes": 84,
+      "votacoes_depois": 71,
+      "deputados_tratados": 33,
+      "deputados_controle": 327,
+      "incluido": true
+    },
+    {
+      "evento": "sai_CIDADANIA_20170522",
+      "tipo": "saida",
+      "grupo": "principal",
+      "partido": "CIDADANIA",
+      "data": "2017-05-22",
+      "janela": "2016-11-22 a 2017-11-22",
+      "controles": "DEM,MDB,PL,PP,PSD,PSDB,PTB,REPUBLICANOS",
+      "votacoes_antes": 84,
+      "votacoes_depois": 72,
+      "deputados_tratados": 10,
+      "deputados_controle": 327,
+      "incluido": true
+    },
+    {
+      "evento": "sai_PSDB_20171214",
+      "tipo": "saida",
+      "grupo": "principal",
+      "partido": "PSDB",
+      "data": "2017-12-14",
+      "janela": "2017-06-14 a 2018-06-14",
+      "controles": "DEM,MDB,PL,PP,PSD,PTB,REPUBLICANOS",
+      "votacoes_antes": 84,
+      "votacoes_depois": 59,
+      "deputados_tratados": 48,
+      "deputados_controle": 230,
+      "incluido": true
+    },
+    {
+      "evento": "sai_PTB_20180705",
+      "tipo": "saida",
+      "grupo": "principal",
+      "partido": "PTB",
+      "data": "2018-07-05",
+      "janela": "2018-01-05 a 2018-12-31",
+      "controles": "DEM,MDB,PL,PP,PSD,REPUBLICANOS",
+      "votacoes_antes": 82,
+      "votacoes_depois": 16,
+      "deputados_tratados": 15,
+      "deputados_controle": 217,
+      "incluido": false
+    },
+    {
+      "evento": "sai_PSL_20191111",
+      "tipo": "saida",
+      "grupo": "principal",
+      "partido": "PSL",
+      "data": "2019-11-11",
+      "janela": "2019-05-11 a 2020-05-11",
+      "controles": null,
+      "votacoes_antes": 166,
+      "votacoes_depois": 119,
+      "deputados_tratados": 55,
+      "deputados_controle": 0,
+      "incluido": false
+    },
+    {
+      "evento": "ent_REPUBLICANOS_20210212",
+      "tipo": "entrada",
+      "grupo": "principal",
+      "partido": "REPUBLICANOS",
+      "data": "2021-02-12",
+      "janela": "2020-08-12 a 2021-08-12",
+      "controles": "AVANTE,CIDADANIA,DEM,MDB,NOVO,PATRIOTA,PCdoB,PDT,PODE,PROS,PSB,PSC,PSD,PSDB,PSL,PSOL,PT,PTB,PV,REDE,SOLIDARIEDADE",
+      "votacoes_antes": 177,
+      "votacoes_depois": 350,
+      "deputados_tratados": 37,
+      "deputados_controle": 429,
+      "incluido": true
+    },
+    {
+      "evento": "ent_PL_20210406",
+      "tipo": "entrada",
+      "grupo": "principal",
+      "partido": "PL",
+      "data": "2021-04-06",
+      "janela": "2020-10-06 a 2021-10-06",
+      "controles": "AVANTE,CIDADANIA,DEM,MDB,NOVO,PATRIOTA,PCdoB,PDT,PODE,PROS,PSB,PSC,PSD,PSDB,PSL,PSOL,PT,PTB,PV,REDE,SOLIDARIEDADE",
+      "votacoes_antes": 223,
+      "votacoes_depois": 388,
+      "deputados_tratados": 44,
+      "deputados_controle": 426,
+      "incluido": true
+    },
+    {
+      "evento": "ent_PP_20210804",
+      "tipo": "entrada",
+      "grupo": "principal",
+      "partido": "PP",
+      "data": "2021-08-04",
+      "janela": "2021-02-04 a 2022-02-04",
+      "controles": "AVANTE,CIDADANIA,DEM,MDB,NOVO,PATRIOTA,PCdoB,PDT,PODE,PROS,PSB,PSC,PSD,PSDB,PSL,PSOL,PT,PTB,PV,REDE,SOLIDARIEDADE",
+      "votacoes_antes": 337,
+      "votacoes_depois": 261,
+      "deputados_tratados": 43,
+      "deputados_controle": 412,
+      "incluido": true
+    },
+    {
+      "evento": "ent_PP_20230913",
+      "tipo": "entrada",
+      "grupo": "principal",
+      "partido": "PP",
+      "data": "2023-09-13",
+      "janela": "2023-03-13 a 2024-03-13",
+      "controles": "AVANTE,CIDADANIA,NOVO,PATRIOTA,PL,PODE,PSDB,PV,REPUBLICANOS,SOLIDARIEDADE",
+      "votacoes_antes": 110,
+      "votacoes_depois": 147,
+      "deputados_tratados": 52,
+      "deputados_controle": 203,
+      "incluido": true
+    },
+    {
+      "evento": "sai_PP_20250902",
+      "tipo": "saida",
+      "grupo": "principal",
+      "partido": "PP",
+      "data": "2025-09-02",
+      "janela": "2025-03-02 a 2026-03-02",
+      "controles": "MDB,PCdoB,PDT,PSB,PSD,PSOL,PT,REDE",
+      "votacoes_antes": 163,
+      "votacoes_depois": 164,
+      "deputados_tratados": 50,
+      "deputados_controle": 223,
+      "incluido": true
+    },
+    {
+      "evento": "sai_UNIÃO_20250902",
+      "tipo": "saida",
+      "grupo": "principal",
+      "partido": "UNIÃO",
+      "data": "2025-09-02",
+      "janela": "2025-03-02 a 2025-12-18",
+      "controles": "MDB,PCdoB,PDT,PSB,PSD,PSOL,PT,REDE",
+      "votacoes_antes": 163,
+      "votacoes_depois": 145,
+      "deputados_tratados": 66,
+      "deputados_controle": 220,
+      "incluido": true
+    },
+    {
+      "evento": "ent_UNIÃO_20251219",
+      "tipo": "entrada",
+      "grupo": "principal",
+      "partido": "UNIÃO",
+      "data": "2025-12-19",
+      "janela": "2025-09-02 a 2026-06-19",
+      "controles": "AVANTE,CIDADANIA,NOVO,PL,PODE,PRD,PSDB,PV,REPUBLICANOS,SOLIDARIEDADE",
+      "votacoes_antes": 145,
+      "votacoes_depois": 81,
+      "deputados_tratados": 36,
+      "deputados_controle": 163,
+      "incluido": true
+    }
+  ],
+  "principal": [
+    {
+      "termo": "ent_pos",
+      "Estimate": 0.0014475167344458015,
+      "Std. Error": 0.00872341074102219,
+      "t value": 0.16593472179852722,
+      "Pr(>|t|)": 0.868229976687954,
+      "2.5%": -0.01566342418609435,
+      "97.5%": 0.018558457654985955,
+      "n": 993031
+    },
+    {
+      "termo": "sai_pos",
+      "Estimate": -0.026164844115053074,
+      "Std. Error": 0.01692178877849406,
+      "t value": -1.546222119750486,
+      "Pr(>|t|)": 0.12225520036778348,
+      "2.5%": -0.05935687606845649,
+      "97.5%": 0.007027187838350348,
+      "n": 993031
+    }
+  ],
+  "simetria": {
+    "soma": -0.024717327380607272,
+    "ep": 0.01862686777658813,
+    "ic95": [
+      -0.061225988222720004,
+      0.01179133346150546
+    ],
+    "p_valor": 0.18451802691512098
+  },
+  "estudo_evento": [
+    {
+      "termo": "ev_m6_ent",
+      "Estimate": -0.014664311798271492,
+      "Std. Error": 0.025926767177128666,
+      "t value": -0.5656051021743904,
+      "Pr(>|t|)": 0.5717441753360788,
+      "2.5%": -0.0655195786885778,
+      "97.5%": 0.036190955092034814,
+      "n": 993031
+    },
+    {
+      "termo": "ev_m6_sai",
+      "Estimate": 0.02449858083380247,
+      "Std. Error": 0.029233494742028198,
+      "t value": 0.8380312053003204,
+      "Pr(>|t|)": 0.4021424667557114,
+      "2.5%": -0.03284282108821133,
+      "97.5%": 0.08183998275581628,
+      "n": 993031
+    },
+    {
+      "termo": "ev_m5_ent",
+      "Estimate": 0.003741801530695585,
+      "Std. Error": 0.01823461997684878,
+      "t value": 0.2052031539701013,
+      "Pr(>|t|)": 0.8374403669698509,
+      "2.5%": -0.03202534441660161,
+      "97.5%": 0.03950894747799279,
+      "n": 993031
+    },
+    {
+      "termo": "ev_m5_sai",
+      "Estimate": -0.04579604830776956,
+      "Std. Error": 0.024523130870325035,
+      "t value": -1.8674633573475101,
+      "Pr(>|t|)": 0.062025643255051,
+      "2.5%": -0.0938980872884122,
+      "97.5%": 0.0023059906728730775,
+      "n": 993031
+    },
+    {
+      "termo": "ev_m4_ent",
+      "Estimate": 0.033954899618052384,
+      "Std. Error": 0.017421977954075712,
+      "t value": 1.9489692678728792,
+      "Pr(>|t|)": 0.05147940014624042,
+      "2.5%": -0.00021825172621310618,
+      "97.5%": 0.06812805096231787,
+      "n": 993031
+    },
+    {
+      "termo": "ev_m4_sai",
+      "Estimate": -0.03523615970765865,
+      "Std. Error": 0.026479483953674287,
+      "t value": -1.3306966166449512,
+      "Pr(>|t|)": 0.1834847047166308,
+      "2.5%": -0.08717557870200257,
+      "97.5%": 0.016703259286685264,
+      "n": 993031
+    },
+    {
+      "termo": "ev_m3_ent",
+      "Estimate": 0.004040213238746278,
+      "Std. Error": 0.018730382931060274,
+      "t value": 0.2157037180508713,
+      "Pr(>|t|)": 0.8292471014935976,
+      "2.5%": -0.032699370081035725,
+      "97.5%": 0.040779796558528286,
+      "n": 993031
+    },
+    {
+      "termo": "ev_m3_sai",
+      "Estimate": -0.09170296504368443,
+      "Std. Error": 0.032638821580938206,
+      "t value": -2.809628552804155,
+      "Pr(>|t|)": 0.005022203799107006,
+      "2.5%": -0.15572390414279225,
+      "97.5%": -0.027682025944576624,
+      "n": 993031
+    },
+    {
+      "termo": "ev_m2_ent",
+      "Estimate": -0.019795233509250703,
+      "Std. Error": 0.017411270507435125,
+      "t value": -1.1369206802454512,
+      "Pr(>|t|)": 0.25574729027987475,
+      "2.5%": -0.05394738223283076,
+      "97.5%": 0.014356915214329354,
+      "n": 993031
+    },
+    {
+      "termo": "ev_m2_sai",
+      "Estimate": -0.08083553430848885,
+      "Std. Error": 0.030139464277996564,
+      "t value": -2.6820494738356433,
+      "Pr(>|t|)": 0.007395023027189751,
+      "2.5%": -0.13995399243775714,
+      "97.5%": -0.021717076179220564,
+      "n": 993031
+    },
+    {
+      "termo": "ev_p0_ent",
+      "Estimate": 0.0268633716972889,
+      "Std. Error": 0.016175106693226693,
+      "t value": 1.6607848224295119,
+      "Pr(>|t|)": 0.09695904862600724,
+      "2.5%": -0.004864045849348835,
+      "97.5%": 0.05859078924392663,
+      "n": 993031
+    },
+    {
+      "termo": "ev_p0_sai",
+      "Estimate": -0.058738097295188654,
+      "Std. Error": 0.03806431305874439,
+      "t value": -1.5431277376407282,
+      "Pr(>|t|)": 0.12300404334240111,
+      "2.5%": -0.13340111973734875,
+      "97.5%": 0.01592492514697144,
+      "n": 993031
+    },
+    {
+      "termo": "ev_p1_ent",
+      "Estimate": 0.020777587038476028,
+      "Std. Error": 0.01569115449561508,
+      "t value": 1.3241592289644692,
+      "Pr(>|t|)": 0.1856455210726311,
+      "2.5%": -0.010000559895148295,
+      "97.5%": 0.05155573397210035,
+      "n": 993031
+    },
+    {
+      "termo": "ev_p1_sai",
+      "Estimate": -0.02205915902528035,
+      "Std. Error": 0.03409202020904597,
+      "t value": -0.6470475756501862,
+      "Pr(>|t|)": 0.5176970229266766,
+      "2.5%": -0.08893054236111664,
+      "97.5%": 0.04481222431055593,
+      "n": 993031
+    },
+    {
+      "termo": "ev_p2_ent",
+      "Estimate": -0.01384147109082741,
+      "Std. Error": 0.019227805076579403,
+      "t value": -0.7198674542258147,
+      "Pr(>|t|)": 0.4717152084673759,
+      "2.5%": -0.05155674628128118,
+      "97.5%": 0.02387380409962636,
+      "n": 993031
+    },
+    {
+      "termo": "ev_p2_sai",
+      "Estimate": -0.08975933939487332,
+      "Std. Error": 0.03325450917883057,
+      "t value": -2.699162958989425,
+      "Pr(>|t|)": 0.00702699290449349,
+      "2.5%": -0.15498794765296092,
+      "97.5%": -0.02453073113678572,
+      "n": 993031
+    },
+    {
+      "termo": "ev_p3_ent",
+      "Estimate": 0.022003838701098895,
+      "Std. Error": 0.015614842187099293,
+      "t value": 1.4091617729750787,
+      "Pr(>|t|)": 0.1589880520869511,
+      "2.5%": -0.008624621895232703,
+      "97.5%": 0.05263229929743049,
+      "n": 993031
+    },
+    {
+      "termo": "ev_p3_sai",
+      "Estimate": -0.11711221175662077,
+      "Std. Error": 0.037909473741315175,
+      "t value": -3.089259760126595,
+      "Pr(>|t|)": 0.0020422404111428705,
+      "2.5%": -0.1914715173967909,
+      "97.5%": -0.042752906116450634,
+      "n": 993031
+    },
+    {
+      "termo": "ev_p4_ent",
+      "Estimate": -0.03155190362106506,
+      "Std. Error": 0.018444522113862962,
+      "t value": -1.7106381735610567,
+      "Pr(>|t|)": 0.08734815643644023,
+      "2.5%": -0.06773077190635272,
+      "97.5%": 0.004626964664222605,
+      "n": 993031
+    },
+    {
+      "termo": "ev_p4_sai",
+      "Estimate": -0.04018344567033055,
+      "Std. Error": 0.02636345349947784,
+      "t value": -1.5242102356251026,
+      "Pr(>|t|)": 0.127660328766104,
+      "2.5%": -0.09189527131779668,
+      "97.5%": 0.011528379977135579,
+      "n": 993031
+    },
+    {
+      "termo": "ev_p5_ent",
+      "Estimate": -0.01525371225063517,
+      "Std. Error": 0.02101632012294096,
+      "t value": -0.7258031930140114,
+      "Pr(>|t|)": 0.46806907229119865,
+      "2.5%": -0.0564771537079686,
+      "97.5%": 0.025969729206698267,
+      "n": 993031
+    },
+    {
+      "termo": "ev_p5_sai",
+      "Estimate": -0.0034526191193591433,
+      "Std. Error": 0.026957478385669628,
+      "t value": -0.12807648660471624,
+      "Pr(>|t|)": 0.898105068947872,
+      "2.5%": -0.056329622589435434,
+      "97.5%": 0.049424384350717145,
+      "n": 993031
+    },
+    {
+      "termo": "ev_p6_ent",
+      "Estimate": -0.04950560567796592,
+      "Std. Error": 0.05041223090772199,
+      "t value": -0.9820157685261813,
+      "Pr(>|t|)": 0.32624543236986536,
+      "2.5%": -0.14838902758062203,
+      "97.5%": 0.04937781622469018,
+      "n": 993031
+    },
+    {
+      "termo": "ev_p6_sai",
+      "Estimate": -0.1419101855944764,
+      "Std. Error": 0.0893469453750484,
+      "t value": -1.5883048379414115,
+      "Pr(>|t|)": 0.1124215037628078,
+      "2.5%": -0.31716391938393207,
+      "97.5%": 0.03334354819497928,
+      "n": 993031
+    }
+  ],
+  "teste_pre": {
+    "ent": {
+      "estatistica": 9.984208330035814,
+      "p_valor": 0.07568393464085849,
+      "df1": 5
+    },
+    "sai": {
+      "estatistica": 17.29081163500324,
+      "p_valor": 0.003980043687665962,
+      "df1": 5
+    }
+  },
+  "placebo": {
+    "candidatas_por_evento": {
+      "ent_REPUBLICANOS_20070618": 0,
+      "sai_PTB_20090928": 26,
+      "sai_PL_20110706": 15,
+      "ent_REPUBLICANOS_20120302": 8,
+      "ent_PL_20130403": 9,
+      "ent_PSD_20130508": 22,
+      "sai_PSB_20131003": 27,
+      "sai_PSB_20170521": 7,
+      "sai_CIDADANIA_20170522": 7,
+      "sai_PSDB_20171214": 13,
+      "ent_REPUBLICANOS_20210212": 19,
+      "ent_PL_20210406": 24,
+      "ent_PP_20210804": 25,
+      "ent_PP_20230913": 12,
+      "sai_PP_20250902": 12,
+      "sai_UNIÃO_20250902": 32,
+      "ent_UNIÃO_20251219": 0
+    },
+    "ent_pos": {
+      "p_valor": 0.967741935483871,
+      "n_placebos": 30,
+      "placebos": [
+        -0.014986637347191738,
+        -0.023956112597673763,
+        -0.025894851599553247,
+        0.03249650530468363,
+        -0.0669801919761949,
+        0.000914235485824685,
+        0.05938682329436774,
+        0.018226251915816227,
+        0.08531566262615334,
+        0.02040030547650253,
+        0.05636904555547097,
+        0.03658370793444284,
+        -0.006280996404186948,
+        0.00914781122976097,
+        0.02015168506867032,
+        -0.04788808002094626,
+        0.013173165985662335,
+        0.02009503273987838,
+        0.06808837497165586,
+        0.014261025372988975,
+        0.031209392971977164,
+        0.05305196380994658,
+        -0.00444580343355313,
+        0.0826608173486013,
+        0.022569104192045452,
+        -0.019535242734848107,
+        -0.01597587659890041,
+        -0.022353473579349165,
+        0.0248418035195409,
+        0.04255558693789436
+      ]
+    },
+    "sai_pos": {
+      "p_valor": 0.5483870967741935,
+      "n_placebos": 30,
+      "placebos": [
+        -0.05191406482426442,
+        0.04894858204178868,
+        -0.013307949251696843,
+        0.02277759833783593,
+        0.0035823724024201817,
+        0.004294454163848549,
+        0.03515859713338988,
+        0.02087326343781957,
+        -0.03661201187955233,
+        -0.05399321088082087,
+        -0.028664898542914773,
+        -0.036856918861534575,
+        0.012244593251944678,
+        -0.011368722525335514,
+        -0.01294597672798464,
+        -0.03460348396533055,
+        0.016829514109731845,
+        0.02026907207773609,
+        0.03625310034101034,
+        -0.036852173689067576,
+        0.03828482715028678,
+        -0.04709862157331491,
+        -0.07245286194745275,
+        -0.05258051773840738,
+        -0.01610866965121662,
+        0.01026249523587184,
+        0.0033709204090145994,
+        -0.05796587931808294,
+        -0.00590817204778708,
+        0.05166536607295395
+      ]
+    }
+  },
+  "robustez": {
+    "controles_todos": [
+      {
+        "termo": "ent_pos",
+        "Estimate": 0.012384994548088998,
+        "Std. Error": 0.008653958156924765,
+        "t value": 1.4311364029624658,
+        "Pr(>|t|)": 0.15257833685743782,
+        "2.5%": -0.0045887610375495574,
+        "97.5%": 0.029358750133727553,
+        "n": 1414167
+      },
+      {
+        "termo": "sai_pos",
+        "Estimate": -0.02674550460548608,
+        "Std. Error": 0.01176913978780241,
+        "t value": -2.272511422899849,
+        "Pr(>|t|)": 0.023182329896119347,
+        "2.5%": -0.0498293349856367,
+        "97.5%": -0.0036616742253354657,
+        "n": 1414167
+      }
+    ],
+    "niveis1234": [
+      {
+        "termo": "ent_pos",
+        "Estimate": -0.004206323860883698,
+        "Std. Error": 0.008116034379862845,
+        "t value": -0.5182732925972132,
+        "Pr(>|t|)": 0.604340540292108,
+        "2.5%": -0.020125715949993336,
+        "97.5%": 0.011713068228225938,
+        "n": 1295594
+      },
+      {
+        "termo": "sai_pos",
+        "Estimate": -0.030774189468661263,
+        "Std. Error": 0.017110745629003214,
+        "t value": -1.7985300077454318,
+        "Pr(>|t|)": 0.07228482972349726,
+        "2.5%": -0.06433647566116064,
+        "97.5%": 0.0027880967238381182,
+        "n": 1295594
+      }
+    ],
+    "merito": [
+      {
+        "termo": "ent_pos",
+        "Estimate": -0.0018780880319957491,
+        "Std. Error": 0.010729989840125626,
+        "t value": -0.17503166917945195,
+        "Pr(>|t|)": 0.8610842028332808,
+        "2.5%": -0.022929661756280906,
+        "97.5%": 0.019173485692289407,
+        "n": 613332
+      },
+      {
+        "termo": "sai_pos",
+        "Estimate": -0.02850017523539419,
+        "Std. Error": 0.02332979360975308,
+        "t value": -1.2216214044636733,
+        "Pr(>|t|)": 0.22209016365757206,
+        "2.5%": -0.07427178149651657,
+        "97.5%": 0.017271431025728198,
+        "n": 613332
+      }
+    ],
+    "janela_3m": [
+      {
+        "termo": "ent_pos",
+        "Estimate": 0.012869038940322442,
+        "Std. Error": 0.009932018268500969,
+        "t value": 1.2957123710833403,
+        "Pr(>|t|)": 0.1952808179507315,
+        "2.5%": -0.006613621771080743,
+        "97.5%": 0.03235169965172563,
+        "n": 558872
+      },
+      {
+        "termo": "sai_pos",
+        "Estimate": -0.008114895871434305,
+        "Std. Error": 0.02370536133897199,
+        "t value": -0.3423232304032965,
+        "Pr(>|t|)": 0.7321572670665994,
+        "2.5%": -0.05461536531510471,
+        "97.5%": 0.038385573572236105,
+        "n": 558872
+      }
+    ],
+    "deixa_um_fora": {
+      "ent_PL_20130403": {
+        "ent_pos": 0.003201214869471709,
+        "sai_pos": -0.026164844115053095
+      },
+      "ent_PL_20210406": {
+        "ent_pos": 0.014712169920933476,
+        "sai_pos": -0.026164844115053022
+      },
+      "ent_PP_20210804": {
+        "ent_pos": 0.0045815900239750025,
+        "sai_pos": -0.026164844115053067
+      },
+      "ent_PP_20230913": {
+        "ent_pos": -0.001392906725253569,
+        "sai_pos": -0.026164844115053015
+      },
+      "ent_PSD_20130508": {
+        "ent_pos": 7.671973365205033e-05,
+        "sai_pos": -0.02616484411505305
+      },
+      "ent_REPUBLICANOS_20070618": {
+        "ent_pos": 0.0015038985395696997,
+        "sai_pos": -0.02616484411505305
+      },
+      "ent_REPUBLICANOS_20120302": {
+        "ent_pos": 0.0019357134258254794,
+        "sai_pos": -0.02616484411505308
+      },
+      "ent_REPUBLICANOS_20210212": {
+        "ent_pos": -0.0071178431878049335,
+        "sai_pos": -0.026164844115053085
+      },
+      "ent_UNIÃO_20251219": {
+        "ent_pos": -0.002138146828580987,
+        "sai_pos": -0.026164844115053074
+      },
+      "sai_CIDADANIA_20170522": {
+        "ent_pos": 0.0014475167344457883,
+        "sai_pos": -0.027250214612075795
+      },
+      "sai_PL_20110706": {
+        "ent_pos": 0.0014475167344457911,
+        "sai_pos": -0.021998485660507005
+      },
+      "sai_PP_20250902": {
+        "ent_pos": 0.001447516734445781,
+        "sai_pos": -0.022847774612130004
+      },
+      "sai_PSB_20131003": {
+        "ent_pos": 0.001447516734445789,
+        "sai_pos": -0.023425472214329203
+      },
+      "sai_PSB_20170521": {
+        "ent_pos": 0.0014475167344457955,
+        "sai_pos": -0.03821544768900137
+      },
+      "sai_PSDB_20171214": {
+        "ent_pos": 0.0014475167344457649,
+        "sai_pos": -0.031476513488773915
+      },
+      "sai_PTB_20090928": {
+        "ent_pos": 0.0014475167344457879,
+        "sai_pos": -0.027961968944771404
+      },
+      "sai_UNIÃO_20250902": {
+        "ent_pos": 0.0014475167344457955,
+        "sai_pos": -0.011582767647276832
+      }
+    },
+    "por_evento": {
+      "ent_PL_20130403": [
+        {
+          "termo": "tratado_pos",
+          "Estimate": -0.09048926099315399,
+          "Std. Error": 0.07377173473709499,
+          "t value": -1.2266115378150766,
+          "Pr(>|t|)": 0.2239102994659159,
+          "2.5%": -0.2375161162960931,
+          "97.5%": 0.05653759430978511,
+          "n": 8463
+        }
+      ],
+      "ent_PL_20210406": [
+        {
+          "termo": "tratado_pos",
+          "Estimate": -0.0337758456628131,
+          "Std. Error": 0.012839522288507328,
+          "t value": -2.6306154468882306,
+          "Pr(>|t|)": 0.008803464549997031,
+          "2.5%": -0.05900595619888117,
+          "97.5%": -0.008545735126745037,
+          "n": 212942
+        }
+      ],
+      "ent_PP_20210804": [
+        {
+          "termo": "tratado_pos",
+          "Estimate": -0.0062633312759790725,
+          "Std. Error": 0.015294886202138275,
+          "t value": -0.4095049281964215,
+          "Pr(>|t|)": 0.6823622857311729,
+          "2.5%": -0.03632088710685716,
+          "97.5%": 0.02379422455489901,
+          "n": 209161
+        }
+      ],
+      "ent_PP_20230913": [
+        {
+          "termo": "tratado_pos",
+          "Estimate": 0.019750020352805927,
+          "Std. Error": 0.029603218246618435,
+          "t value": 0.667157880885534,
+          "Pr(>|t|)": 0.5052769209577384,
+          "2.5%": -0.038549004683743684,
+          "97.5%": 0.07804904538935553,
+          "n": 48174
+        }
+      ],
+      "ent_PSD_20130508": [
+        {
+          "termo": "tratado_pos",
+          "Estimate": 0.060827571415999676,
+          "Std. Error": 0.054641978749303835,
+          "t value": 1.1132022084169975,
+          "Pr(>|t|)": 0.26887424022543316,
+          "2.5%": -0.04787273090865268,
+          "97.5%": 0.16952787374065204,
+          "n": 8611
+        }
+      ],
+      "ent_REPUBLICANOS_20070618": [
+        {
+          "termo": "tratado_pos",
+          "Estimate": -0.041897746924199106,
+          "Std. Error": 0.0157134411766665,
+          "t value": -2.6663635579973852,
+          "Pr(>|t|)": 0.009123901706706627,
+          "2.5%": -0.07312490931620921,
+          "97.5%": -0.010670584532189005,
+          "n": 8492
+        }
+      ],
+      "ent_REPUBLICANOS_20120302": [
+        {
+          "termo": "tratado_pos",
+          "Estimate": -0.06495552319129494,
+          "Std. Error": 0.07629005888273367,
+          "t value": -0.8514284055166195,
+          "Pr(>|t|)": 0.3979168877083512,
+          "2.5%": -0.2175583618157668,
+          "97.5%": 0.08764731543317691,
+          "n": 7795
+        }
+      ],
+      "ent_REPUBLICANOS_20210212": [
+        {
+          "termo": "tratado_pos",
+          "Estimate": 0.039462621393489265,
+          "Std. Error": 0.016680921650736005,
+          "t value": 2.365733873688453,
+          "Pr(>|t|)": 0.018403660081995454,
+          "2.5%": 0.0066832971929490365,
+          "97.5%": 0.0722419455940295,
+          "n": 181704
+        }
+      ],
+      "ent_UNIÃO_20251219": [
+        {
+          "termo": "tratado_pos",
+          "Estimate": 0.04957484838599601,
+          "Std. Error": 0.030227093160808644,
+          "t value": 1.640079915136298,
+          "Pr(>|t|)": 0.10257627104347766,
+          "2.5%": -0.010033507631305165,
+          "97.5%": 0.10918320440329718,
+          "n": 31612
+        }
+      ],
+      "sai_CIDADANIA_20170522": [
+        {
+          "termo": "tratado_pos",
+          "Estimate": 0.008753928024738601,
+          "Std. Error": 0.044661948075566615,
+          "t value": 0.1960041691402988,
+          "Pr(>|t|)": 0.8448636351127781,
+          "2.5%": -0.07947070945158749,
+          "97.5%": 0.09697856550106468,
+          "n": 31988
+        }
+      ],
+      "sai_PL_20110706": [
+        {
+          "termo": "tratado_pos",
+          "Estimate": -0.10674816493097869,
+          "Std. Error": 0.03621544025286424,
+          "t value": -2.9475871116197765,
+          "Pr(>|t|)": 0.004266688467122748,
+          "2.5%": -0.17889302146684904,
+          "97.5%": -0.034603308395108334,
+          "n": 16204
+        }
+      ],
+      "sai_PP_20250902": [
+        {
+          "termo": "tratado_pos",
+          "Estimate": -0.03426922994271386,
+          "Std. Error": 0.026798034097083444,
+          "t value": -1.2787964153849456,
+          "Pr(>|t|)": 0.20205873207663627,
+          "2.5%": -0.08702715873215826,
+          "97.5%": 0.018488698846730545,
+          "n": 64909
+        }
+      ],
+      "sai_PSB_20131003": [
+        {
+          "termo": "tratado_pos",
+          "Estimate": -0.10409001226371102,
+          "Std. Error": 0.06132699710981522,
+          "t value": -1.6972951093190196,
+          "Pr(>|t|)": 0.09348027817427718,
+          "2.5%": -0.2261114996717914,
+          "97.5%": 0.017931475144369352,
+          "n": 14768
+        }
+      ],
+      "sai_PSB_20170521": [
+        {
+          "termo": "tratado_pos",
+          "Estimate": 0.0876128232255433,
+          "Std. Error": 0.03685865165909219,
+          "t value": 2.3769947972020082,
+          "Pr(>|t|)": 0.01868252294059669,
+          "2.5%": 0.014798997030387312,
+          "97.5%": 0.16042664942069929,
+          "n": 34167
+        }
+      ],
+      "sai_PSDB_20171214": [
+        {
+          "termo": "tratado_pos",
+          "Estimate": 0.020576815663926457,
+          "Std. Error": 0.021426094197515323,
+          "t value": 0.9603624194984006,
+          "Pr(>|t|)": 0.3385052508688442,
+          "2.5%": -0.021778522896335074,
+          "97.5%": 0.06293215422418799,
+          "n": 24136
+        }
+      ],
+      "sai_PTB_20090928": [
+        {
+          "termo": "tratado_pos",
+          "Estimate": 0.009622910849525879,
+          "Std. Error": 0.03032284735989858,
+          "t value": 0.3173485238807753,
+          "Pr(>|t|)": 0.7515546113324652,
+          "2.5%": -0.05044081386870402,
+          "97.5%": 0.06968663556775578,
+          "n": 25427
+        }
+      ],
+      "sai_UNIÃO_20250902": [
+        {
+          "termo": "tratado_pos",
+          "Estimate": -0.0531649497797547,
+          "Std. Error": 0.026935506765346257,
+          "t value": -1.973786877035995,
+          "Pr(>|t|)": 0.04937845453179679,
+          "2.5%": -0.10618431439515058,
+          "97.5%": -0.0001455851643588288,
+          "n": 64478
+        }
+      ]
+    }
+  }
+}

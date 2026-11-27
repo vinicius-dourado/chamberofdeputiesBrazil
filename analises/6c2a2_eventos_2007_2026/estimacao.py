@@ -33,6 +33,25 @@ def tentar(fn):
         return {"nao_identificado": str(erro).strip().splitlines()[0]}
 
 
+COLS = ["y1", "ent_pos", "sai_pos", "tratado", "tratado_pos", "mes_rel", "tipo_evento", "evento", "tipo_votacao",
+        "dep_stack", "vot_stack", "deputado_id", "idVotacao"]
+
+
+def enxugar(pilha):
+    """Só as colunas usadas e ids como inteiros: o painel empilhado tem ~1 milhão de linhas e a
+    máquina, 7 GB."""
+    d = pilha[[c for c in COLS if c in pilha.columns]].copy()
+    for c in ("dep_stack", "vot_stack", "deputado_id", "idVotacao"):
+        d[c] = d[c].astype("category").cat.codes.astype("int32")
+    for c in ("y1", "ent_pos", "sai_pos", "tratado", "tratado_pos"):
+        d[c] = d[c].astype("float32")
+    return d
+
+
+def log(msg):
+    print(msg, file=sys.stderr, flush=True)
+
+
 def principal(pilha, formula=FORMULA):
     tipos = set(pilha["tipo_evento"])
     if tipos == {"entrada"}:
@@ -118,7 +137,9 @@ def placebo(eventos_incluidos, todos, n=N_PLACEBOS, semente=config.SEMENTE):
                 partes.append(v)
         if not partes:
             continue
-        pilha = pd.concat(partes, ignore_index=True)
+        pilha = enxugar(pd.concat(partes, ignore_index=True))
+        del partes
+        log(f"placebo {len(betas) + 1}/{n}")
         r = tentar(lambda: principal(pilha).coef())
         betas.append({k: float(r.get(k, np.nan)) if not isinstance(r, dict) else np.nan for k in ("ent_pos", "sai_pos")})
     return pd.DataFrame(betas), {k: len(v) for k, v in cand.items()}
@@ -134,13 +155,15 @@ def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--placebos", type=int, default=N_PLACEBOS)
     a = ap.parse_args(argv)
-    pilha = script.ler_painel(__file__, "pilha")
+    pilha = enxugar(script.ler_painel(__file__, "pilha"))
     diag = pd.read_csv(script.cache(__file__) / "eventos.csv")
     res = {"eventos": diag.to_dict("records")}
     m = principal(pilha)
     res["principal"] = coefs(m)
     res["simetria"] = simetria(m)
+    log("principal ok")
     res["estudo_evento"], res["teste_pre"] = estudo_evento(pilha)
+    log("estudo de evento ok")
 
     todos = EV.classificar()
     inc = todos[todos["evento"].isin(diag.loc[diag["incluido"], "evento"])]
@@ -153,7 +176,8 @@ def main(argv=None):
     for nome, arq in (("controles_todos", "pilha_ctrl_todos"), ("niveis1234", "pilha_niveis1234")):
         f = script.cache(__file__) / f"{arq}.parquet"
         if f.exists():
-            rob[nome] = tentar(lambda: coefs(principal(pd.read_parquet(f))))
+            rob[nome] = tentar(lambda: coefs(principal(enxugar(pd.read_parquet(f)))))
+            log(f"robustez {nome} ok")
     rob["merito"] = tentar(lambda: coefs(principal(pilha[pilha["tipo_votacao"].isin(MERITO)])))
     rob["janela_3m"] = tentar(lambda: coefs(principal(pilha[pilha["mes_rel"].between(-3, 2)])))
     loo = {}

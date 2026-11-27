@@ -22,7 +22,8 @@ _P1 = {}
 
 def p1_leg(leg):
     if leg not in _P1:
-        p = p1.carregar_cache(leg)
+        p = p1.carregar_cache(leg)[["idVotacao", "data", "deputado_id", "linhagem", "na_base", "fonte_orient_gov",
+                                    "dir_gov", "dir_voto", "seguiu_gov", "tipo_votacao", "proposicao_titulo"]]
         p["data"] = pd.to_datetime(p["data"]).dt.date
         _P1[leg] = p
     return _P1[leg]
