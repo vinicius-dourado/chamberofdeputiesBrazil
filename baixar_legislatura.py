@@ -127,6 +127,13 @@ ABREV_BLOCO = {"UNI": ["UNIAO"], "PP": ["PP"], "PSDB": ["PSDB"], "CID": ["CIDADA
                "PSB": ["PSB"], "PDT": ["PDT"], "NOVO": ["NOVO"], "PATRI": ["PATRIOTA"],
                "PTB": ["PTB"], "PROS": ["PROS"], "FDR": []}
 BANCADAS_ESPECIAIS = {"GOVERNO", "MAIORIA", "MINORIA", "OPOSICAO"}
+# até 2022 a Câmara registra a orientação do Governo como "GOV." (convive com "Governo")
+ALIAS_ESPECIAIS = {"GOV.": "GOVERNO", "GOV": "GOVERNO"}
+
+
+def norm_bancada(txt):
+    s = norm(txt)
+    return ALIAS_ESPECIAIS.get(s, s)
 
 
 def sigla_partido(s):
@@ -136,7 +143,7 @@ def sigla_partido(s):
 
 def partidos_da_bancada(sigla):
     """-> (tipo, conjunto de partidos, truncado?)"""
-    s = norm(sigla)
+    s = norm_bancada(sigla)
     if s in BANCADAS_ESPECIAIS:
         return "especial", set(), False
     truncado = s.endswith("...") or s == "BLOCO PARLAMENTAR"
@@ -194,7 +201,7 @@ def mapear_orientacoes(orient, votos, blocos_completos=()):
     v = votos.assign(partido_norm=votos["deputado_siglaPartido"].map(sigla_partido))
     v = v.merge(m, on=["idVotacao", "partido_norm"], how="left").drop(columns="partido_norm")
 
-    esp = orient.assign(b=orient["siglaBancada"].map(norm))
+    esp = orient.assign(b=orient["siglaBancada"].map(norm_bancada))
     esp = esp[esp["b"].isin(BANCADAS_ESPECIAIS)]
     esp = esp.pivot_table(index="idVotacao", columns="b", values="orientacao", aggfunc="first")
     esp.columns = [f"orientacao_{c.lower()}" for c in esp.columns]

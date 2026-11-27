@@ -16,10 +16,14 @@ Saídas (em dados/leg<N>/):
   lideres                      - líderes e vice-líderes de partidos, blocos e bancadas
                                  (Governo, Maioria, Minoria, Oposição) com período
   mesa                         - composição da Mesa Diretora com período
+  deputados_exercicio          - períodos de cada deputado por situação (Exercício, Licença,
+                                 Suplência, Convocado, Fim de mandato...), reconstruídos de
+                                 deputados_historico: quem estava em exercício em cada data
 
 Uso:
   python baixar_camara_complementar.py                       # legislaturas 55, 56 e 57
   python baixar_camara_complementar.py --legislaturas 56
+  python baixar_camara_complementar.py --so-exercicio      # só deputados_exercicio (sem API)
 """
 import argparse
 from concurrent.futures import ThreadPoolExecutor
@@ -28,7 +32,7 @@ from pathlib import Path
 import pandas as pd
 
 from baixar_legislatura import API, api_paginada, get, salvar
-from baixar_tse import cpf_hash
+from baixar_tse import cpf_hash, nome_nasc_hash
 
 
 def dados(endpoint, params=None):
@@ -46,6 +50,39 @@ def tipos_orgaos(ids):
             if d:
                 mapa[i] = (d.get("codTipoOrgao"), d.get("tipoOrgao"), d.get("sigla"))
     return mapa
+
+
+def periodos_exercicio(hist, ini, fim):
+    """Converte o histórico de status em períodos [dataInicio, dataFim) por situação.
+    Cada registro vale até o seguinte; registros sem situação (nome/partido no início da
+    legislatura) herdam a anterior. O último período termina no fim da legislatura."""
+    h = hist.copy()
+    h["t"] = pd.to_datetime(h["dataHora"], errors="coerce")
+    fim_ts = pd.Timestamp(fim) + pd.Timedelta(days=1)
+    h = h[(h["t"] < fim_ts)].sort_values(["id", "t"])
+    h["situacao"] = h.groupby("id")["situacao"].ffill()
+    h["condicaoEleitoral"] = h.groupby("id")["condicaoEleitoral"].ffill()
+    h["siglaPartido"] = h.groupby("id")["siglaPartido"].ffill()
+    h = h.dropna(subset=["situacao"])
+    h["situacao"] = h["situacao"].replace({"FIM_MANDATO": "Fim de mandato", "SUPLENCIA": "Suplência",
+                                           "CONVOCADO": "Convocado", "VACANCIA": "Vacância"})
+    chave = h["situacao"] + "|" + h["siglaPartido"].fillna("") + "|" + h["condicaoEleitoral"].fillna("")
+    h["novo"] = chave != chave.groupby(h["id"]).shift()
+    h = h[h["novo"]]
+    h["dataFim"] = h.groupby("id")["t"].shift(-1).fillna(fim_ts)
+    h = h.rename(columns={"t": "dataInicio"})
+    h["dias"] = (h["dataFim"] - h["dataInicio"]).dt.total_seconds() / 86400
+    h["em_exercicio"] = h["situacao"].eq("Exercício")
+    return h[["id", "nome", "situacao", "em_exercicio", "condicaoEleitoral", "siglaPartido",
+              "dataInicio", "dataFim", "dias", "descricaoStatus"]].reset_index(drop=True)
+
+
+def so_exercicio(id_leg):
+    saida = Path("dados") / f"leg{id_leg}"
+    leg = dados(f"legislaturas/{id_leg}")
+    ex = periodos_exercicio(pd.read_parquet(saida / "deputados_historico.parquet"),
+                            leg["dataInicio"], leg["dataFim"])
+    salvar(ex, "deputados_exercicio", saida)
 
 
 def processa(id_leg):
@@ -80,6 +117,7 @@ def processa(id_leg):
                      "n_legislaturas_anteriores": len(exerc)})
     comp = pd.DataFrame(comp)
     comp.insert(1, "cpf_hash", cpf_hash(comp.pop("cpf")))
+    comp.insert(2, "nome_nasc_hash", nome_nasc_hash(comp["nomeCivil"], comp["dataNascimento"]))
     salvar(comp, "deputados_complemento", saida)
 
     org = pd.DataFrame([dict(o, id=i) for i, _, _, os_, *_ in res for o in os_])
@@ -100,13 +138,17 @@ def processa(id_leg):
 
     mesa = pd.DataFrame(dados(f"legislaturas/{id_leg}/mesa", {"dataInicio": ini, "dataFim": fim}))
     salvar(mesa, "mesa", saida)
+    so_exercicio(id_leg)
 
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--legislaturas", type=int, nargs="*", default=[55, 56, 57])
-    for n in ap.parse_args().legislaturas:
-        processa(n)
+    ap.add_argument("--legislaturas", type=int, nargs="*", default=[53, 54, 55, 56, 57])
+    ap.add_argument("--so-exercicio", action="store_true",
+                    help="gera apenas deputados_exercicio a partir de deputados_historico")
+    args = ap.parse_args()
+    for n in args.legislaturas:
+        so_exercicio(n) if args.so_exercicio else processa(n)
     print("Concluído.")
 
 
